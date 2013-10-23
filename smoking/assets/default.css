@@ -1,0 +1,71 @@
+/* 
+------------------------------
+Last Updated - Aug, 21, 2008
+-----------------------------
+*/
+
+
+/* Set basic elements */
+body {background: #4D5155; color: #000; font: x-small Verdana, sans-serif; margin: 0 auto; padding: 0; text-align: center;}
+
+/* Clearer */
+.et-clear {clear: both;}
+
+.e-wrapper {background: #fff; margin: 0 auto; padding: 0; position: relative; text-align: left; width: 990px;}
+
+/* Image Maps */
+.imagemap a {background: red; position: absolute; height: 20px; width: 150px; top: 400px; left: 400px; text-decoration:none;}
+.imagemap a i {display: none;}
+a.hw-logo {background: none; width: 100px; height: 40px; top: 230px; left: -10px;}\
+
+/* Header */
+.e-header {background: #999; height: 450px;}
+
+/* Title */
+.e-title {display: none;}
+.e-title h1 {color: #000; font: 2.4em Helvetica, Arial, sans-serif; margin: 0 0 5px 0; padding: 0;}
+
+/* Byline */
+.e-byline h1{color: #000; display: none; font: 1.1em Arial, sans-serif; margin: 0 0 25px 0;}
+
+/* Page Content */
+.e-content {font-size: 1.2em; line-height: 1.6em; padding: 0 80px;}
+.e-content a:link {color: #000000;}
+.e-content a:visited {color: #777;}
+.e-content a:hover {color: #FF0000;}
+.e-content p {margin: 0 0 10px 0; padding: 0;}
+.e-subhead {font: bold 1.8em Arial, sans-serif; margin: 40px 0 3px 0; color: #444;}
+
+/* page tools */
+.e-tools {margin: 20px 0; padding: 0;}
+.page-tools {font-size: 10px; margin: 0; padding: 0;}
+.page-tools ul {float: right; list-style: none; margin: 0px; padding: 0px;}
+.page-tools ul li {float: left; margin: 0 7px;}
+.page-tools ul li a, .page-tools ul li a:visited {color: #8f8f8f; display: block; padding: 0px 0px 0px 19px;}
+.page-tools ul li a:hover {color:  #FF0000;}
+.navigation{float:left; font-family:Helvetica, Arial, sans-serif; font-size:11px; color:#999;}
+.navigation span{color:#000; margin-left:30px; font-weight:bold;}
+.navigation span.first{margin-left:0px;}
+.navigation a, .navigation a:visited{text-decoration:none; color:#666666;}
+.navigation a:hover{text-decoration:underline; color:#FF0000;}
+
+/* Column 1 */
+.e-col1 {float: left; margin: 0; padding: 0; text-align: left; width: 830px;}
+
+/* Column 2 */
+.e-col2 {display: none; margin: 0 0 0 492px; padding: 0;}
+
+/* Photos */
+.e-photo-left {background: none; display: block; float: left; margin: 0 20px 20px 0; text-align: left; width: 412px;}
+.e-photo-right {background: none; display: block; float: right; margin: 0 0 20px 20px; text-align: left; width: 412px;}
+.e-centerBox {background: none; display: block; margin: 20px auto; padding: 0; text-align: center; width: 100%;}
+.e-photo-mag {display: block; float: left; margin: 0 0 40px 0; text-align: left; width: 455px;}
+.e-photo-center {display: block; margin: 0 auto; text-align: center; width: 830px;}
+
+/* photo credit & caption */
+.e-photo-cred {font: 0.9em Arial, sans-serif; margin: 2px 0; color: #777; text-align: right;}
+.e-photo-cap {font: bold 1em Verdana, sans-serif; text-align: left;}
+
+/* FOOTER */
+.footer a, .footer a:visited {color: #b5b7ba;}
+.footer a:hover {color: white;}
