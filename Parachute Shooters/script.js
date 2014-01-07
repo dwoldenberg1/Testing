@@ -1,4 +1,3 @@
-
 //***********MAIN.js**********//
 var gameBoard;
 var paraExecutor;
@@ -39,9 +38,9 @@ $(document).ready(function() {
 function cont( number) {
 	if(number<(levelNum*15)) {
 		para[number]=new chute( (Math.floor(Math.random() * gameFieldRelativeWidth)* paraElementWidth),0);
-		chuteList()
 		currentChute+=1;
-		paraExec=setInterval(execEach(paraIncrement), paraSpeed)
+		parachute=new chuteList();
+		paraExec=setInterval(parachute.execEach(paraIncrement), paraSpeed);
 		}
 	else{
 		nextLevel();
@@ -63,7 +62,7 @@ function keyPressedHandler(e) {
  }
  
  function mouseClickHandler(event) {
-	 if(para!=null){
+	 if(para!==null){
 		 var pos = $('gameField').position();
 		 var relX = event.pageX - pos.left;
 		 var relY = event.pageY - pos.top;
@@ -104,7 +103,7 @@ function startGame() {
 	bullets= new Array();
 	bulletExecutor=setInterval(execBullet, 100);
 
-};
+}
 function endGame() {
 	if(paraExecutor) {
 		clearInterval(paraExecutor);
@@ -125,7 +124,7 @@ function endGame() {
 	paraIncrement=5;
 	bulletIncrement=10;
 	levelNum = 1;
-};
+}
 
 function nextLevel() {
 	bullets=null;
@@ -145,7 +144,7 @@ function parachuteCrashHandler() {
 		endGame();
 		gameBoard.showLoseMessage();
 	}
-};
+}
 
 //*******para/bullet.js****//
 
@@ -179,12 +178,12 @@ function bullet(thisSlope, bulletX, bulletY) {
 			else {bullet[i].bulletXPos+=1;}
 			gameBoard.drawElement('bullet',bullet[i].bulletXPos,para[i].bulletYPos);
 		}
-	}
+	};
 	
 	this.addBullet = function(index, slopeOf){
 		currentBullet+=1;
 		bullets[index]=new bullet(slopeOf, "325", "150");
-	}
+	};
 }
 
 function chute(chuteX, chuteY) {
@@ -221,14 +220,14 @@ function chuteList() {
 			var temp=para[i];
 			temp.chuteYPos+=increment;
 			gameBoard.drawElement('parachute' + currentChute,temp.chuteXPos,temp.chuteYPos);
-			if(atBottom(para[i].chuteYPos)){
+			if(this.atBottom(para[i].chuteYPos)){
 				gameBoard.removeChute(currentChute);
 			}
 			if(crash(temp)){
 				onCrashCallback();
 			}
 		}
-	}
+	};
 }
 //*******GAMEBOARD.js******//
 function GameBoard() {
@@ -247,7 +246,7 @@ function GameBoard() {
 	
 	this.showCannon = function() {
 		$('#can').css('visibility','visible');
-	}
+	};
 	
 	this.removeCannon = function() {
 		$('#can').css('visibility','hidden');
@@ -259,7 +258,7 @@ function GameBoard() {
 	
 	this.removeBullets = function() {
 		$('div.bullet').remove();
-	}
+	};
 	
 	this.updateScore = function() {
 		var $currentScore = Number($('#score').html());
@@ -273,7 +272,7 @@ function GameBoard() {
 		$currentLives = Number(currentScore.substring(6, 7));
 		$currentLives-=1;
 		$('#mlives').html("Lives: " + $currentLives);
-	}
+	};
 	
 	this.showLoseMessage = function(){
 		$('#loseMsg').css('visibility','visible');
