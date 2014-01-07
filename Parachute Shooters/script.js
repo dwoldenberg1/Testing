@@ -20,6 +20,7 @@ var currentBullet;
 
 var para=null;
 var currentChute;
+var paarachute;
 
 //actual field size(400px) divided by corresponding para size(4px)
 var gameFieldRelativeWidth = 100;
@@ -35,14 +36,16 @@ $(document).ready(function() {
     $('body').keydown(keyPressedHandler);
 });
 
-function cont( var number) {
+function cont( number) {
 	if(number<(levelNum*15)) {
-		para[number]=new chute( (Math.floor(Math.random() * gameFieldRelativeHeight)* paraElementWidth),0);
+		para[number]=new chute( (Math.floor(Math.random() * gameFieldRelativeWidth)* paraElementWidth),0);
+		chuteList()
 		currentChute+=1;
 		paraExec=setInterval(execEach(paraIncrement), paraSpeed)
 		}
+	else{
+		nextLevel();
 	}
-	nextLevel();
 }
 
 
@@ -89,14 +92,16 @@ function startGame() {
 	bullet= null;
 	currentBullet=0;
 	currentChute=0;
+	gameBoard.removeCannon();
 	gameBoard.showCannon();
 	
-	para = new array();
+	parachute=new chuteList();
+	para= new Array();
 	
 	parachute.onCrash(parachuteCrashHandler,{xPos:650,yPos:300});
 	paraExecutor = setInterval(cont(currentChute),gameSpeed);
 	
-	bullets= new array();
+	bullets= new Array();
 	bulletExecutor=setInterval(execBullet, 100);
 
 };
@@ -167,7 +172,7 @@ function bullet(thisSlope, bulletX, bulletY) {
 		return false;
 	};
 	
-	this.execBullet(){
+	this.execBullet = function(){
 		for (var i=0; i<bullet.length; i+=1) {
 			bullet[i].bulletYPos+=slopeOf;
 			if (slopeOf<0) {bullet[i].bulletXPos-=1;}
@@ -176,7 +181,7 @@ function bullet(thisSlope, bulletX, bulletY) {
 		}
 	}
 	
-	this.addBullet(index, slopeOf){
+	this.addBullet = function(index, slopeOf){
 		currentBullet+=1;
 		bullets[index]=new bullet(slopeOf, "325", "150");
 	}
@@ -185,14 +190,15 @@ function bullet(thisSlope, bulletX, bulletY) {
 function chute(chuteX, chuteY) {
 	this.chuteXPos=chuteX;
 	this.chuteYPos=chuteY;
+}
+
+function chuteList() {
 	var onCrashCallback;
 	var gameRegion;
 	
-	this.atBottom = function(xpos,ypos) { //need to check if at the end of the map + update accordingly
-		for(var i = 0; i< bodyParts.length; i++){
-			if(bodyParts[i].xPos == xpos && bodyParts[i].yPos == ypos)
-				return true;
-		}
+	this.atBottom = function(ypos) { //need to check if at the end of the map + update accordingly
+		if(ypos>gameRegion.yPos)
+			return true;
 		return false;
 	};
 	
@@ -201,7 +207,7 @@ function chute(chuteX, chuteY) {
 		onCrashCallback = crashCallback;
 	};
 	
-	var crash = function(chute thisChute){
+	var crash = function(thisChute){
 		if(thisChute.chuteYPos >= gameRegion.yPos) {
 			crashes+=1;
 			updateLives();
@@ -210,11 +216,15 @@ function chute(chuteX, chuteY) {
 		return false;
 	};
 	
-	this.execEach(var increment){
+	this.execEach= function(increment){
 		for(var i=0; i<para.length; i+=1){
-			para[i].chuteYPos+=increment;
-			gameBoard.drawElement('parachute',para[i].chuteXPos,para[i].chuteYPos);
-			if(crash(para[i]){
+			var temp=para[i];
+			temp.chuteYPos+=increment;
+			gameBoard.drawElement('parachute' + currentChute,temp.chuteXPos,temp.chuteYPos);
+			if(atBottom(para[i].chuteYPos)){
+				gameBoard.removeChute(currentChute);
+			}
+			if(crash(temp)){
 				onCrashCallback();
 			}
 		}
@@ -243,8 +253,8 @@ function GameBoard() {
 		$('#can').css('visibility','hidden');
 	};
 	
-	this.removeChutes = function() {
-		$('div.parachute').remove();
+	this.removeChute = function(currentChute) {
+		$('div.parachute' + currentChute).remove();
 	};
 	
 	this.removeBullets = function() {
