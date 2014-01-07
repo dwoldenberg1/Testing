@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Simple Alien Invaders</title>
+<!-- Huge thanks to karapuzz @ http://www.codecademy.com/karapuzz , he made this awesome snake game @ http://www.codecademy.com/karapuzz/codebits/CNUPkC , that inspired me and helped with a lot of concept -->
+	<link rel="stylesheet" href="style.css"/>
+	 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src='script.js'></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+	<body>
+        <div id='game'> 
+            <div onclick="mouseClickHandler(this)" id='gameField'>
+                <div id='gamemsg'>
+                    <!--http://stackoverflow.com/questions/2570972/css-font-border-->
+					<div style="color: #F1FE1C;"id='nextRndMsg'>Next Round!</div>
+					<div style="color: #B92103;"id='loseMsg'>You lose! Try again</div>
+					<canvas id="can" width="650" height="300"></canvas>
+					<!--http://www.html5canvastutorials.com/tutorials/html5-canvas-semicircles/ -->
+					<script>
+						var canvas = document.getElementById('can');
+						var context = canvas.getContext('2d');
+
+						context.beginPath();
+						context.arc(325, 150, 50, 0, Math.PI, true);
+						context.closePath();
+						context.lineWidth = 5;
+						context.fillStyle = 'red';
+						context.fill();
+						context.strokeStyle = '#5B2701';
+						context.stroke();
+						</script>
+				</div>
+            </div> 
+            <div id='gameInfo'> 
+                <div id='points'>
+                    <div id='level'>Level: 1</div>
+                    <div id='lives'>Lives: 5</div>
+                    <div id='monsters'>Monsters Killed: 0</div>
+                </div>
+                <div id='instrux'>Drag the mouse to aim the turret and click to fire. <br> press space to start/restart and esc to end. <br>Stop the Alien Invaders from reaching Earth! </div>
+	</body>
+</html>

@@ -1,0 +1,85 @@
+#game {
+	width: 650px;
+}
+
+#gameField {
+	width: 650px;
+	height: 300px;
+	float: left;
+	margin-right: 20px;
+	border-style: solid;
+    background:#3D81FF;
+	position:relative;
+}
+
+.bullet {
+	height: 4px;
+	width: 4px;
+	position:absolute;
+	background: white;
+	 -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    border-radius:4px;
+}
+
+.parachute {
+	height: 16px;
+	width: 4px;
+	position: absolute;
+	background: black;
+}
+
+#can {
+	visibility: hidden;
+	z-index: auto;
+}
+
+#gameInfo {
+	margin-top: 10px;
+	width: 650px;
+	height: 80px;
+	float: left;
+	border: 4px double #01363C;
+    background:#0190A1;
+	font-family: "Impact", Charcoal, san-serif; 
+    font-weight:bold; 
+	text-align:left;
+	color:#792c15;
+	color: black;
+}
+
+#gamemsg {
+    font-family: "Impact", Charcoal, san-serif; 
+    font-weight:bold; 
+    font-size: 40px;
+    text-align: center;
+    padding-top: 50px;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    visibility: hidden;
+}
+
+#points {
+    margin-left: 10px;
+    margin-top: 5px;
+    font-size: 17px;
+    width: 200px;
+    display: inline-block;
+}
+
+#monsters {
+    margin-top: 5px;
+    width: 200px;
+}
+
+#level {
+    width: 200px;
+    margin-bottom: 5px;
+}
+
+#instrux {
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 17px;
+    font-family: "Tahoma", Geneva, san-serif;
+}
