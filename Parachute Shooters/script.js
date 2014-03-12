@@ -15,10 +15,10 @@ var crashes = 0;
 var lives = 5;
 
 var bullets=null;
-var currentBullet;
+var currentBullet=0;
 
 var para=null;
-var currentChute;
+var currentChute=0;
 var parachute;
 
 //actual field size(400px) divided by corresponding para size(4px)
@@ -69,7 +69,7 @@ function keyPressedHandler(e) {
 		 var relY = event.pageY - pos.top;
 		 slopeOf = slope(relX, relY);
 		 if (bullets.length<bulletIncrement){
-		 	bullet.addBullet(currentBullet, slopeOf);
+		 	this.addBullet(currentBullet, slopeOf);
 		 }
 		 else{
 		 	var index=0;
