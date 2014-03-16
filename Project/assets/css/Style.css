@@ -1,0 +1,92 @@
+<style type="text/css">
+/* title="credit" href=https://github.com/honor/bitstarter/blob/4d25989f45565e8a6604d9584974b14968437715/index.html id="honor"*/
+/* Large desktop */
+{
+      body {
+        padding-top: 60px;
+      }
+.linediv-l {
+border-right: 1px white solid;
+}
+.linediv-r {
+border-left: 1px white solid;
+}
+}
+/* Landscape phones and down */
+@media (max-width: 480px) {
+.copy {
+padding: 2.5% 10%;
+}
+    .linediv-l {
+      border-bottom: 1px white solid;
+    }
+.linediv-r {
+      border-top: 1px white solid;
+    }
+  }
+/* All form factors */
+  /* Main body and headings */
+  body {
+    font-family:'Open Sans', Helvetica, Arial, sans-serif;
+    background-color: #C4EFFC;
+  }
+  .heading, .subheading {
+    font-family:'Ubuntu', Helvetica, Arial, sans-serif;
+    text-align: center;
+  }
+p.lead {
+    padding-top: 1.5%;
+    font-size: 24px;
+    line-height: 30px;
+  }
+  p {
+    font-size: 18px;
+    line-height: 24px;
+    text-decoration:none;
+  }
+ /* Video pitch and Action */
+  .pitch {
+    padding: 2.5% 0%;
+  }
+  .order {
+    padding: 2% 0%;
+  }
+  .actions {
+    background-color: #343434;
+    padding: 3% 0%;
+  }
+  .video, .thermometer, .order, .social, .statistics {
+    text-align: center;
+  }
+  .statistics h3, .statistics p {
+    color: white;
+  }
+/* Marketing Copy and Footer */
+  .copy {
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
+    text-align: justify;
+  }
+  .asset {
+    padding: 2.5% 0%;
+  }
+  .footer {
+    color: #cccccc;
+    text-align: center;
+  }
+  .footer p {
+    font-size: 11px;
+  }
+  .footer a {
+    color: #ccccff;
+  }
+  
+/*my added style*/
+
+  #main {
+	padding-top: 50px;
+  }
+  
+  a:hover {color:#00AFBF; text-decoration: none;}
+  a:visited {color:#E075FF;}
+ </style>
