@@ -1,4 +1,4 @@
 <!DOCTYPE html>
-<div id="main" style="background-color: teal; top: top;3">
+<div id="main">
 this my home.
 </div>

@@ -1,3 +1,5 @@
+<div id="main">
 <?php
-	echo "this my about.";
+	echo "this is my about.";
 ?>
+</div>
