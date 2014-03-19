@@ -11,14 +11,14 @@
         </button>
         <a class="brand" href="/Testing/phpframeworks/CodeIgniter_2/" >David Woldenberg</a>
         <div class="nav-collapse collapse">
-          <ul class="nav">
-            <li class="active" ><a href="/Testing/phpframeworks/CodeIgniter_2/">Home</a>
+          <ul class="nav" >
+            <li <?php if($title==="Home")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/">Home</a>
             </li>
-            <li><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/about" >About</a>
+            <li <?php if($title==="About")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/about" >About</a>
             </li>
-            <li><a href="#Game" >Game</a>
+            <li <?php if($title==="Game")echo"class='active'";?>><a href="#Game" >Game</a>
             </li>
-            <li><a href="#Contact" ">Contact</a>
+            <li <?php if($title==="Contact")echo"class='active'";?>><a href="#Contact" ">Contact</a>
             </li>
           </ul>
         </div>

@@ -12,7 +12,10 @@
       <div class="span12">
         <!-- Special typography from Bootstrap for lead paragraph. -->
         <!-- http://twitter.github.io/bootstrap/base-css.html#typography -->
-        <p class="lead">One sentence description</p>
+        <p class="lead">Bitches don't know about my swag.</p>
       </div>
     </div>
 </div>
+
+<!--http://www.w3schools.com/html/html_sounds.asp-->
+<embed height="0" width="0" src="/Testing/phpframeworks/CodeIgniter_2/assets/Other/Halo_Theme_Song_Original.mp3">

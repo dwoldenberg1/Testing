@@ -28,7 +28,13 @@ padding: 2.5% 10%;
   /* Main body and headings */
   body {
     font-family:'Open Sans', Helvetica, Arial, sans-serif;
-    background-color: #C4EFFC;
+    /*background-color: #C4EFFC;
+    background-image: url("/Testing/phpframeworks/CodeIgniter_2/assets/image/gradient.png");*/
+    background: -webkit-linear-gradient(top,#c4effc,#ffffff); /*Safari 5.1-6*/
+    background: -o-linear-gradient(bottom,#c4effc,#ffffff); /*Opera 11.1-12*/
+    background: -moz-linear-gradient(bottom,#c4effc,#ffffff); /*Fx 3.6-15*/
+    background: linear-gradient(to bottom, #c4effc,#ffffff); /*Standard*/
+    background-repeat: no-repeat;
   }
   .heading, .subheading {
     font-family:'Ubuntu', Helvetica, Arial, sans-serif;

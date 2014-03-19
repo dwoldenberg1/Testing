@@ -14,16 +14,17 @@ class News_model extends CI_Model {
 		{
 			$query = $this->db->get('news');
 			return $query->result_array();
-			}
-
-			$query = $this->db->get_where('news', array('slug' => $slug));
-			return $query->row_array();
 		}
+
+		$query = $this->db->get_where('news', array('slug' => $slug));
+		return $query->row_array();
+		
 	}
 	
 	public function index()
 	{
-		$data['news'] = $this->news_model->get_news();
+		echo 'moo';
+		$data['news'] = array('title' => 'bar', 'text' => 'fuck'); //$this->news_model->get_news();
 		$data['title'] = 'News archive';
 
 		$this->load->view('templates/header', $data);
@@ -46,4 +47,4 @@ class News_model extends CI_Model {
 		return $this->db->insert('news', $data);
 	}
 	
-	
+}
