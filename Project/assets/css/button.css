@@ -1,5 +1,4 @@
-<style type="text/css">
-a. back {
+.back {
 	-moz-box-shadow:inset 0px 1px 0px 0px #dcecfb;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #dcecfb;
 	box-shadow:inset 0px 1px 0px 0px #dcecfb;
@@ -33,17 +32,19 @@ a. back {
 	text-decoration:none;
 	text-align:center;
 	text-shadow:1px 1px 0px #528ecc;
-	position: absolute;
-	top: 500px;
-	left: 500px;
 }
-a. back:hover {
+.back:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #80b5ea), color-stop(1, #bddbfa) );
 	background:-moz-linear-gradient( center top, #80b5ea 5%, #bddbfa 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#80b5ea', endColorstr='#bddbfa');
 	background-color:#80b5ea;
-}a. 3back:active {
+	color: white;
+}.back:active {
 	position:relative;
 	top:1px;
-}</style>
+	color: black;
+}.back:visited {
+	color: white;
+}
 /* This button was generated using CSSButtonGenerator.com */
+}

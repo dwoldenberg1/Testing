@@ -1,6 +1,6 @@
 <?php
 
-class Pages extends CI_Controller {
+class Game extends CI_Controller {
 
 	public function view($page = 'home')
 	{
@@ -14,6 +14,23 @@ class Pages extends CI_Controller {
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('pages/'.$page, $data);
+	}
+	
+	public function index()
+	{
+		echo 'wtf';
+
+		//$this->load->view('templates/header', $data);
+		$this->load->view('pages/game');
+		//$this->load->view('templates/footer');
+		
+	}
+	
+	public function main($page = 'home')
+	{
+		$data['previous'] = ($page);
+		$this->load->view('templates/header');
+		$this->load->view('pages/game', $data);
 	}
 }
 ?>

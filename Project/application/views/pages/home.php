@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/snowstorm.js"></script>
 <div id="main">
 <!-- Font and paired font of .heading/.subheading and body from Google Fonts -->
     <!-- www.google.com/fonts/specimen/Ubuntu -->

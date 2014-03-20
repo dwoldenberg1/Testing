@@ -43,10 +43,11 @@ $route['404_override'] = '';*/
 
 
 $route['news/create'] = 'news/create';
-$route['news/(:any)'] = 'news/view/$1';
-$route['game'] = 'game';
+//$route['news/(:any)'] = 'news/view/$1';
+//$route['game'] = 'game';
 $route['news'] = 'news';
-$route['(:any)'] = 'pages/view/$1';
+//$route['(:any)'] = 'pages/view/$1';
+$route['about'] = 'pages/view/about';
 $route['default_controller'] = 'pages/view';
 
 /* End of file routes.php */
