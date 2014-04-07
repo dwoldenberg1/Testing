@@ -18,7 +18,9 @@
             </li>
             <li <?php if($title==="Game")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/main/<?php echo $title ?>" >Game</a>
             </li>
-            <li <?php if($title==="Contact")echo"class='active'";?>><a href="#Contact" ">Contact</a>
+            <li <?php if($title==="News")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/news">News</a>
+            </li>
+            <li <?php if($title==="Contact")echo"class='active'";?>><a href="#Contact">Contact</a>
             </li>
           </ul>
         </div>

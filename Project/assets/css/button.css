@@ -32,6 +32,7 @@
 	text-decoration:none;
 	text-align:center;
 	text-shadow:1px 1px 0px #528ecc;
+	/*added css*/
 }
 .back:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #80b5ea), color-stop(1, #bddbfa) );

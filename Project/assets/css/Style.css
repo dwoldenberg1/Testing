@@ -93,5 +93,43 @@ p.lead {
 	text-align: center;
   }
   
+  #spin {
+	  overflow: hidden;
+	  padding-bottom: 10px;
+  }
+  
+/*game.php*/
+  #game {
+	border-width: medium;
+	border-style: groove;
+	border-color: black;
+	width: 80%;
+	height: 100%;
+  }
+  
+  #frame{
+	  height: 70%;
+	  display: none;
+  }
+  #board{
+	  height: 20%;
+  }
+  
+  .options{
+	  border-bottom-width: medium;
+	  border-bottom-style: -moz-bg-outset;
+  }
+  
+  #multiplayer{
+	  float: left;
+  }
+  
+  #singleplayer{
+	  position: relative;
+	  left: 50%;
+	  padding-right: 20px;
+	  
+  }
+  
   a:hover {color:#00AFBF; text-decoration: none;}
   a:visited {color:#E075FF;}
