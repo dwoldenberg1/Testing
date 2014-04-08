@@ -7,8 +7,8 @@
 <div id="game">
 	<canvas id="frame"></canvas>
 	<div class="options">
-			<div id="singleplaer" style="visibility: hidden;" onclick="start(singleplayer)">Singleplayer</div>
-			<div id="multiplayer" style="visibility: hidden;" onclick="start(multiplayer)">Multiplayer</div>
+			<div id="singleplaer" style="visibility: hidden;" >Singleplayer</div>
+			<div id="multiplayer" style="visibility: hidden;" >Multiplayer</div>
 		</div>
 	<div id="board">
 		<div id="player1"></div>
