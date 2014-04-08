@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.3 Tutorials: Simple Chat (part 2) </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available  under the <strong>Examples/(Actionscript version)/simpleChat</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p><span class="articleText">In this second chapter of the &quot;<strong>Simple Chat</strong>&quot; application we would like to discuss a little more in detail some aspects of the code created in part 1. The previous tutorial focused its attention on how to quickly build a simple chat application and we intentionally left out some topics that deserve some extra explanation.</span></p>
+ <p><span class="subTitle">&raquo; Connect - Login - Join </span></p>
+ <p><span class="articleText">As you have noticed we have taken three main actions in the previous code example:</span></p>
+<p><strong>Connect</strong><br>
+At first we try to establish a connection to the server using  its ip address
+  and port. This is just like knocking at someone's door. You don't enter in
+  the house, you just ask if there's anybody at home. In case you don't get any
+responses then you won't be able to ask anything else.</p>
+ <p><strong>Login</strong><br>
+  If the server responded you can tell who you are and see if the server accepts you.
+In our case you will always be accepted unless you use a user name that is already in use.</p>
+ <p><strong>Join</strong><br>
+  Once you're &quot;inside&quot; you will be able to choose which room you want to enter.
+This is determined by the &quot;zone&quot; in which you asked to log in. You can think of &quot;zones&quot; as if they were different houses, each of them with its different set of rooms. Some can be very small with a few rooms and others can be huge and with many many rooms.</p>
+ <p>Once these three steps are taken successfully you're enabled to interact with all the other users.</p>
+ <p>Below follows a table with the typical request-response pattern that you would normally use to do the connect-login-join:</p>
+ <table width="543" border="1" cellpadding="4" cellspacing="0" bordercolor="#333333">
+   <tr bgcolor="#FF6600">
+     <td width="50%"><font color="#FFFFFF"><strong>Client Request</strong></font></td>
+     <td><strong><font color="#FFFFFF">Event fired by Server</font></strong></td>
+   </tr>
+   <tr>
+     <td>server.connect(ip, port, zone)</td>
+     <td>onConnect()</td>
+   </tr>
+   <tr>
+     <td>server.login(name, password)</td>
+     <td> onLogin()<br>
+     onRoomListUpdate() </td>
+   </tr>
+   <tr>
+     <td>server.joinRoom(roomId) <em>or</em><br> 
+     server.autoJoin()</td>
+     <td>onJoinRoom() <em>or</em> onJoinRoomError()</td>
+   </tr>
+ </table>
+ <p><span class="subTitle">&raquo; The RoomList : Room and User objects </span></p>
+ <p>Two of the most important SmartFoxServer events are called <strong>onRoomListUpdate()</strong> and <strong>onJoinRoom()</strong>.<br>
+What makes them special is the fact the they populate some data structures in the <strong>SmartFoxClient</strong> object and I'd like to take a deeper look at it.</p>
+ <p>The following picture represents the SmartFoxServer internal data structure and you have already seen it in the first part of this tutorial:</p>
+ <p><img src="images/diagramFull.gif" width="466" height="373" class="imgBorder"></p>
+ <p>The server (at the root of the diagram) holds a list of zones, each running a different application.
+Each zone contains a list of rooms which in turn contain users.<br>
+<br>
+While the server always sees all this big structure, the client has a smaller perspective as every user is always connected in just one zone at a time. So the <strong>SmartFoxClient</strong> object is populated with a list of Rooms (those owned by the zone in which we are connected) and every Room will have its own list of users.<br>
+              <br>
+The picture below shows this in detail:</p>
+ <p><img src="images/clientObj_diagram.gif" width="666" height="380" class="imgBorder"></p>
+ <p>The roomList is an array and it is populated with Room objects when the onRoomListUpdate event is fired: each Room object can be accessed using the methods shown under the <strong>Room Object.</strong></p>
+ <p>The userList is an array and it is populated with User objects when the onJoinRoom event is fired: each User object can be accessed using the methods shown under the <strong>User Object.</strong></p>
+ <p>If you go back to the previous article and source code, you will notice that we already used these objects and methods but now you should have a better understanding of what's going on &quot;behind the scenes&quot; and be able to experiment on your own.</p>
+ <p><span class="subTitle">&raquo; Handling errors </span></p>
+ <p>One important thing to consider in every project is how to manage unexpected conditions and errors.<br>
+Also sometimes it is necessary to stop the normal flow of the application, for example to get some input from the user and we would also like our UI to behave in a different way (i.e. disable certain part of it until the user submits data).</p>
+ <p>In our &quot;<strong>Simple Chat</strong>&quot; demo we can get two types of errors: </p>
+ <p>&raquo; a <strong>login error</strong>, if you try to enter with an already existing user name<br>
+  &raquo; a <strong>join error</strong>, if you try to join a room that's already full</p>
+ <p>To test these conditions, try launching two instances of the &quot;Simple
+   Chat&quot; sample and log in with the same name: the second time a dialog
+   window will popup in the middle of the screen and the rest of the application
+   will be grayed out. The application will restore its state when you will press
+   the &quot;OK&quot; button.</p>
+ <p>We'll use this simple system quite a lot in all the next tutorials every time we will need a dialog box:<br>
+                <br>
+  - sending a private message<br>
+  - entering a password protected room<br>
+  - creating a new room<br>
+  - creating a new game room<br>
+  - showing system and error messages</p>
+ <p>You can find the code that handles the dialog boxes under the &quot;<strong>connect</strong>&quot; label in the source .FLA of the &quot;SimpleChat&quot;.<br>
+  Mainly we use two functions: <strong>showWindow()</strong>, <strong>hideWindow()</strong></p>
+<pre class="code"><font color="#993300">function</font> showWindow(linkageName)
+{
+        <font color="#000087">_global</font>.isBusy = <font color="#000087">true</font>
+        userList_lb.<font color="#000087">setEnabled</font>(<font color="#000087">false</font>)
+        disabler.<font color="#000087">_visible</font> = <font color="#000087">true</font>
+        <font color="#993300">var</font> win = <font color="#000087">_root</font>.<font color="#000087">attachMovie</font>(linkageName, linkageName, 9999)
+        win.<font color="#000087">_x</font> = (stageW / 2) - (win.<font color="#000087">_width</font> / 2)
+        win.<font color="#000087">_y</font> = (stageH / 2) - (win.<font color="#000087">_height</font> / 2)
+        <font color="#993300">return</font> win
+}</pre>
+ <p>The &quot;<strong>linkageName</strong>&quot; argument is the linkage identifier of the symbol in the library, so if you plan to add you own custom windows always remember to export them for &quot;Actionscript&quot;. If you inspect the library in the .FLA you will find a &quot;<strong>_windows</strong>&quot; folder with all the dialog boxes needed by the application and if you right-click (win) or ctrl-click(mac) on each of them you will notice that they all have a linkage id.</p>
+ <p>The _<strong>global.isBusy</strong> boolean is tested everytime a button in the interface is pressed. This way we can disable all buttons in the GUI just by setting this global variable to &quot;true&quot;.</p>
+ <p>The variable called &quot;<strong>disabler</strong>&quot; refers to a movieclip (check the layer called &quot;disabler&quot;) that will cover the entire stage with a semi-transparent black square (this enforces the idea that the main interface has been temporarily &quot;freezed&quot;).</p>
+ <p>The code continues by attaching the dialog box movieclip on stage, then the clip is centered in the screen and a reference to it is returned by the function so you can furtherly manipulate it.</p>
+ <p>Now double click on the &quot;<strong>errorWindow</strong>&quot; movieclip in the library and select the &quot;OK&quot; button then open the Actionscript panel (F9).<br>
+  You will notice that we have just one command, closeMe(), and you will find it's code in the main timeline of the &quot;errorWindow&quot; movieclip.</p>
+<pre class="code"><font color="#000087">_parent</font>.hideWindow(<font color="#993300">this</font>.<font color="#000087">_name</font>)</pre>
+ <p>This command invokes the <strong>hideWindow()</strong> function in the parent timeline passing the movieclip instance name as an argument. This way the <strong>hideWindow()</strong> method can destroy the window and re-enable the GUI controls.</p>
+ <p>In the next tutorials we will use also input dialog boxes and we will use almost the same approach. The only thing we'll change is that the button will not directly call the <strong>closeMe()</strong> function, instead it will call a function in the main timeline that will read the input
+  data and then invoke the <strong>hideWindow()</strong> method.</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%">&nbsp;</td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../04_advChat_p1/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

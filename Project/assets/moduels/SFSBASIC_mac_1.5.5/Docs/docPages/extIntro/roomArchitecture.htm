@@ -1,0 +1,335 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.10 Application Architecture Overview </p>
+ <p>In this article we will analyze the server architecture focusing on <strong>Rooms</strong>, the most important tool to develop a wide range of applications.<br>
+ We will discuss the various types of rooms available in the <strong>SmartFoxServer framework</strong>, compare their features and see how to use them in real multiplayer applications. In the second section of this article will also take a look at advanced techniques for developing more sophisticated behaviors.</p>
+
+ <span class="subTitle">&raquo; Rooms for everything! </span>
+ <p>In the SmartFoxServer framework, <strong>Rooms</strong> are the most important entities: they are responsible for grouping and connecting users together and let them interact with each other. They also provide a series of events that allow programmers to know about changes in the room properties in real time and react accordingly.</p>
+ <p>The diagram below shows how this works:</p>
+ <p align="center"><img src="images/basicArchitecture.jpg" alt="zone_room_diagram" width="511" height="405" class="imgBorder"></p>
+ <p>Each <strong>Zone</strong> represents a different application running in the server with its own set of rooms.<br>
+   Users can perform any activity (chat, play, setup profile etc...) by connecting to one or more of these available rooms.<br>
+In order to simplify the development, <strong>SmartFoxServer</strong> already provides a set of default behaviors that can greatly speed up the process of creating typical multiplayer applications such as lobbies, chat rooms, instant messengers and games.</p>
+ <p>Typically these default behaviors don't require any server side programming.<br>
+   If you wish to override them and create more advanced features you can easily write your own server extension(s) using languages such as <strong>Actionscript</strong>, <strong>Python</strong> and <strong>Java</strong>.</p>
+ <p><span class="subTitle">&raquo; Default Room Management</span></p>
+ <p>Room creation can happen in three different ways:</p>
+ <ul>
+   <li><strong>at boot time</strong> (also referred to as &quot;static rooms&quot;)
+   <li><strong>from a client side request</strong> (also referred to as &quot;dynamic rooms&quot;)   
+   <li><strong>from a server side extension</strong> (dynamic)
+   </ul>
+ <p>The <strong>boot-time rooms</strong> are declared inside the main config.xml file. When the server starts it parses the configuration and creates the rooms based on the specified settings. Each time a Room is created an &quot;<strong>owner</strong>&quot; is assigned to it, which is usually the user who created the Room. In the particular case of static rooms the owner is the server itself.<br>
+     <br>
+ Creating rooms from a <strong>client side request</strong> is done with the <strong>createRoom</strong>() method by passing a number of parameters such as the room name, maximum number of users, room type (regular, game, limbo), etc... After a Room is successfully created the <strong>ownership</strong> is set to the User that sent the request.<br>
+ The room creation may fail if the name of the room is already taken, if it contains bad words (bad words filter must be enabled), or if there are other restrictions in the number of rooms that can be created.</p>
+ <p>Finally you can create a new room from a <strong>server side extension</strong>, which is the most advanced way of the three. This technique allows more control as you can add your own logic, validation, properties etc... From the server side you can also decide the ownership of the room and perform any additional task.</p>
+ <p><span class="subTitle">&raquo; Room types and their life cycle</span></p>
+ <p>The <strong>SmartFoxServer framework</strong> provides three different types of room:</p>
+ <ul>
+   <li><strong>REGULAR</strong>:<br>
+     Regular rooms can be used for chatting and / or sharing other informations (whiteboard, avatars etc...) They provide automatic event notifications when a user joins or leaves the room and when other rooms in the Zone are created or destroyed.<br>
+     A regular room that was created dynamically is destroyed when it is empty and its owner has left the server.<br><br></li>
+   <li><strong>GAME</strong>:<br>
+     Game rooms behave similarly to the <strong>Regular</strong> rooms with a few exceptions.<br>
+     First of all they add support for spectators, so they can contain two different types of users: <strong>players</strong> and <strong>watchers</strong>. A game room also dispatches an event each time a user joins or leaves the room but they don't receive notifications about the other rooms in Zone being added or destroyed.<br>
+     <br>
+     Game rooms  provide <strong>player indexes</strong>: each user  joining the room is automatically assigned a unique player index which facilitates the tasks of starting and stopping the game. Spectators are not indexed. <br>
+     <br>
+     When a game room is dynamically created its owner will be <strong>automatically joined</strong> in it.<br>
+     <br>
+     Furthermore a watcher can be turned into a player by sending a <strong>switchSpectator()</strong> request: if at least one user slot is available the spectator will be turned into a player and receive a player ID. An event will also be fired to the other players to notify the change.<br>
+     <br>
+     A game room created dynamically is destroyed when the last user goes away.<br><br></li>
+   <li><strong>LIMBO</strong>:<br>
+     Limbo rooms are a special type of rooms with a limited set of events, specifically designed for creating lobbies or other &quot;areas&quot; where users don't need to know much about each other. By <strong>inhibiting a number of events</strong> these rooms can contain thousands of users without performance loss and without generating <br>
+continuos messages about clients joining and leaving etc..<br>
+     <br>
+     Also public chat messages are <strong>not available</strong> in Limbo rooms, only <strong>private messages</strong> are (even between users joined in different rooms) <br>
+     The reason why the former are not allowed lies in the fact that they generate too much traffic (each message must be &quot;replicated&quot; to all other users) <br>
+     In the next chapters we are going to illustrate how Limbo Rooms can be used for creating Lobbies or IM-like applications.<br>
+     <br>
+     Limbo rooms only receive events of the new rooms being created or removed in the current Zone.<br>
+     Usually they are created statically and they are never destroyed.<br>
+     </li>
+ </ul>
+ <p>This is a <strong>list of properties</strong> that can be used to create a room dynamically:   </p>
+ <table border="0" cellspacing="1" cellpadding="4" style="font-size:90%">
+   <tr style="background-color:#FF3300; color:#FFFFFF; font-weight:bold;">
+     <td>&nbsp;</td>
+     <td>REGULAR</td>
+     <td>GAME</td>
+     <td>LIMBO</td>
+     <td>&nbsp;</td>
+   </tr>
+   <tr style="background-color:#FF6600; color:#FFFFFF; font-weight:bold;">
+     <td>Property</td>
+     <td colspan="3">&nbsp;</td>
+     <td>Description</td>
+   </tr>
+   <tr>
+     <td><strong>name</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td>The room name</td>
+   </tr>
+   <tr>
+     <td><strong>password</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td>An optional password</td>
+   </tr>
+   <tr>
+     <td><strong>maxUsers</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td>The maximum number of user allowed</td>
+   </tr>
+   <tr>
+     <td><strong>maxSpectators</strong></td>
+     <td align="center">---</td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td>The maximum number of spectators allowed</td>
+   </tr>
+   <tr>
+     <td><strong>isGame</strong></td>
+     <td align="center">---</td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td>A flag indicating if the room is a game room</td>
+   </tr>
+   <tr>
+     <td><strong>exitCurrent</strong></td>
+     <td align="center">---</td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td>A flag indicating if the current room should be left before joining the new one</td>
+   </tr>
+   <tr>
+     <td><strong>uCount</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td align="center">---</td>
+     <td>A flag indicating if the new room will receive the uCount update messages</td>
+   </tr>
+   <tr>
+     <td><strong>vars</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td>An array of room variables</td>
+   </tr>
+   <tr>
+     <td><strong>extension</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td>An optional object. Specifies which extension should be dynamically attached to the room</td>
+   </tr>
+ </table>
+ <p>To summarize you can check the following <strong>table of events</strong>:</p>
+ <table border="0" cellspacing="1" cellpadding="4" style="font-size:90%">
+   <tr style="background-color:#FF3300; color:#FFFFFF; font-weight:bold;">
+     <td>&nbsp;</td>
+     <td>REGULAR</td>
+     <td>GAME</td>
+     <td>LIMBO</td>
+     <td>&nbsp;</td>
+   </tr>
+   <tr style="background-color:#FF6600; color:#FFFFFF; font-weight:bold;">
+     <td>Event</td>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+     <td>Description</td>
+   </tr>
+   <tr>
+     <td><strong>onUserEnterRoom</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td>A user has joined the room </td>
+   </tr>
+   <tr>
+     <td><strong>onUserLeaveRoom</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td>A user left the room </td>
+   </tr>
+   <tr>
+     <td><strong>onSpectatorSwitched</strong></td>
+     <td align="center">---</td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td>A spectator was turned into a player </td>
+   </tr>
+   <tr>
+     <td><strong>onRoomAdded</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td>A room was added in the Zone </td>
+   </tr>
+   <tr>
+     <td><strong>onRoomDestroyed</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center">---</td>
+     <td align="center">---</td>
+     <td>A room has been removed from the Zone </td>
+   </tr>
+   <tr>
+     <td><strong>onPublicMessage</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td>A public message has been received </td>
+   </tr>
+   <tr>
+     <td><strong>onPrivateMessage</strong></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td align="center"><img src="images/check.gif" alt="check" width="15" height="12"></td>
+     <td>A private message hass been received </td>
+   </tr>
+ </table>
+ <p>You can learn more about rooms and room creation by checking the following tutorials:</p>
+ <ul>
+   <li><a href="../tutorials_basic/04_advChat_p1/" target="_top">Advanced Chat</a> </li>
+   <li><a href="../tutorials_basic/08_boardGame_p1/" target="_top">SmartFoxServer BASIC &quot;SFSTris&quot; game </a></li>
+   <li><a href="../tutorials_pro/08_sfsTrisPro/" target="_top">SmartFoxServer PRO &quot;SFSTris&quot; game </a></li>
+ </ul>
+ <p class="subTitle">&raquo; Advanced room features - Room Variables</p>
+ <p>One of the most important features of Rooms is the ability to attach custom values to them, the so called <strong>Room Variables</strong>. These values can be set from both the client side and the server side and they can be <strong>very helpful to maintain the state of a Room</strong>.</p>
+ <p>A <strong>Room Variable</strong> is made up of <strong>four properties</strong>:</p>
+ <ul>
+   <li>
+     <strong>name</strong>: 		the name of the variable</li>
+   <li><strong>value</strong>: 		its value. It can be any primitive data: string, number, boolean<br>
+     </li>
+   <li><strong>access type</strong>:	it can be public or private. Private variables can only be modified by its &quot;owner&quot;</li>
+   <li><strong>persistency</strong>:	controls the life cycle of the variable. A persistent variable exist until its owner is connected to the server. <br>
+   By default variables are destroyed as soon as their owner leaves the room in question.</li>
+ </ul>
+ <p><strong>Room Variables</strong> are immediately available to all clients joining the Room and their change is notified in real time to all clients. A good example of Room Variable usage is the &quot;<a href="../tutorials_basic/08_boardGame_p1/" target="_top"><strong>SFSTris</strong></a>&quot; game found at chapter 5.8 of this documentation.<br>
+   The game board status is stored inside one or more variables, when a player makes his move the variables are modified with a client request and the changes are automatically broadcasted to all the players. Furthermore by keeping the status in <strong>Room Variables</strong> all spectators will be able to receive an up-to-date game state as soon as they join the room.</p>
+ <p>You can learn all the details about Room Variables by checking the following tutorials:</p>
+ <ul>
+   <li><a href="../tutorials_basic/08_boardGame_p1/" target="_top">SFSTris Game</a> </li>
+   <li><a href="../tutorials_basic/11_roomVars/" target="_top">Room Variables Tutorial </a></li>
+ </ul>
+ <p class="subTitle">&raquo; Advanced room features - Extensions</p>
+ <p><strong>Extensions</strong> are the most powerful tool available in <strong>SmartFoxServer</strong>. They allow developers to extend the server functionality by adding their custom code using various languages such as <strong>Javascript</strong> / <strong>Actionscript</strong>, <strong>Python</strong> and <strong>Java</strong>.</p>
+ <p>Additionally, writing your game / application logic on the server side allows much better security and control.<br>
+Each room in the server can be controlled by its extension. The extension can receive any custom request from the client and respond to it. Also they can handle the server side events (i.e. a new user entered / left the room etc...).</p>
+ <p> You can all the details about server side extensions by reading the other chapters present in this same section of the documentation. (Section #6)</p>
+ <p class="subTitle" style="font-size:140%;">&raquo; Real-world application examples</p>
+ <p>In the second section of the article we are  going to cover three different Room settings that you can use to create various types of multiplayer applications.<br>
+ Each example will demonstrate how the different <strong>Room types can be combined together</strong> in various ways and be controlled by one or more server side extensions.</p>
+ <p>The following diagram illustrates the three example scenarios:</p>
+ <p align="center"><a name="diag"></a><img src="images/scenarios.jpg" alt="examples" width="569" height="690" border="0" usemap="#Map" class="imgBorder">
+   <map name="Map">
+     <area shape="rect" coords="37,109,152,611" href="#zone1">
+     <area shape="rect" coords="190,113,324,678" href="#zone2">
+     <area shape="rect" coords="366,116,557,637" href="#zone3">
+   </map>
+ </p>
+ <p><strong><a name="zone1"></a>1. Simple chat:</strong>
+   <br>
+ The first example (<a href="#diag">Zone 1</a>) shows how you can build a simple chat application with a main static room where all users are initially joined. From there, chatters will be able to create their own public or private rooms and invite other friends. This </p>
+ <p>As you can see from the diagram we only need to define one main static room in our config.xml. This is an example of such definition:</p>
+ <pre class="code">
+&lt;Zone name=&quot;theChat&quot;&gt;
+	&lt;Rooms&gt;
+		&lt;Room name=&quot;Main Entrance&quot; autoJoin=&quot;true&quot; /&gt;
+	&lt;/Rooms&gt;
+&lt;/Zone&gt;
+</pre>
+<p>This will be the only room available when the server starts, all other rooms (of type &quot;regular&quot;) will be created by users once they have logged in the application.<br>
+  All other rooms can be <strong>created at runtime</strong> by the users through the chat interface. The simplest way to achieve this is by calling the <strong>createRoom()</strong> method of the client side Flash/Flex API.</p>
+ <p>The approach just shown here is the same we have used in many of the <strong>basic example applications</strong> that are available in the <strong>SmartFoxServer package</strong>. <br>
+For a full walkthrough on how to build a chat you can follow these tutorials:</p>
+ <ul>
+   <li><a href="../tutorials_basic/02_simpleChat_p1/" target="_top">Simple Chat</a></li>
+   <li><a href="../tutorials_basic/04_advChat_p1/" target="_top">Advanced Chat</a></li>
+ </ul>
+ <p><strong><a name="zone2"></a>2.  Simple Lobby with Zone Extension:</strong></p>
+ <p>The second example (<a href="#diag">Zone 2</a>) shows a more advanced design, using a <strong>Lobby Room</strong> as the main entrance, a variable number of game rooms created by the players, and a <strong>Zone Level </strong>extension that manages the lobby and game logic.</p>
+ <p>The lobby room is created at boot time, by defining it statically in the config.xml file.<br>
+ The following is an example of the Zone definition:</p>
+ <pre class="code">
+	&lt;Zone name=&quot;theLobby&quot;&gt;
+		&lt;Rooms&gt;
+			&lt;Room name=&quot;Lobby&quot; autoJoin=&quot;true&quot; isLimbo=&quot;true&quot; maxUsers=&quot;1000000&quot;/&gt;
+		&lt;/Rooms&gt;
+		
+		&lt;Extensions&gt;
+			&lt;Extension name=&quot;ext&quot; classname=&quot;lobbyExtension.as&quot; type=&quot;script&quot; /&gt;
+		&lt;/Extensions&gt;
+	&lt;/Zone&gt;
+ </pre>
+ <p>You can notice that we've added the <strong>isLimbo</strong> flag to the room definition and a very high number for the maxUsers attribute in order to let all users to join it.</p>
+ <p>From the main lobby users will be able to create or join game rooms and interact with other users by starting a one-on-one chat in the style of MSN/ICQ and similar IMs.<br>
+   More advanced features would also include the ability to create and edit a personal profile, customize an avatar, perform a search in the user list, keep a list of buddies etc... Also the application could let the user create small private chat rooms where they can invite more people and talk together.</p>
+ <p><strong>SmartFoxServer</strong> was specifically designed with these tasks in mind and provides a number of advanced functionalities out of the box, like persistent buddy lists, the ability to easily connect to any database etc...</p>
+ <p>From the diagram you can also see that the <strong>Zone Level extension</strong> controls all the events happening in the Lobby and game rooms, allowing developers to add their custom logic for the game(s), validate user input and react to server side event.</p>
+ <p><strong><a name="zone3" id="zone3"></a>3. Lobby with multiple games:</strong></p>
+ <p>The third scenario (<a href="#diag">Zone 3</a>) expands the previous application by adding multiple games to the mix.<br>
+ From the diagram you can see that essentially the design is very similar to the 2nd example, except for the extensions which are plugged at <strong>Room Level</strong>. This allows the developer to create specific extensions for each game and dynamically attach them at run time when launching new game rooms.</p>
+ <p>The advantage of this approach is that we can concentrate on the logic of each game, leaving additional Lobby logic to the specific Lobby extension (if needed).<br>
+ There are also a few <strong>performance considerations</strong> when using this application design:</p>
+ <ol>
+   <li><strong>For each game running a new extension will be created</strong>. <br>
+     This means that you will need to optimize the way you use resources in your code. For example: if each game runs its own threads you may find yourself using too many resources when hundreds of games are running.<br>
+     For this reason it would be best to have a central thread/object pool where all games can borrow and return resource consuming objects.<br>
+     <br>
+   </li>
+   <li><strong>Actionscript extensions need to be compiled at runtime before running</strong>.<br>
+     This may add a significant overhead to the server when many hundreds or thousands of extensions are being created and destroyed.<br>
+     We  recommend to use <strong>Java</strong> instead to optimize this process. <strong>Python</strong> extensions would also work well in this scenario as they are compiled to bytecode once and then executed as Java classes.</li>
+ </ol>
+ <p><span class="subTitle" style="font-size:120%;">&raquo; Advanced room managements</span></p>
+ <p>In the first section of this article we've seen the various default features of each type of <strong>Room</strong> available in the <strong>SmartFoxServer framework</strong>. <br>
+ Also we learned how extensions can help adding extra functionalities and logic to your applications but there's more.</p>
+ <ul>
+   <li><strong>Zone settings:</strong><br>
+   For each Zone you can specify which default events should be broadcasted and which default server commands can be invoked by the client side. This feature allows you to fine tune the room settings and secure the application by inhibiting unwanted features. <br>
+   You can learn more about this by <a href="framework_1.4.0.htm" target="_top">reading this document</a>.<br>
+   <br>
+</li>
+   <li><strong>Advanced room management:</strong><br>
+     The server side framework allows programmers to override the default mechanisms for creating, joining and leaving rooms providing an almost unlimited range of advanced server behaviors.</li>
+ </ul>
+ <p>A few examples could be:</p>
+ <ul>
+   <li>Creating advanced &quot;maps&quot; of rooms that compose a complex and organized virtual world</li>
+   <li>Ability to store and retrieve additional room data from a database</li>
+   <li>Creating IM like applications with both real time and off-line messaging</li>
+   <li>Creating advanced join/exit logics</li>
+ </ul>
+ <p>&nbsp;</p>
+ <hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="whatIsAnExtension.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="databaseConnection.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

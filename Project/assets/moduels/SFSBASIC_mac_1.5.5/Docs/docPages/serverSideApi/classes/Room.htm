@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">Room class </p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Description:</p>
+ <p class="plain">A Rom object represents a room running in a specific Zone. <br />
+   Here follows a list of public methods for this object.</p>
+ <p class="title">Public Methods: </p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>contains(userName)</strong></td>
+     <td>&nbsp;</td>
+     <td>Return true if the passed userName exist in the room </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getAllUsers()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return an array with all the users </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getId()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the id of the room </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getMaxSpectator()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the max. amount of spectators allowed</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getMaxUsers()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the max. number of users allowed in the room </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getName()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the room name </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getPassword()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the room password </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getSpectatorCount()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the current number of spectators </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getUserCount()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the current number of users </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getVariable(name)</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the room variable with the requested name </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getVariables()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return a java.util.HashMap with all the Room Variables </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>isGame()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return true if the room is a game room </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>isPrivate()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return true if the room is private </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>isTemp()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return true if the room is temporary (dynamic) </td>
+   </tr>
+</table>
+ <p class="title">Public Properties:
+ </p>
+ It is also possible to &quot;attach&quot; your own custom properties to the Room() object
+ by using the public &quot;<strong>properties</strong>&quot; object. The object
+ works like an associative array. Below follows a list of methods available:<br />
+ <br />
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>put(key, value)</strong></td>
+     <td>&nbsp;</td>
+     <td>Put a new value/object </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>get(key)</strong></td>
+     <td>&nbsp;</td>
+     <td>Retrive the value/object for the passed key. If the object doesn't exist
+     it returns null </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>remove(key)</strong></td>
+     <td>&nbsp;</td>
+     <td>Remove the value/object </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>size()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the size of the properties array</td>
+   </tr>
+ </table> 
+ <br />
+ <br />
+ <span class="title">Example #1: properties <br />
+ <br />
+<pre class="code">
+var score = 2500
+var bestScore = 31000
+var bestPlayers = ["Jim", "Pat", "Hal", "Sam", "Tom"]
+
+// Save data in the room.properties associative array
+room.properties.put("score", score)
+room.properties.put("bestScore", bestScore)
+room.properties.put("bestPlayers", bestPlayers)
+
+// Retrieve data and display it
+var list = room.properties.get("bestPlayers")
+
+for (var i in list)
+	trace("Name: " + list[i])
+</pre>
+ </span>
+ <p class="title">Example #2: variables </p>
+ <pre class="code">
+/**
+* Obtain the list of variables in the room
+* 
+* the getVariable() method will return a java native HashMap object (java.util.HashMap)
+* You can read the javadoc here: http://java.sun.com/j2se/1.4.2/docs/api/java/util/HashMap.html
+*/
+
+var rVars = roomObject.getVariables()
+
+// We cycle through the HashMap and trace each variable
+for (var i = rVars.entrySet().iterator(); i.hasNext();)
+{
+   var rVar = i.next()
+   var varName = rVar.getKey()
+   var varValue = rVar.getValue().getValue()
+   
+   trace("var: " + varName + ", val: " + varValue)
+} 
+ </pre>
+ <p><br />
+   An HashMap is like an associative array, so each values is stored with its own
+   key.  <br />
+   The entrySet() method returns a set of objects with a getKey() and getValue()
+   methods. <br />
+  <br />
+   The variable name is stored in the key of the array <br />
+   The variable itself is the value.</p>
+ <p>&nbsp; </p>
+</body>
+</html>

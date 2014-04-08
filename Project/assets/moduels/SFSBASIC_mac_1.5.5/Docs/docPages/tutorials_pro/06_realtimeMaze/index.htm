@@ -1,0 +1,370 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.6 Tutorials: Realtime maze </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is found under the <strong>Examples/AS2/pro_realtimeMaze</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+<p>In this tutorial we will put into practice what we have learned so far and
+  we will create a real-time maze game protype for two players. We will concentrate
+  on how to handle the basic logic of the game in our extension, and how to optimize
+the amount of data sent between  clients and server. </p>
+<p>Specifically we will take a look at the ability of <strong>SmartFoxServer
+    PRO</strong> to send
+  very small messages using raw strings, and bypassing the XML
+  based protocol that is normally used. This feature is particularly important
+  for all real-time applications where continuous updates are sent to one or
+  more client. By using this technique you will be able to send the minimum amount
+  of informations, achieving better network performance and saving a lot of precious
+  bandwidth. <br>
+  <br>
+  Also we'll talk about time-based animations on the client side, an important
+  technique for multiplayer games that need precise synchronization.<br>
+<div align="center"><img src="images/game.jpg" width="600" height="392" class="imgBorder"></div>
+<p><br>
+  <span class="subTitle">&raquo; The game prototype </span><br> 
+  <br>
+  We are going to implement a simple tile-based game where two players can move
+around in real-time, and we'll have a look at the techniques that are necessary
+to achieve the best network performance and synchronization. <br>
+<br>
+<span class="subTitle">&raquo; The game logic </span><br>
+<br>
+Before we start with the code analysis it would be a good idea to list the behaviors
+that our <strong>server-side extension</strong> will perform:<br>
+<br>
+1) Wait for two players in the room, when both of them are inside, the
+game will start.<br>
+2) Assign each player a starting position on the map, for example the top-left
+corner for player 1 and the bottom-right corner for player 2<br>
+3) Handle the player movement and send the proper updates so that both clients
+are always in synch <br>
+4) Handle the user disconnections and stop the game
+</p>
+</p>
+<p><span class="subTitle">&raquo; Client synchronization </span></p>
+<p>The client is going to play an important role. It will be responsible for
+  one of the most critical aspects of real-time games: synchronization. <br>
+  Keeping the two client sprites synchronized in a LAN wouldn't be very difficult,
+  there's plenty of bandwidth and an almost insignificant lag, so you could just
+  send player updates to each client and perform the animations when the message
+  is received. Unfortunately this approach would not work on a real server connected
+  to the internet. If you're lucky you may get a lag of a few centiseconds which
+  would already affect synchronization, but you may also stop receiving packets
+  for a few seconds and in that case you would be completely out of synch.<br>
+  <br>
+  Another problem is the rendering speed of each client. Let' suppose that Mark
+  and Paul are playing the same game.<br>
+  Mark is running an old P2-350Mhz
+  while Paul sits in front of his shiny new Athlon 3.6Ghz. When the game begins
+  and the two players start interacting, lots of updates are sent to both
+  clients. While Paul's machine can handle them flawlessly, Mark's old PC
+  takes more time to render the animations and the messages that arrive during
+  the rendering process are lost. In less than a minute the two clients will
+  be out of synch.</p>
+<p>To solve these problems efficiently we will have to change the way animations
+  are perfomed in Flash, using a time-based approach instead of the common frame-based
+  technique.<br>
+  A time based animation always takes the same amount of time to execute on whatever
+  hardware, be it Mark's slow Pentium2 or Paul's shiny new computer. By using
+  the time as a constant in rendering animations we make sure that the rendering
+  time will be the same on all clients.</p>
+<p>Also we will keep a <strong>queue of server updates</strong> in each client
+  so that if a new update is received in the middle of a rendering it won't
+  be lost. <br>
+  This will also help us in determining if the client is getting out of synch:
+  in an ideal scenario each time you look inside the  queue you should
+  always find it empty or with one item only. This would mean that as soon as
+  you get a new message you render it on the screen and you go back to the queue
+  to check the next update. <br>
+  If the next time you check the queue you will find, say 5 items inside, then
+  your client is definately behind the current state of the game and it should
+  quickly make up for it. In this case the best solution is to skip to the second-last
+  update and perform the animation from there to the last one: this way even
+  if the connection is lost for several seconds you will always be able to get
+  back in synch with the game.<br>
+  <br>
+  <strong>NOTE:</strong> TCP/IP messages are never lost. The protocol always
+  make sure that all packets are delivered to the client maintaining the order
+  in which they were sent,<br>
+  so even if you stop receiving updates for a few seconds you won't loose any
+  messages. The only event that can break the game is the client disconnection,
+  and in that case the server will handle it and stop the game.</p>
+<p><span class="subTitle">&raquo; Game setup</span></p>
+<p>Now you can open the source .FLA file and inspect the code under the &quot;<strong>chat</strong>&quot;
+  label. Most of the code found here is identical to all the previous examples,
+    however when creating a new game room we pass a new parameter containing
+    the name of the <strong>extension</strong> that we want to load: 
+<pre class="code"><font color="#993300">function</font> createRoom(name:<font color="#993300">String</font>, pwd:<font color="#993300">String</font>, spec:<font color="#993300">Number</font>)
+{
+        hideWindow("<font color='blue'>newGameWindow</font>")
+        
+        <font color="#993300">var</font> gameRoom:<font color="#993300">Object</font>		= <font color="#993300">new</font> <font color="#993300">Object</font>()
+        gameRoom.name 			= name
+        gameRoom.<font color="#000087">password</font> 		= pwd
+        gameRoom.maxUsers 		= 2
+        gameRoom.maxSpectators 	= spec
+        gameRoom.isGame 		= <font color="#000087">true</font>
+        gameRoom.isTemp 		= <font color="#000087">true</font>
+        
+        xt = {}
+        xt.name = "<font color='blue'>maze</font>"
+        xt.script = "<font color='blue'>mazeGame.as</font>"
+        
+        gameRoom.extension		= xt
+        
+        smartfox.createRoom(gameRoom)
+}
+</pre>
+  <br>
+  Now that the room is properly created and the extension is loaded we can move
+  to the &quot;<strong>game</strong>&quot;
+  label: <br>
+  <br>
+<pre class="code">import it.gotoandplay.smartfoxserver.*
+<font color="#000087">stop</font>()
+
+<font color="#000087">_global</font>.gameStarted = <font color="#000087">false</font>								<font color='#878787'>// global flag for tracking the game status
+</font>
+<font color="#993300">var</font> extensionName:<font color="#993300">String</font> = "<font color='blue'>maze</font>"						<font color='#878787'>// Name of the extension that we'll call
+</font><font color="#993300">var</font> win:<font color="#993300">MovieClip</font>										<font color='#878787'>// A movieclip used for dialogue windows
+</font><font color="#993300">var</font> myOpponent:User										<font color='#878787'>// My opponent user object
+</font><font color="#993300">var</font> player1Id:<font color="#993300">Number</font>									<font color='#878787'>// Id of player 1
+</font><font color="#993300">var</font> player1Name:<font color="#993300">String</font>									<font color='#878787'>// Name of player 1
+</font><font color="#993300">var</font> player2Name:<font color="#993300">String</font>									<font color='#878787'>// Name of player 2
+</font><font color="#993300">var</font> player2Id:<font color="#993300">Number</font>									<font color='#878787'>// Id of player 2
+</font>
+<font color="#993300">var</font> tileSize:<font color="#993300">Number</font> = 21
+<font color="#993300">var</font> playerSpeed:<font color="#993300">Number</font> = 100 							<font color='#878787'>// Expressed in milliseconds
+</font><font color="#993300">var</font> obstacles:<font color="#993300">String</font> = "<font color='blue'>X</font>"								<font color='#878787'>// This string contains all the letters used as obstacles
+</font><font color='#878787'>// in the map. X = wall
+</font>
+gamePaused("<font color='blue'></font>")											<font color='#878787'>// pause the game
+</font>
+<font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Game Board
+</font><font color='#878787'>//----------------------------------------------------------
+</font>gameBoard = []
+gameBoard[0] = "<font color='blue'>XXXXXXXXXXXXXXXXXXXXXXXX</font>"
+gameBoard[1] = "<font color='blue'>X..X...X...X...X...X.X.X</font>"
+gameBoard[2] = "<font color='blue'>X.X.X.X.X.X.X.X.X.X.X..X</font>"
+gameBoard[3] = "<font color='blue'>X.X....................X</font>"
+gameBoard[4] = "<font color='blue'>X.XXX.XXXXXXXXXXX.XXXX.X</font>"
+gameBoard[5] = "<font color='blue'>X.X.X.X.X.X.X.X.X.X.X.XX</font>"
+gameBoard[6] = "<font color='blue'>X......................X</font>"
+gameBoard[7] = "<font color='blue'>X.XXX.XXXXXXXXXXX.XXXX.X</font>"
+gameBoard[8] = "<font color='blue'>X.X....................X</font>"
+gameBoard[9] = "<font color='blue'>X.X.X.X.X.X.X.X.X.X.X..X</font>"
+gameBoard[10] = "<font color='blue'>X..X...X...X...X...X.X.X</font>"
+gameBoard[11] = "<font color='blue'>XXXXXXXXXXXXXXXXXXXXXXXX</font>"
+
+<font color="#993300">var</font> map = []
+
+<font color='#878787'>// Draw the map on screen
+</font>drawBoard()
+
+<font color='#878787'>// Draw the map on screen
+</font><font color="#993300">function</font> drawBoard()
+{
+        <font color="#993300">var</font> tile
+        <font color="#993300">var</font> mc
+        <font color="#993300">var</font> lvl = 0
+        
+        <font color='#878787'>// Cycle through each line
+</font>        <font color="#993300">for</font> (<font color="#993300">var</font> i:<font color="#993300">Number</font> = 0; i &lt; gameBoard.<font color="#000087">length</font>; i++)
+        {
+                <font color='#878787'>// Cycle through each chracter
+</font>                <font color="#993300">for</font> (<font color="#993300">var</font> j:<font color="#993300">Number</font> = 0; j &lt; gameBoard[i].<font color="#000087">length</font>; j++)
+                {
+                        <font color="#993300">var</font> c = gameBoard[i].<font color="#000087">charAt</font>(j)
+                        
+                        <font color="#993300">if</font> (c == "<font color='blue'>X</font>")
+                        	tile = "<font color='blue'>tile_wall</font>"
+                        <font color="#993300">else</font>
+                        	tile = "<font color='blue'>tile_floor</font>"
+                        
+                        <font color='#878787'>// Attach the tile
+</font>                        mc = boardMC.<font color="#000087">attachMovie</font>(tile, "<font color='blue'>t_</font>" + j + "<font color='blue'>_</font>" + i, lvl++)
+                        mc.<font color="#000087">_x</font> = tileSize * j
+                        mc.<font color="#000087">_y</font> = tileSize * i
+                        
+                        <font color='#878787'>// Setup a bi-dimensional array to keep a copy of the game map
+</font>                        <font color="#993300">if</font> (map[i] == <font color="#000087">undefined</font>)
+                        	map[i] = []
+                        
+                        map[i][j] = c
+                }
+        }
+}
+</pre>
+</p>
+<br>
+In the first lines we setup the variables needed for the game, the player IDs,
+player names, the size of the tiles etc...<br>
+Also we define the simple game map using an array of strings where each index
+represents a map row. The &quot;X&quot; character is used for walls and the &quot;.&quot; is used
+for walkable tiles. <br> 
+The <strong>drawBoard()</strong> method is used to draw the game map on stage:
+it basically cycles through all the rows in the map and for each row a loop is
+started to check all characters in the string. The tiles are attached dynamically
+ using the &quot;<strong>tile_wall</strong>&quot; and &quot;<strong>tile_floor</strong>&quot;
+ movieclips that you can find in the library.<br>
+Also a bi-dimensional array called map[] is populated with the elements of the
+map: we will use it later to validate the player movements. <br>
+ Once the game board is drawn on screen, the <strong>gamePaused()</strong> method
+ is called and a dialog box will appear waiting for the other player.<br>
+ <br>
+ From this moment the game will wait for events coming from our <strong>server
+ extension</strong>.<br>
+ <br>
+ <span class="subTitle">&raquo; The server side </span><br>
+ <br>
+ Essentially the extension will be able to send three different events:<br>
+ <br>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>start</strong></td>
+     <td>&nbsp;</td>
+     <td>The game is starting</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>stop</strong></td>
+     <td>&nbsp;</td>
+     <td>The game should stop, because one of the players left </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>mv</strong></td>
+     <td>&nbsp;</td>
+     <td>The opponent move </td>
+   </tr>
+ </table> 
+ <br>
+ Now we can have a look at the server code:<br>
+ <br>
+<pre class="serverCode"><font color="#993300">var</font> numPlayers			<font color='#878787'>// count the number of players currently inside
+</font><font color="#993300">var</font> users = []			<font color='#878787'>// an array of users
+</font><font color="#993300">var</font> gameStarted			<font color='#878787'>// boolean, true if the game has started
+</font><font color="#993300">var</font> currentRoomId		<font color='#878787'>// the Id of the room where the extension is running
+</font><font color="#993300">var</font> p1id			<font color='#878787'>// userId of player1
+</font><font color="#993300">var</font> p2id			<font color='#878787'>// userId of player2
+</font>
+<font color="#993300">function</font> init()
+{
+        numPlayers = 0
+        gameStarted = <font color="#000087">false</font>
+}
+
+
+<font color="#993300">function</font> destroy()
+{
+        <font color='#878787'>// Nothing special to do here
+</font>}
+</pre>
+ <br>
+ We keep a variable called <strong>numPlayers</strong> to keep track of the number
+ of players currently in the room and a list of players called <strong>userList</strong>. Each
+ time a new player enters we'll receive and internal event (<strong>userJoin</strong>) that
+ is handled in the <strong>handleInternalEvent()</strong> function.<br>
+ <br>
+<pre class="serverCode">
+<font color="#993300">function</font> handleInternalEvent(evt)
+{
+        evtName = evt.name
+        
+        <font color='#878787'>// Handle a user joining the room
+</font>        <font color="#993300">if</font> (evtName == "<font color='blue'>userJoin</font>")
+        {
+                <font color='#878787'>// get the id of the current room
+</font>                <font color="#993300">if</font> (currentRoomId == <font color="#000087">undefined</font>)
+                	currentRoomId = evt["<font color='blue'>room</font>"].getId()
+                
+                <font color='#878787'>// Get the user object
+</font>                u = evt["<font color='blue'>user</font>"]
+                
+                <font color='#878787'>// add this user to our list of local users in this game room
+</font>                <font color='#878787'>// We use the userId number as the key
+</font>                users[u.getUserId()] = u
+                
+                <font color='#878787'>// Increase the number of players
+</font>                numPlayers++
+                
+                <font color="#993300">if</font> (u.getPlayerIndex() == 1)
+                	p1id = u.getUserId()
+                <font color="#993300">else</font>
+                	p2id = u.getUserId()
+                
+                <font color='#878787'>// If we have two players and the game was not started yet
+</font>                <font color='#878787'>// it's time to start it now!
+</font>                <font color="#993300">if</font>(numPlayers == 2 &amp;&amp; !gameStarted)
+                	startGame()
+                
+        }
+        
+        <font color='#878787'>// Handle a user leaving the room or a user disconnection
+</font>        <font color="#993300">else</font> <font color="#993300">if</font> (evtName == "<font color='blue'>userExit</font>" || evtName == "<font color='blue'>userLost</font>")
+        {
+                <font color='#878787'>// get the user id
+</font>                <font color="#993300">var</font> uId = evt["<font color='blue'>userId</font>"]
+				<font color="#993300">var</font> u = users[uId]
+                
+                <font color='#878787'>// Let's remove the player from the list
+</font>                <font color="#993300">delete</font> users[uId]
+                
+                numPlayers--
+                
+                gameStarted = <font color="#000087">false</font>
+                
+                <font color="#993300">if</font>(numPlayers &gt; 0)
+                {
+                        <font color="#993300">var</font> res = {}
+                        res._cmd = "<font color='blue'>stop</font>"
+                        res.n = u.getName()
+                        _server.sendResponse(res, currentRoomId, <font color="#993300">null</font>, users)
+                }
+                
+        }
+}
+</pre>
+ <br>
+ As you can see in the code we add the new player to the <strong>userList</strong> array,
+ using its userId as the key. It's always a good idea to keep track of users
+ using their numerical ID as this number is unique. In the next line the <strong>numPlayers</strong> variable is incremented.<br>
+ The next thing to do is keeping track of each player's <strong>playerId</strong>.
+ If you remember from the past tutorials, the <strong>playerId</strong> number
+ is automagically assigned by the server to each user in a game room. For example
+ in a game room for 6 players each client is assigned his playerId (from 1 to
+ 6) automatically.<br>
+ <br>
+ Finally if there are two players in the room the &quot;<strong>start</strong>&quot; event
+ can be sent to both clients, calling the <strong>gameStart()</strong> function.<br>
+ <br>
+ When a user leaves the room or gets disconnected, the event is handled by removing
+ the player from the list and decreasing the numPlayer variable. Also a &quot;<strong>stop</strong>&quot; event
+ is broadcasted to the clients so that the game is paused.<br>
+ <br>
+ This arcticle continues  in <a href="part2.htm">part
+ II</a> where we will 
+ see how the client movements are updated. <br>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../05_loginExt/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="part2.htm" class="navLinks">next &raquo; </a></td>
+  </tr>
+</table>
+
+</body>
+</html>

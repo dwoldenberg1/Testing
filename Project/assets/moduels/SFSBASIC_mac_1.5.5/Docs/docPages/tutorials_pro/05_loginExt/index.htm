@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.5 Tutorials: Login Extension </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is found under the <strong>Examples/AS2/pro_loginExample</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+<p>With this article we'll start seeing how to handle the server <strong>internal
+    events</strong>  and how they can be useful to create advanced server behaviors.
+    The example application is based on the <strong>simpleChat</strong> tutorial,
+    one of the first and most simple tutorials of the <strong>SmartFoxServer
+    Basic</strong> series.
+    The new example will show you how to intercept a &quot;loginRequest&quot; server
+    event and use it to create your own login custom logic. <br> 
+  <br> 
+  <br> 
+  <span class="subTitle">&raquo; Internal Events </span><br>
+  <br>
+Internal server events are fired by the server engine each time an &quot;interesting&quot;
+action is executed. For example a login request has just arrived, or a new user
+just entered a Room in the current Zone etc... <br>
+<br>
+The available server events are:</p>
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>userJoin</strong></td>
+    <td>&nbsp;</td>
+    <td>a user has joined the room / zone</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>userExit</strong></td>
+    <td>&nbsp;</td>
+    <td>a user has left the room</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>userLost</strong></td>
+    <td>&nbsp;</td>
+    <td>a user was disconnected</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>newRoom</strong></td>
+    <td>&nbsp;</td>
+    <td>a new room was created in the zone</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>roomLost</strong></td>
+    <td>&nbsp;</td>
+    <td>a room was destroyed in the zone</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>loginRequest</strong></td>
+    <td>&nbsp;</td>
+    <td>a client is requesting to log in </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>spectatorSwitched</strong></td>
+    <td>&nbsp;</td>
+    <td>a spectator in a game room was turned into a player</td>
+  </tr>
+</table>
+<p> Depending on the <strong>Level</strong>  of your extension, it will
+  be able to handle all of them (<strong>Zone Level</strong>) or only a part
+  of them (<strong>Room Level</strong>: userJoin, userExit, userLost). You can
+  find more info about extension levels in the <a href="../01_introduction/index.htm">tutorials
+  intro</a> and in <a href="../../serverSideApi/index.htm">Server-Side Actionscript
+  API</a> documentation.<br>
+  <br>
+<span class="subTitle">&raquo; Handling the login event<br></span>
+<br>
+Before we dive in the code it's important to remember that the <strong>loginRequest</strong> event
+can be activated or deactivated from the <strong>Zone</strong> configuration
+in your config.xml file. By changing the <strong>customLogin</strong> attribute
+to true or false you can toggle the notification of this event. By default it
+is set to false.<br>
+<br>
+For this example we will use the <strong>simpleChat</strong> Zone and we'll set <strong>customLogin=&quot;true&quot;</strong> to
+make sure we'll be able to handle the <strong>loginRequest</strong> event. <br>
+<br>
+Below you can see a simple diagram of how a login request is handled by the server,
+broadcasted to the extension and finally verified back by the server engine:<br>
+<br>
+<div align="center"><img src="images/loginDiagram.gif" width="660" height="362">
+</div>
+<p><br>
+  <br>
+  <strong>1)</strong> The client sends a login request, using the already known <strong>login(zone,
+name, password)</strong>
+method from the client side API.<br>
+<strong>2)</strong> The server checks if the Zone where the user wants to connect
+has the <strong>customLogin</strong> attribute
+turned on. If so the event is broadcasted to all Zone Level estensions.<br>
+<strong>3)</strong> In the above diagram we pretend that  the extension C
+handles the login request. The user credentials are verified by your custom code
+and, if the check is passed, you will have to ask the server to finally allow
+this user in.<br>
+<br>
+A this point  some questions may arise:<br>
+<em>Why do I have to do this? If my custom logic says the user is valid why should
+I ask the server to allow this user?</em><br>
+<br>
+There are still some extra system checks to pass before the server permits a
+new user to log in. The server will  check if the user name is not duplicated
+in the Zone, if the user IP address is not banned, if the user name is not banned,
+if the Zone has room for this client etc...<br>
+<br>
+By passing this final tests the user will be successfully logged inside the requested
+Zone. </p>
+<p><span class="subTitle">&raquo; The client side</span></p>
+<p>The client side code is almost identical to the original, non extension-based
+  example. We have just added a new input field for the user password.<br>
+  Here's the code for the login request:
+<pre class="code"><font color="#993300">function</font> sendLogin()
+{
+        <font color="#993300">if</font> (!<font color="#000087">_global</font>.isBusy)
+        smartfox.login(zone, login_txt.<font color="#000087">text</font>, pwd_txt.<font color="#000087">text</font>)
+}
+</pre>
+  </p>
+  <br>
+  <span class="subTitle">&raquo; The server side</span><br>
+  <br>
+Now we can have a look at what happens on the server side. Below is shown the
+code of our extension:<br>
+  <br>
+<pre class="serverCode"><font color="#993300">var</font> userList
+
+<font color="#993300">function</font> init()
+{
+        <font color='#878787'>// Simple list of users
+</font>        <font color='#878787'>// The key is the username, the value is the password
+</font>        userList = <font color="#993300">new</font> <font color="#993300">Object</font>()
+        
+        userList["<font color='blue'>tom</font>"] 	= "<font color='blue'>tom</font>"
+        userList["<font color='blue'>jerry</font>"] 	= "<font color='blue'>jerry</font>"
+        userList["<font color='blue'>smart</font>"] 	= "<font color='blue'>fox</font>"
+}
+
+
+<font color="#993300">function</font> destroy()
+{
+        <font color="#993300">trace</font>("<font color='blue'>Bye bye!</font>")
+}
+
+<font color="#993300">function</font> handleRequest(cmd, params, user, fromRoom)
+{
+        
+        <font color='#878787'>// no requests to handle here...
+</font>}
+
+<font color="#993300">function</font> handleInternalEvent(evt)
+{
+        <font color="#993300">if</font> (evt.name == "<font color='blue'>loginRequest</font>")
+        {
+                <font color="#993300">var</font> error = "<font color='blue'></font>"
+                
+                <font color="#993300">var</font> nick = evt["<font color='blue'>nick</font>"]
+                <font color="#993300">var</font> pass = evt["<font color='blue'>pass</font>"]
+                <font color="#993300">var</font> chan = evt["<font color='blue'>chan</font>"]
+				
+                <font color="#993300">if</font> (userList[nick] != pass)
+                {
+                        error = "<font color='blue'>Authentication failed</font>"
+                }
+                <font color="#993300">else</font>
+                {
+                        <font color="#993300">var</font> obj = _server.loginUser(nick, pass, chan)
+                        
+                        <font color="#993300">if</font> (obj.success == <font color="#000087">false</font>)
+                        error = obj.error
+                }
+                
+                <font color='#878787'>// Send response to client
+</font>                <font color="#993300">var</font> response = <font color="#993300">new</font> <font color="#993300">Object</font>()
+                
+                <font color="#993300">if</font> (error == "<font color='blue'></font>")
+                {
+                        response._cmd = "<font color='blue'>logOK</font>"
+                }
+                <font color="#993300">else</font>
+                {
+                        response._cmd = "<font color='blue'>logKO</font>"
+                        response.err = error
+                }
+                
+                _server.sendResponse(response, -1, <font color="#993300">null</font>, chan)
+                
+        }
+}
+</pre>
+  <br>
+  In order to keep things as simple as possible we setup a simple associative
+  array called <strong>userList</strong> which will use the user name as the
+  key to store each user password. When a login request is received we'll go
+  look in that list and see if the key exist, if so we'll check if both the key
+  and value match the user name and password sent by the client.<br>
+  <br> 
+Now let's analyze the code inside the <strong>handleInternalEvent()</strong> method:<br>
+<br>
+First we check the event name, then we get the parameters sent by the event:
+<strong>nick</strong>, <strong>pass</strong>, <strong>chan</strong> which they
+respectively represent the nickname and password sent by the client and the &quot;socket
+channel&quot; used by the client. You don't have to worry too much about this
+last parameter, we'll just store it and send it back to the server at the right
+moment.<br>
+<br>
+For more detailed informations about each event and their relative arguments
+please check the <a href="../../serverSideApi/index.htm">Server-Side Actionscript
+API</a> documentation.<br>
+<br>
+We also set an empty string variable called &quot;<strong>error</strong>&quot; to store a custom error message,
+if the login fails. <br>
+In the next lines we check the received user name against our local list of valid
+user: if the name is not found in the associative array the error message is
+set, otherwise if the credentials are correct we move on the last login step
+by calling the <strong>_server.loginUser()</strong> method. <br>
+<br>
+This method will return an object with a boolean value (success) and an optional
+error string if there's a problem with the final login phase.<br>
+<br>
+Finally we can send our custom response to the user. We have chosen &quot;logOK&quot; and
+&quot;logKO&quot; as the command names that we'll receive on the client side based on the
+success of the request. Additionally an <strong>err</strong> property is sent
+to the user describing the reason why the login failed.<br>
+<br> 
+<span class="subTitle">&raquo; Back to the client </span><br>
+<br> 
+To handle the response from the server we will use a slightly different code
+than the original in the <strong>simpleChat</strong> example. <br>
+The old application used
+the <strong>onLogin() </strong>client event handler to detect the server response.
+This time is not the server itself responding but your custom extension so you
+will handle the response as you would normally do with any other extensions,
+using the <strong>onExtensionResponse()</strong> handler. <br>
+<br>
+Here's the code we have used:<br>
+<br>
+<pre class="code">smartfox.onExtensionResponse = <font color="#993300">function</font>(resObj:<font color="#993300">Object</font>)
+{<font color="#993300">
+        if</font> (resObj._cmd == "<font color='blue'>logOK</font>")
+        {
+                <font color='#878787'>// Login Successful
+</font>                <font color="#000087">_global</font>.myName = resObj.name
+                <font color="#000087">gotoAndStop</font>("<font color='blue'>chat</font>")
+        }
+        <font color="#993300">else</font> <font color="#993300">if</font> (resObj._cmd == "<font color='blue'>logKO</font>")
+        {
+                <font color='#878787'>// Login Failed
+</font>                _gloabl.isBusy = <font color="#000087">true</font>
+                
+                <font color='#878787'>// Show an error window
+</font>                <font color="#993300">var</font> win = showWindow("<font color='blue'>errorWindow</font>")
+                win.errorMsg.<font color="#000087">text</font> = resObj.err
+        }
+}
+</pre>
+<br> 
+If the login was successful the playhead is moved to the &quot;chat&quot; label
+and you can start chatting with the other clients, otherwise a window
+will pop up and show  the  error message.<br>
+<br> 
+<br>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../04_advDbExt/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../06_realtimeMaze/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">setBuddyVariables()</p>
+ <p class="title">Availability:</p>
+<p class="plain">Flash Player 6 <br />
+ SmartFoxServer  Basic / Pro (from version 1.4.0) </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.setBuddyVariables(varObj) </p>
+ <p class="title">Description:</p>
+<p class="plain">Set a number of properties of a buddy. These variables will be received by the other users who have added this user as a buddy.<br />
+  It can be used to store additional information for a buddy like the name of his/her avatar or his current status (&quot;Available&quot;, &quot;Busy&quot; etc...)
+</p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>varObj</strong></td>
+     <td>&nbsp;</td>
+     <td>an object containing the variables to set </td>
+   </tr>
+ </table>
+    <br />
+    All variables should be of type <strong>String</strong> <br />
+    Buddy variables are destroyed when the user logs out or gets disconnected.<br />
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong><strong>onBuddyListUpdate</strong></strong> event </p>
+ <p class="plain"><span class="title">Example:</span><br />
+   <br />
+ <strong class="plain">Example #1</strong>
+ <br />
+ we set two Buddy Variables to show the other clients our status and the current audio track we're listening to. 
+ <pre class="code">
+var bVars = new Object()
+bVars["status"] = "Be right back"
+bVars["track"] = "What is hip"
+
+smartFox.setBuddyVariables(bVars)
+</pre> 
+ </p>
+<strong class="plain"><br />
+</strong>Buddy variables are broadcasted to all other clients that added our profile to their buddy list <br />
+<p class="title">See also:</p>
+ <p class="plain"><strong><strong>onBuddyListUpdate</strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

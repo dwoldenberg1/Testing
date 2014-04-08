@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">Internal Event :: userLost</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Event name:</p>
+ <p class="plain"><strong>userLost</strong></p>
+ <p class="title">Description:</p>
+<p class="plain">This event is fired each time a user is suddenly disconnected
+  from the server. <br />
+  The event is available for both <strong>Zone
+  Level</strong> and <strong>Room
+  Level</strong> extensions. <br />
+  <br />
+  <strong>Zone Level </strong>extensions will receive the event when a user is
+  leaving any room in that zone, while <strong>Room Level</strong> extensions
+  will receive it only if the user is leaving that room. <br />
+  <br />
+  <strong>NOTE:</strong> It is always reccomended to keep track of Users by
+  using their unique id. For example you can keep a local list of users with
+  their id as the key. <br />
+  When
+  a client leaves a room or it is disconnected you will always receive the userId
+  of the User that was lost, so it will be very easy to handle the event this
+  way. 
+<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr class="tHead">
+     <td valign="top" nowrap="nowrap">name</td>
+     <td>&nbsp;</td>
+     <td>description</td>
+     <td>type</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>roomIds</strong></td>
+     <td>&nbsp;</td>
+     <td>A list containing all the room ID(s) where the user was connected <strong>(Zone
+       Level only) </strong></td>
+     <td>Java native array (*) </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>playerIndexes</strong></td>
+     <td>&nbsp;</td>
+     <td>A list containing the playerIndex for each room where the user was connected
+       <strong>(Zone level only) </strong></td>
+     <td>Java native array (*)</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>uid</strong></td>
+     <td>&nbsp;</td>
+     <td>The id of the user that was lost </td>
+     <td>java.lang.String(*)</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>oldPlayerIndex</strong></td>
+     <td>&nbsp;</td>
+     <td>The playerIndex assigned for the current room <strong>(Room Level only)</strong> </td>
+     <td>java.lang.String(*)</td>
+   </tr>
+</table>
+ <p><strong>(*) A note on data types:</strong> the parameters passed by the server events to the running extensions are all Java types.<br />
+   You can use them transparently in Actionscript or cast them to AS native data types.
+   <br />
+   <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/String.html" target="_blank">&raquo; javadoc for -&gt; java.lang.String</a><br />
+   <a href="http://java.sun.com/docs/books/jls/second_edition/html/arrays.doc.html" target="_blank">&raquo; javadoc for -&gt; Java array</a> </p>
+ <p><br />
+   <strong>&raquo; Zone Level Extension Notes:</strong> <br />
+   A Zone Level Extension listens for all the events happening in the rooms within
+ that Zone. When the &quot;<strong>userLost</strong>&quot; event is fired you will receive two
+ extra parameters called <strong>roomIds</strong> and <strong>playerIndexes </strong>with
+ the list of rooms the user was in and the its playerIndex for each room.<br />
+ <br />
+ In the most simple scenario, where the user can only join one room at a time,
+ both lists will only contain one element. <br />
+ If your application allows clients to join more rooms simultaneously both lists
+ will be contain data for each room.<br />
+ <br />
+The two lists are also synchronized so the <strong>playerIndexes[2]</strong> containd the playerIndex
+for the room in <strong>roomIds[2] </strong><br />
+ <br />
+ <strong>&raquo; Room Level Extension Notes:</strong> <br />
+ A Room Level Extension listens for events happening in that room only, so handling
+ a user disconnection is almost identical to handling the &quot;<strong>userExit</strong>&quot; event <br />
+ </p>
+ <p class="title">Example:</p>
+<pre class="code">
+// Handle server events
+// We assume this is a Zone Level extension, and our application allows clients to join one room at a time.
+//
+// We keep a list of game rooms in an array called gameRooms, where each item is an object describing the status
+// of the game. Also each gameRoom[] item has a userList array property.
+//
+// When a user disconnects we look for the gameRoom where the event was fired and remove the user from the local list.
+// Also we should check if this affects the status of the game and send the proper notifications to the other users
+// in the same room.
+function handleInternalEvent(evtObj)
+{
+	if (evtObj.name == "userLost")
+	{
+		var uid = evtObj.userId						// id of the user that was lost
+		var roomIds = evtObj.roomIds				// list of room id(s) where user was present
+		var playerIndexes = evtObj.playerIndexs		// list of playerIndex(es) for each room
+		
+		// Get the roomId
+		var rId = roomIds[0]						// Our app does not allow users to be present in more 
+													// than one room at a time!
+		// Get the playerIndex
+		playerIndex = playerIndexes[0]
+		
+		// Get the game room
+		var gameRoom = gameRooms[rId]
+		
+		// Get the user that was lost
+		var lostUser = gameRoom.userList[uid]
+		
+		trace("User: " + lostUser.getName())
+		
+		// Remove user from list
+		delete gameRoom.userList[uid]
+		
+		//
+		// Here goes the code that handles the game logic...
+		// ...
+		//
+		
+		if (playerIndex == -1)
+		{
+			// User was a spectator ...
+		}
+		else if (playerIndex > 0)
+		{
+			// User was one of the players in this room ...
+		}
+	}
+}
+</pre>
+<br /> 
+<p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

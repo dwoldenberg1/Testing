@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">onAdminMessage()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.onAdminMessage(message) </p>
+ <p class="title">Description:</p>
+<p class="plain">Handles an administrator message. Admin messages are special
+  messages that can be sent by an administrator to a user or group<br />
+  of users.<br />
+  <br />
+  <strong>IMPORTANT:</strong> All client applications should handle this event,
+  or users won't be be able to receive important admin notifications!</p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>message</strong></td>
+     <td>&nbsp;</td>
+     <td>a string with the text of the message </td>
+   </tr>
+ </table>
+
+    <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="plain"><span class="title">Example:</span>
+<pre class="code">
+smartFox.onAdminMessage = function(message)
+{
+	trace("Administrator said: " + message)
+}
+</pre> 
+ </p>
+<strong class="plain"></strong>
+<p class="title">See also:</p>
+ <p class="plain"><strong><strong><strong><strong><strong></strong></strong></strong></strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

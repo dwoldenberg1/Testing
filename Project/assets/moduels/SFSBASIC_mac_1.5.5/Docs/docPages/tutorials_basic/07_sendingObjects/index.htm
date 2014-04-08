@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.7 Tutorials: Sending Objects </p>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>One of the interesting and usefull features in <strong>SmartFoxServer </strong> is the ability to send and receive complex data
+structures (arrays, objects, etc.) very easily and transparently. In this tutorial we'll show you how this feature can really speed up the process of creating complex multiuser applications and games.</p>
+ <p><span class="subTitle">&raquo; Data structures </span></p>
+ <p>In the previous tutorial we concentrated our attention on the &quot;User
+   Variables&quot; and we've learned how to use them.<br>
+&quot;User Variables&quot; are very usefull when you want to store settings for
+each client connected and have all the other users receive notices about changes
+in those values.</p>
+ <p>There are cases in which this approach is not the best one, for example in a turn-based game.<br>
+  Classic turn based games can be board games (Chess, Connect 4, ...), role-playing games, card games, strategy games, etc.</p>
+ <p>Every time a user makes a move in a &quot;Connect 4&quot; game or in a &quot;Chess&quot; game we don't really need to store that move as a &quot;User Variable&quot;. We would just need to be able to send the move data to the other clients, without storing it anywhere.<br>
+  One more example can be a multiuser whiteboard application: anytime someone draws something on it we should just send the information about the lines and curves that were drawn in a convenient format and again no need to save that data.</p>
+ <p>The <strong>sendObject()</strong> method of the SmartFoxClient API allows us to do this very easily, check this example:</p>
+ <pre class="code">move = <font color="#993300">new</font> <font color="#993300">Object</font>()
+move.px = 100
+move.py = 200
+move.<font color="#000087">color</font> = "<font color='blue'>red</font>"
+
+sendObject(move)</pre>
+ <p>The other clients will receive an <strong>onObjectReceived</strong> event:</p>
+ <pre class="code">smartfox.onObjectReceived = <font color="#993300">function</font>(obj, user)
+{
+        <font color='#878787'>// do something here
+</font>}</pre>
+ <p>where <strong>obj</strong> is the object received and &quot;user&quot; is the <strong>User object </strong>of the sender.</p>
+ <p>The following list represents the type of variables that can be sent through the <strong>sendObject()</strong> method:</p>
+ <p>&raquo; <em>object</em><br>
+&raquo; <em>array</em><br>
+&raquo; <em>number</em><br>
+&raquo; <em>string</em><br>
+&raquo; <em>boolean</em><br>
+&raquo; <em>null</em></p>
+ <p>All the other variable types are ignored.</p>
+ <p>To give you an example that is a little more complex, imagine you're playing an RPG game and you have to send some data<br>
+  about your character:</p>
+ <pre class="code">myChar = <font color="#993300">new</font> <font color="#993300">Object</font>()
+myChar.name = "<font color='blue'>Tarkus</font>"
+myChar.<font color="#000087">position</font> = {px: 100, py:100}
+myChar.inventory = <font color="#993300">new</font> <font color="#993300">Array</font>("<font color='blue'>knife</font>", "<font color='blue'>short sword</font>", "<font color='blue'>long sword</font>", "<font color='blue'>hammer</font>", "<font color='blue'>shield</font>")
+
+sendObject(myChar)</pre>
+ <p>As you can see you can nest other objects and arrays and create pretty complex data structures.<br>
+              <br>
+In the next tutorial we'll use this feature to implement a first simple multiplayer game.</p>
+ <p><span class="subTitle">&raquo; What's behind </span></p>
+ <p>  It is not the purpose of this tutorial to show how this mechanism works, however we can discuss the basics of it in order to better understand what's going on and how to get the best out of it.</p>
+ <p>The process of sending and receiving structured Actionscript objects is done through a serialization/deserialization mechanism.</p>
+ <p>In simple words, an AS object is transformed in a more convenient format
+   (xml in this case) and sent to the server which in turn will transmit the
+   received data to the other users. As soon as the client API receives the serialized
+   data it will re-construct the object and make it available to the application.</p>
+ <p>It's always important to take care of the amount of data that you're sending and receiving. The more complex and nested is the structure of your objects the more time it will take to send it through the network and if you exceed with informations your application may not respond as expected.</p>
+ <p>If your application/game is targeted to broadband users then this should not be much of an issue, however slower modem connections have limited bandwidth (4 to 7 KB/s) and you will also have to deal with the inevitable lag of internet connections.</p>
+ <p>Also if you waste bandwidth by sending unnecessary data you will steal bandwidth
+   to other users connected to the server and if you saturate it the general
+   performance of the clients connected will deteriorate.</p>
+ <p>The previous RPG game example should not give problems to slower modem connections, however it can be optimized efficiently by<br>
+  replacing those strings in the inventory array with numeric IDs.</p>
+ <pre class="code">myChar = <font color="#993300">new</font> <font color="#993300">Object</font>()
+myChar.name = "<font color='blue'>Tarkus</font>"
+myChar.<font color="#000087">position</font> = {px: 100, py:100}
+myChar.inventory = <font color="#993300">new</font> <font color="#993300">Array</font>(1, 2, 3, 4, 5)
+
+sendObject(myChar)</pre>
+ <p>1, 2, 3, 4, 5 represent the various inventory items.</p>
+ <p>You can save about 30 bytes by using this new object:
+  with 100 connected users, you're saving 3 KB/s (24Kb/s) of bandwith; if the users are 1000 you
+save 240 Kb/s, which is almost half of a DSL connection.</p>
+ <p>After seeing the theory behind sending and receiving Actionscript data through the SmartFoxServer, in the next tutorial this knowledge will be put to work in a real world example: a complete simple game of Tic-Tac-Toe.</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../06_avatarChat/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../08_boardGame_p1/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">Zone class </p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Description:</p>
+ <p class="plain">A Zone object represents one zone / application running in
+   the server.<br />
+   Here follows a list of public methods for this object.</p>
+ <p class="title">Public Methods: </p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>addBuddy(who, buddyName)</strong></td>
+     <td>&nbsp;</td>
+     <td>Adds a buddy (buddyName) to the user (who) buddy list </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>checkBuddy(buddyName)</strong></td>
+     <td>&nbsp;</td>
+     <td>Checks if a buddy (buddyName) is logged in the current Zone. Returns
+       a boolean </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>clearBuddyList(who)</strong></td>
+     <td>&nbsp;</td>
+     <td>who = user name of the client. Clears the user's buddy list. </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getAutoJoinRoom()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the ID of the room set as autoJoin in the current Zone </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getEmptyNames()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return true if the &quot;EmptyNames&quot; options is turned on for the current
+       Zone </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getCountUpdate()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return true if the 
+       &quot;uCountUpdate&quot;  options is turned on for the current
+     Zone </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getMaxRooms()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the max number of rooms available for the current
+     Zone </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getMaxUsers()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the max number of users available for the current Zone </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getName()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the name of the current Zone</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getRoom(roomId)</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the Room object from its ID</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getRoomByName(roomName)</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the Room object from its name</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getRoomCount()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the current number of rooms in the Zone </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getRooms()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return a list of Room objects available in the Zone </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getStatus()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return true if the current Zone is active </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getUserCount()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return the current number of users in the Zone </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getUserList()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return a java.util.List containing all the users logged in that Zone </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>hasBuddyList()</strong></td>
+     <td>&nbsp;</td>
+     <td>Return true if the current Zone has the buddyList support turned on </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>removeBuddy(who, buddyName)</strong></td>
+     <td>&nbsp;</td>
+     <td>Removes a buddy (buddyName) from a user (who) buddy list</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>setPubMsgInternalEvent(flag)</strong></td>
+     <td>&nbsp;</td>
+     <td>If set to true an internal event will be fired each time a public message is received by the server. It can be useful for logging public messages.<br />
+       By defualt the flag is set to <em>false</em> </td>
+   </tr>
+</table>
+ <p class="title">&nbsp;</p>
+</body>
+</html>

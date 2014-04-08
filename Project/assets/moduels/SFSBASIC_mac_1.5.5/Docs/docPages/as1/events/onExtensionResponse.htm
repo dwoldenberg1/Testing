@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">onExtensionResponse()</p>
+ <p class="title">Availability:</p>
+<p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer   Pro</p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.onExtensionResponse(resObj, type) </p>
+ <p class="title">Description:</p>
+<p class="plain">The event is fired when an extension responds to a client request. </p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td valign="top"><strong>resObj</strong></td>
+     <td>&nbsp;</td>
+     <td>The object returned contains all the data sent by the server side extension.
+       <br />
+       By convention a string property called <strong>_cmd</strong> is always
+       present. The property contains the name of the server action that is responding. </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong><br />
+     type</strong></td>
+     <td>&nbsp;</td>
+     <td><br />
+     A string. It can be either &quot;<strong>xml</strong>&quot; or &quot;<strong>str</strong>&quot; and it indicates which protocol
+       was used for the response. By default <strong>xml</strong> is used.</td>
+   </tr>
+</table>
+                                <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="plain"><span class="title">Example:</span>
+<pre class="code">
+smartfox.onExtensionResponse = function(resObj, type)
+{
+	var cmd = resObj._cmd
+	
+	if (cmd == "myCommand")
+	{
+		// Handle the response here
+	}
+}
+</pre>
+ </p>
+ <br />
+ You can learn more about server side extensions, protocols etc... by reading
+ the introduction in <strong>section 6</strong> of the SmartFoxServer PRO documentation. <strong class="plain"><br />
+</strong>
+<p class="title">See also:</p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

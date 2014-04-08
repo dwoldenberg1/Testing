@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+.style1 {color: #CC0000}
+-->
+</style>
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.8 Tutorials: SmartFoxTris PRO (p.2) </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source FLA</strong> of this
+       example is found under the <strong>Examples/mx2004/pro_smartFoxTris</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Sending  moves </p>
+<p>As we said in the introduction, all the game logic is now moved on the server
+  side while the client will only take care of the visualization. The central
+  part of the client code is the extension response handler:<br>
+<pre class="code">smartfox.onExtensionResponse = <font color="#993300">function</font>(resObj:<font color="#993300">Object</font>, <font color="#000087">type</font>:<font color="#993300">String</font>)
+{
+        <font color="#993300">var</font> cmd:<font color="#993300">String</font> = resObj._cmd
+        
+        switch(cmd)
+        {
+                case "<font color='blue'>start</font>":
+                <font color="#000087">_global</font>.whoseTurn = resObj.t
+                player1Id = resObj.p1i
+                player2Id = resObj.p2i
+                player1Name = resObj.p1n
+                player2Name = resObj.p2n
+                startGame()
+                <font color="#993300">break</font>
+                
+                case "<font color='blue'>stop</font>":
+                <font color="#000087">_global</font>.gameStarted = <font color="#000087">false</font>
+                gamePaused(resObj.n + "<font color='blue'> left the game</font>" + <font color="#993300">newline</font>)
+                <font color="#993300">break</font>
+                
+                case "<font color='blue'>move</font>":
+                moveReceived(resObj)
+                <font color="#993300">break</font>
+                
+                case "<font color='blue'>specStatus</font>":
+                setSpectatorBoard(resObj)
+                <font color="#993300">break</font>
+                
+                case "<font color='blue'>tie</font>":
+                <font color="#000087">_global</font>.gameStarted = <font color="#000087">false</font>
+                <font color="#993300">var</font> win:<font color="#993300">MovieClip</font> = showWindow("<font color='blue'>gameEnd</font>")
+                win.message_txt.<font color="#000087">text</font> = "<font color='blue'>Tie!</font>"
+                <font color="#993300">break</font>
+                
+                case "<font color='blue'>win</font>":
+                setWinner(resObj)
+                <font color="#993300">break</font>
+        }
+}
+</pre>
+  <br>
+  For each command coming from the extension we perform the appropriate action,
+  for example if a &quot;<strong>start</strong>&quot; message is received we'll
+  save the player names, ids and turn locally and call the <strong>startGame()</strong> function.
+  If the &quot;<strong>stop</strong>&quot; action is received will halt the game and show a dialog window
+  and so on... <br>
+  The <strong>_global.whoseTurn</strong> variable will keep track of the player
+  turn during the game, so that each player will know if it's his turn or not.<br>
+  <br>
+  This is what we do when the game starts:<br>
+  <br>
+<pre class="code"><font color="#993300">function</font> startGame()
+{
+        resetGameBoard()
+        
+        hideWindow("<font color='blue'>gameEnd</font>")
+        
+        <font color="#993300">if</font> (!iAmSpectator)
+        	hideWindow("<font color='blue'>gameMessage</font>")
+        <font color="#993300">else</font>
+        	hideWindow("<font color='blue'>gameSpecMessage</font>")
+        
+        <font color="#000087">_root</font>["<font color='blue'>player1</font>"].name.<font color="#000087">text</font> = player1Name
+        <font color="#000087">_root</font>["<font color='blue'>player2</font>"].name.<font color="#000087">text</font> = player2Name
+        
+        setTurn()
+        
+        <font color="#000087">_global</font>.gameStarted = <font color="#000087">true</font>
+}
+</pre> 
+<br>
+Once we have performed these very simple actions, the players will be able to
+click on the game board and send moves. <br>
+The code we use for sending the player move is this:<br>
+<br> 
+<pre class="code"><font color="#993300">function</font> moveDone(tile:<font color="#993300">MovieClip</font>)
+{
+	<font color="#993300">var</font> x:<font color="#993300">Number</font> = <font color="#993300">Number</font>(tile.<font color="#000087">_name</font>.<font color="#000087">substr</font>(3,1))
+        <font color="#993300">var</font> y:<font color="#993300">Number</font> = <font color="#993300">Number</font>(tile.<font color="#000087">_name</font>.<font color="#000087">substr</font>(5,1))
+        
+        <font color="#993300">var</font> obj:<font color="#993300">Object</font> = {}
+        obj.x = x
+        obj.y = y
+        
+        smartfox.sendXtMessage(extensionName, "<font color='blue'>move</font>", obj)
+}
+</pre>
+<br> 
+If you remember, from the previous tutorials about this same game, we called
+each square tile of the board like this: <strong>sq_<span class="style1">x</span>_<span class="style1">y</span>, </strong>where <span class="style1"><strong>x</strong></span> and
+<span class="style1"><strong>y</strong></span> are their relative tile position on the X and Y axis. In order to know which
+board square was clicked, we take the 3rd and 5th character of the tile name
+and convert them to numbers. Finally we send this information to the server.<br>
+<br>
+This is how the extension handles the &quot;<strong>move</strong>&quot; action:
+<br>
+<br>
+<pre class="serverCode"><font color="#993300">function</font> handleMove(prms, u)
+{
+        <font color="#993300">if</font> (gameStarted)
+        {
+                <font color="#993300">if</font> (whoseTurn == u.getPlayerIndex())
+                {
+                        <font color="#993300">var</font> px = prms.x
+                        <font color="#993300">var</font> py = prms.y
+                        
+                        <font color="#993300">if</font> (board[py][px] == "<font color='blue'>.</font>")
+                        {
+                                board[py][px] = <font color="#993300">String</font>(u.getPlayerIndex())
+                                
+                                whoseTurn = (whoseTurn == 1) ? 2 : 1
+                                
+                                <font color="#993300">var</font> o = {}
+                                o._cmd = "<font color='blue'>move</font>"
+                                o.x = px
+                                o.y = py
+                                o.t = u.getPlayerIndex()
+                                
+                                _server.sendResponse(o, currentRoomId, <font color="#993300">null</font>, users)
+                                
+                                moveCount++
+                                
+                                checkBoard()
+                        }
+                }
+        }
+}
+</pre>
+<br>
+We have added some extra validations to avoid cheating: first
+we check that the game is really started, if not we'll refuse the request.<br>
+Then we  verify if the player who sent the move was allowed to do so, in
+other words if it's his turn. Once these two checks are passed we can finally
+store the move in the board array, using the playerId as value.<br>
+<br> 
+In the next lines we set the turn for the other player and send the move data
+and turn id to both clients. Also we keep track of the number of moves by incrementing
+the <strong>moveCount</strong> variable and we call the <strong>checkBoard()</strong> method
+to see if there's a winner or a tie. <br>
+<br>
+The <strong>checkBoard()</strong> method is the same we've used in the past examples
+of this game: you may want to go back to those articles if something is not
+clear about how it works. The only difference you will find is that, if a winner
+or tie is found, a message will be sent to all clients:<br>
+<br>
+<pre class="serverCode"><font color="#993300">var</font> response = {}
+
+<font color='#878787'>// TIE !!!
+</font><font color="#993300">if</font> (winner == <font color="#993300">null</font> &amp;&amp; moveCount == 9)
+{
+        gameStarted = <font color="#000087">false</font>
+        
+        response._cmd = "<font color='blue'>tie</font>"
+        _server.sendResponse(response, currentRoomId, <font color="#993300">null</font>, users)
+        
+        endGameResponse = response
+}
+<font color="#993300">else</font> <font color="#993300">if</font> (winner != <font color="#993300">null</font>)
+{
+        <font color='#878787'>// There is a winner !
+</font>        gameStarted = <font color="#000087">false</font>
+        
+        response._cmd = "<font color='blue'>win</font>"
+        response.w = winner
+        _server.sendResponse(response, currentRoomId, <font color="#993300">null</font>, users)
+        
+        endGameResponse = response
+}
+</pre><br>
+<span class="subTitle">&raquo; Receiving moves and client updates</span> <br>
+<br> 
+As we've already seen the moves are received in the <strong>onExtensionResponse()</strong>. In
+this version of the game the method that handles the move update is called <strong>moveReceived()</strong><br>
+<br>
+<pre class="code"><font color="#993300">function</font> moveReceived(res:<font color="#993300">Object</font>)
+{
+        <font color="#000087">_global</font>.whoseTurn = (res.t == 1) ? 2 : 1
+        
+        setTurn()
+        
+        <font color="#993300">if</font> (res.t != <font color="#000087">_global</font>.myID)
+        {
+                <font color="#993300">var</font> tile:<font color="#993300">String</font> = "<font color='blue'>sq_</font>" + res.x + "<font color='blue'>_</font>" + res.y
+                <font color="#993300">var</font> <font color="#000087">color</font>:<font color="#993300">String</font> = (res.t == 1) ? "<font color='blue'>green</font>" : "<font color='blue'>red</font>"
+                
+                setTile(tile, <font color="#000087">color</font>)
+        }
+}
+</pre>
+
+<br>
+This code is very similar to the one we've used in the past examples: we dynamically
+create a string with the name of the tile to set and pass it to the <strong>setTile()</strong> method.
+Also we set the <strong>_global.whoseTurn</strong> variable to the new turn id
+sent by the server side extension.<br>
+<br> 
+<span class="subTitle">&raquo; Conclusions<br></span>
+<br> 
+We've seen how to split the game logic from the game view by using
+a server side extension as the &quot;game controller&quot;. There are many advantages in
+using this approach: better game code organization, better game security, better
+integration with external data etc...<br> 
+<br>
+We suggest to analyze both client and server code to fully understand how they
+work and experiment with your own variations and ideas. Good luck! <br>
+<br>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%" height="23"><a href="index.htm" class="navLinks">&laquo; previous</a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../../tutorials_basic/02_simpleChat_p1/index.htm" class="navLinks"> </a><a href="../otherExamples/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

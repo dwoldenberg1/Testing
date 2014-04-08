@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.1 Tutorials: Connecting to the server </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available  under the <strong>Examples/(Actionscript version)/simpleConnect</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>
+ </p>
+ In this first tutorial we will see how you load and use the <strong>SmartFoxClient</strong> object and how you establish a connection to the server.<br>
+ <p><span class="subTitle">&raquo; The basics </span></p>
+ <p>Open the simpleConnect.fla file from the &quot;Examples/simpleConnect&quot; directory and have a look at the code the first frame on the timeline.</p>
+ <p>You may find two different lines based on what version of the API component you're using.<br>
+   The following line is what you will find if you are using the Actionscript 1.0 API component (fMX and fMX2004):</p>
+ <pre class="code"><font color="#993300">#include</font> "<font color='blue'>SmartFoxClient.as</font>"</pre>
+ <p>If you're using the Actionscript 2.0 API component (fMX2004 only) you'll use this line instead:</p>
+ <pre class="code">import it.gotoandplay.smartfoxserver.*
+</pre>
+ <p>   The first line will always be present in all your &quot;SmartFoxServer&quot; applications
+   as it imports the <strong>SmartFoxClient class</strong> and its relative helper
+   classes.</p>
+ <pre class="code"><font color="#000087">stop</font>()
+ip = "<font color='blue'>127.0.0.1</font>"
+port = 9339
+smartfox = <font color="#993300">new</font> SmartFoxClient()
+smartfox.onConnection = handleConnection
+smartfox.<font color="#000087">connect</font>(ip, port)</pre>
+<p>After we've stopped the timeline with a stop() command we can setup three simple variables that we will use to connect to the server: <strong>ip</strong>, <strong>port</strong> and <strong>zone</strong>.<br>
+If you're running the server locally (on the same computer where you run the examples) you can leave the default value 127.0.0.1 otherwise you should replace it with the ip address of the machine running <strong>SmartFoxServer</strong>.</p>
+ <p>The default port number should always be <strong>9339</strong>, if you have
+   changed it for some reason then the port variable should reflect this change.</p>
+ <p>The next 3 lines of code will do most of the &quot;magic&quot;: first, we create a new instance of the <strong>SmartFoxClient object</strong>, then we specify an event handler for
+   the <strong>onConnect</strong> event and then we finally call the <strong>connect()</strong> method to establish a connection between client and server.</p>
+ <p class="subTitle">&raquo; Connection handling</p>
+ <p>If you are a bit familiar with Flash and Actionscript the expression &quot;event
+   handler&quot; should not sound new to you. In fact many of the built-in objects
+   in Flash use events to handle situations that will occur at an undefined moment
+   in the future. For example when you load an external movieclip you don't know
+   exactly when the whole clip will be available and you have to write an event
+   handler (a function) that will perform actions when the Flash onLoad event
+   is fired.</p>
+ <p><strong>SmartFoxServer</strong> uses events quite a lot because you can receive messages at any time from the server or from other users.<br>
+  All you will have to do is write the appropriate functions to manage these different situations.</p>
+ <p>Back to the example of this tutorial we need to write a function that handles
+   the connection event and takes the right action whether the connection succedeed
+   or not.</p>
+ <p>The following code is a simple example of connection handling:</p>
+<pre class="code"><font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Handle connection response from server
+</font><font color='#878787'>//----------------------------------------------------------
+</font><font color="#993300">function</font> handleConnection(success)
+{
+        <font color="#993300">if</font> (success)
+        {
+                status_txt.<font color="#000087">text</font> = "<font color='blue'>Connection succesfull!</font>"
+        }
+        <font color="#993300">else</font>
+        {
+                status_txt.<font color="#000087">text</font> = "<font color='blue'>Can't connect!</font>"
+        }
+}
+</pre>
+ <p>Upon reception of a <strong>onConnection</strong> message the <strong>handleConnection</strong> function is called.<br>
+Every time you receive this notification a boolean parameter is also sent saying if connection was successfull or not.</p>
+ <p>In a real-world example we could open a dialog box asking for username and
+   password if the client could connect or show an error message if it failed.</p>
+ <p><strong>SmartFoxServer</strong> can fire many different events based in the
+   type of request it receives, some of them are:</p>
+ <p>- onConnection<br>
+  - onLogin<br>
+  - onRoomListUpdate<br>
+   - onJoinRoom<br>
+   - onJoinRoomError<br>
+   - onPublicMessage<br>
+  etc...</p>
+ <p>We'll analyze each one of them as we progress with more complex tutorials.</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%">&nbsp;</td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../02_simpleChat_p1/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

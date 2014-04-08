@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.3 Connecting to databases</p>
+<p>By exploiting the JDBC and ODBC technologies, <strong>SmartFoxServer
+     PRO</strong> is capable
+   of connecting to almost any existing database engine. To name a few: MySQL,
+   Microsoft Access, Microsoft SQL Server, Oracle, Sybase, IBM DB2 and a lot
+   more.<br>
+   <br>
+   Accessing external data sources will enable developers to create complex multiplayer
+   applications and games, adding data persistence 
+   and allowing to access existing databases.<br>
+   <br>
+ <span class="subTitle">&raquo; The Database Manger </span> <br>
+ <br>
+ The <strong>SmartFoxServer</strong> extension API exposes an object called <strong>DatabaseManager</strong>,
+ which is responsible for connecting to the external data source and interact
+ with it. For each Zone in your <strong>SmartFoxServer</strong> configuration
+ you can activate a separate
+ <strong>DatabaseManager</strong>, allowing each application running in the server
+to connect to a different data source. </p>
+<p><span class="subTitle">&raquo; JDBC, ODBC and drivers.<br></span>
+  <br> 
+  In order to connect to your database engine you have two possibilities:<br>
+  <br>
+<strong>1)</strong> Use the Java Runtime built-in ODBC connector<br>
+<strong>2) </strong>Download and install the specific JDBC driver for your database
+engine.<br>
+<br>
+In the first case you don't need to do anything and you could skip to the next
+section in this article. The ODBC connector is already provided in your Java
+Runtime and you don't need to configure anything else.<br>
+<br> 
+Using a JDBC driver is also very common where the database engine does not support
+ODBC natively (MySQL for example) or when the JDBC driver delivers better performance
+than the ODBC one.<br>
+In this case we reccomend to download the latest version of the driver and install
+it, by copying it to your JRE <strong>lib/ext/</strong> directory, so that it
+will be available to the Java runtime without having to mess with the
+Java classpath.<br>
+<br>
+  <span class="subTitle">&raquo; Configuring database connections.</span><br>
+  <br>
+  Here follows the XML used in the config.xml file to set up a connection with
+a MS Access database:
+<pre class="code">
+&lt;DatabaseManager active=&quot;true&quot;&gt;
+
+	&lt;Driver&gt;sun.jdbc.odbc.JdbcOdbcDriver&lt;/Driver&gt;
+	&lt;ConnectionString&gt;jdbc:odbc:sfsTest&lt;/ConnectionString&gt;
+	&lt;UserName&gt;myUserName&lt;/UserName&gt;
+	&lt;Password&gt;myPassword&lt;/Password&gt;
+
+	&lt;TestSQL&gt;&lt;![CDATA[SELECT COUNT(*) FROM contacts]]&gt;&lt;/TestSQL&gt;
+	
+	&lt;MaxActive&gt;10&lt;/MaxActive&gt;
+	&lt;MaxIdle&gt;10&lt;/MaxIdle&gt;
+	  
+	&lt;OnExhaustedPool&gt;fail&lt;/OnExhaustedPool&gt;
+	&lt;BlockTime&gt;5000&lt;/BlockTime&gt;
+	
+&lt;/DatabaseManager&gt;
+</pre>
+<p>Even if it may look like a lot of paramaters, those that we need to specify
+  are only a few.<br>
+  The first thing to notice is the <strong>active</strong> attribute in the &lt;DatabaseManager&gt;
+  tag which will turn on or off the connection to the data source. If you don't
+  really need the Database Manager in your Zone you can completely omit it.<br>
+  <br>
+  The next four parameters are essential for a successfull connection:</p>
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>Driver</strong></td>
+    <td>&nbsp;</td>
+    <td>This is the name of the driver that <strong>SmartFoxServer
+        PRO</strong> will use to connect
+      to your database. In this case we use the default ODBC driver provided
+      with the Java Runtime </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>ConnectionString</strong></td>
+    <td>&nbsp;</td>
+    <td>This is the database connection string. The first part of it &quot;<strong>jdbc:odbc:</strong>&quot;
+      should not be modified while the last &quot;<strong>sfsTest</strong>&quot; is the name of the Access
+      database that we want to use </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>UserName</strong></td>
+    <td>&nbsp;</td>
+    <td>This is the user name for the database </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>Password</strong></td>
+    <td>&nbsp;</td>
+    <td>This is the password  for the database </td>
+  </tr>
+</table>
+<p>The last parameter we should specify is a test SQL statement that <strong>SmartFoxServer</strong>  will
+  run after the connection is established to verify that the database is accessible.
+  The &lt;TestSQL&gt;&lt;/TestSQL&gt; tag can contain any valid SQL statement.
+  If the test string fails you will receive an error and you should check what's
+  wrong with your settings. <br>
+  <br>
+  If we were going to connect to a MySQL database the configuration would have
+  looked like this:</p>
+<pre class="code">
+&lt;DatabaseManager active=&quot;true&quot;&gt;
+
+	&lt;Driver&gt;org.gjt.mm.mysql.Driver&lt;/Driver&gt;
+	&lt;ConnectionString&gt;jdbc:mysql://192.168.0.15:3306/sfsTest&lt;/ConnectionString&gt;
+	&lt;UserName&gt;myUserName&lt;/UserName&gt;
+	&lt;Password&gt;myPassword&lt;/Password&gt;
+
+	&lt;TestSQL&gt;&lt;![CDATA[SELECT COUNT(*) FROM contacts]]&gt;&lt;/TestSQL&gt;
+	
+	&lt;MaxActive&gt;10&lt;/MaxActive&gt;
+	&lt;MaxIdle&gt;10&lt;/MaxIdle&gt;
+	  
+	&lt;OnExhaustedPool&gt;fail&lt;/OnExhaustedPool&gt;
+	&lt;BlockTime&gt;5000&lt;/BlockTime&gt;
+</pre><br>
+As you can see the only thinsg that change are the driver name and the connection
+string. This time the &quot;<strong>jdbc:mysql&quot;</strong> tells the server
+to use a MySQL driver for the connection, and the remaining part of the string
+indicates the db server address, the db server port and the name of the database
+we want to use.<br>
+<br>
+<span class="subTitle">&raquo; Advanced settings: connection pool<br></span>
+<br> 
+Each <strong>Database Manager</strong> is backed by a connection pool which allows
+better performance and reuse of the server resources.<br>
+We usually reccomend not to change the last four parameters in the configuration
+block, however there may be cases in which you would need to adjust these values
+based on the requirements of your application.<br>
+<br>
+( If you don't know what a Database connection-pool is, we reccomend to use the
+default settings. ) <br>
+<br>
+The following table illustrates the meaning of the those tags:<br>
+<br> 
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>MaxActive</strong></td>
+    <td>&nbsp;</td>
+    <td>The max. number of pooled connections </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>MaxIdle</strong></td>
+    <td>&nbsp;</td>
+    <td>The max. number of idle pooled connections (-1 = no limits) </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>OnExhaustedPool</strong></td>
+    <td>&nbsp;</td>
+    <td>Specifies what action should be taken when the pool of connections is
+      exhausted:<br>
+      <br>
+      <strong>fail</strong> &gt;&gt; returns an error (RECCOMENDED)<br>
+      <strong>grow</strong> &gt;&gt; grow the pool (Attention! You may need extra
+      heap memory in your JVM or you could crash it)<br>
+      <strong>block</strong> &gt;&gt; block for some time before returning an error</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>BlockTime</strong></td>
+    <td>&nbsp;</td>
+    <td>used only if you choose to block when the pool is exhausted. Expressed
+    in ms.</td>
+  </tr>
+</table>
+<br>
+<br>
+<br>
+<hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="extArchitecture.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="mailer.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

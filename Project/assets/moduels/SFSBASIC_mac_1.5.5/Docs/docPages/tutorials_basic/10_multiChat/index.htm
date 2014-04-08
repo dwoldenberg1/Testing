@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.10 Tutorials: Multi Chat </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available  under the <strong>Examples/AS2/multiChat</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>
+ </p>
+ In this new article we'd like to discuss a particular feature of <strong>SmartFoxServer</strong>:
+ the ability to join one user in multiple rooms at the same time.<br>
+ <br>
+This feature can be pretty useful when you need to develop
+medium complex applications and games.<br>
+For example you could have a chat system where you can talk to other users
+in the &quot;Main Lobby&quot; and simultaneously have other small windows
+   where you can chat in other public rooms. This could be easily
+achieved by using the multi-room capability of <strong>SmartFoxServer</strong>.<br>
+<br>
+Another idea would
+   be to have a main window for chatting plus one ore more game rooms where you
+   can simultaneously play with your mates a turn-based game like chess, checkers,
+connect-four and so on...
+<p><span class="subTitle">&raquo; Requirements </span></p>
+ <p>Before proceeding with this tutorial it is necessary that you're already
+   familiar with the basic <strong>SmartFoxServer</strong> concepts explained
+   in the previous articles.<br>
+     <br>
+<span class="subTitle">&raquo; Objectives</span></p>
+ <p>In this article I will demonstrate how the &quot;MultiChat&quot; example
+   file works.<br>
+   The &quot;<strong>MultiChat</strong>&quot; is a simple chat application that
+   allows each user to talk in a room called &quot;Main Lobby&quot; and also
+   to create and join other custom rooms where you can chat simultaneously.</p>
+ <p>As soon as the user logs in the chat he's automatically joined in the &quot;Main
+   Lobby&quot; using the <strong>autoJoin()</strong> command.<br>
+   He will be able to create new chat rooms and join one of those without leaving
+the &quot;Main Lobby&quot; keeping two public chats open at the same time.</p>
+ <p><span class="subTitle">&raquo; The basics </span></p>
+ <p>This new demo stays consistent with the other examples in terms of code organization,
+   so the main timeline should look familiar when you will see it the first time.<br>
+ As usual we have a frame labeled &quot;<strong>connect</strong>&quot; where
+ we setup the basic variables and object needed to initialize the application
+ and connect to <strong>SmartFoxServer</strong>.</p>
+ <p><img src="images/timeline.gif" width="393" height="144" class="imgBorder"></p>
+ <p>For this application we'll use a zone called &quot;<strong>MultiChat</strong>&quot; that
+   is defined in the config.xml file on the server side:</p>
+ <pre class="code">&lt;Zone name=&quot;multiChat&quot;&gt;
+	&lt;Rooms&gt;
+		&lt;Room name=&quot;Main Lobby&quot; maxUsers=&quot;50&quot; isPrivate=&quot;false&quot; isTemp=&quot;false&quot; autoJoin=&quot;true&quot; /&gt;
+	&lt;/Rooms&gt;
+&lt;/Zone&gt; </pre>
+ <p>   The code in the &quot;<strong>connect</strong>&quot; section is exactly the same we've
+   been using in the other tutorials, so we can safely move to the next frame
+   labeled &quot;<strong>chat</strong>&quot;. </p>
+ <p class="subTitle">&raquo; Handling multiple rooms:</p>
+ <p>
+   In one of the previous examples we mentioned a property of the <strong>SmartFoxClient</strong> class
+   called &quot;<strong>activeRoomId</strong>&quot;.<br>
+ This property keeps track of the latest
+ joined room and it is used by the client API in order to know where the user
+is located.</p>
+ <p>Even if this property is not used very much by the Flash developer who is
+   working with <strong>SmartFoxServer</strong> it is very important behind the scenes because
+   every message that is sent to the server has a roomId property that tells
+   the server from which room the message is coming from.</p>
+ <p>In other words when you call the <strong>server.sendPublicMessage(&quot;hello!&quot;)</strong>   the
+   client API sends your text and the room id of the room where the user is currently
+   in. If you inspect the API or just read the API documentation provided in
+   the SFS package you will notice that all methods have an optional <strong>roomId</strong> parameter
+   that can be used to specify the room from which the message is coming from.</p>
+ <p>With this in mind the complete form of the <strong>sendPublicMessage()</strong> method is:
+   <strong>server.sendPublicMessage(message, roomId)</strong></p>
+ <p>The reason why we've never passed the second parameter is because all the
+   other examples can log the user in one room at a time, so the client API already
+   know where the user is located and automagically sends the <strong>roomId</strong> if we don't
+   specify it.</p>
+ <p>Now that we want to be present in more than one room at the same time we
+   will have to keep track ourselves of the different rooms where the user is
+   located and send the appropriate id. For example if you're simultaneously
+   connected in the &quot;Main Lobby&quot; and in the &quot;Soccer Room&quot; you
+   will need to specify in which of the two rooms you want your message to be
+   sent to.</p>
+ <p>In this &quot;MultiChat&quot; example we're going to be automatically joined
+   in the &quot;Main Lobby&quot; right after the login and we'll be able to join
+   another room keeping two public chat windows on screen at the same time.<br>
+   If you inspect the stage contents at the frame labeled &quot;<strong>Chat</strong>&quot; you
+   will see how the &quot;double-view&quot; interface is organized: the left
+   and right parts of the screen are symmetrical with a list box on top for user
+   names, a text area in the middle for the public chat messages and a single
+   line input box for sending  messages.</p>
+ <p>In the middle is located another list box that will show all the available
+   rooms, together with a button for creating new ones (labeled NEW) and a button
+   for leaving the &quot;secondary&quot; room. (labeled LEAVE)</p>
+ <p><img src="images/multiChat.gif" width="500" height="322" class="imgBorder"></p>
+ <p><span class="subTitle">&raquo; Room ID Variables</span></p>
+ <p>At the very beginning of the code located under the &quot;<strong>chat</strong>&quot; label
+ you will find these two variables:</p>
+ <pre class="code">
+var mainLobby:Number = -1
+var privRoom:Number = -1
+</pre>
+ <p>We will use these two values to track the <strong>roomId</strong> number of the &quot;Main
+   Lobby&quot; and the one of the secondary chat room.<br>
+   At start up the variables are set to -1 to indicate that you're currently
+   not logged in any of the two and we'll assign them the right values as soon
+as the user joins the &quot;Main Lobby&quot; and the secondary room.</p>
+ <p>As usual we handle the <strong>onRoomListUpdate</strong> event by populating
+   the room list box:</p>
+ <pre class="code">smartfox.onRoomListUpdate = <font color="#993300">function</font>(roomList:<font color="#993300">Object</font>)
+{
+        roomList_lb.<font color="#000087">removeAll</font>()
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i:<font color="#993300">String</font> <font color="#993300">in</font> roomList)
+        {
+                <font color="#993300">var</font> room:Room = roomList[i]
+                roomList_lb.<font color="#000087">addItem</font>(room.getName() + "<font color='blue'> (</font>" + room.getUserCount() + "<font color='blue'>)</font>", room.getId())
+        }
+        roomList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+        
+        <font color='#878787'>// Join the default room
+</font>        <font color="#993300">this</font>.autoJoin()
+        
+}
+</pre>
+<p>The last line in the method calls the <strong>autoJoin()</strong> requesting to be joined
+ in the default room of the current zone.<br>
+ Now let's have a look at the <strong>onJoinRoom</strong> handler:</p>
+ <pre class="code">smartfox.onJoinRoom = <font color="#993300">function</font>(roomObj:Room)
+{
+        <font color="#993300">var</font> txtObj:<font color="#993300">Object</font>
+        <font color="#993300">var</font> box:<font color="#993300">Object</font>
+        
+        <font color="#993300">if</font> (roomObj.getName() == "<font color='blue'>Main Lobby</font>")
+        {
+                mainLobby = roomObj.getId()
+                txtObj = mainChat_txt
+                box = mainList_lb
+        }
+        <font color="#993300">else</font>
+        {
+                privRoomName_txt.<font color="#000087">text</font> = roomObj.getName()
+                privRoom = roomObj.getId()
+                txtObj = privChat_txt
+                box = privList_lb
+        }
+        
+        <font color="#993300">var</font> roomId:<font color="#993300">Number</font>	= roomObj.getId()
+        <font color="#993300">var</font> userList:<font color="#993300">Object</font>	= roomObj.getUserList()
+        
+        resetRoomSelected(roomId)
+        
+        <font color="#000087">_global</font>.currentRoom = roomObj
+        
+        <font color='#878787'>// Clear text area
+</font>        txtObj.<font color="#000087">htmlText</font> = "<font color='blue'></font>"
+        
+        <font color='#878787'>// Clear current list
+</font>        box.<font color="#000087">removeAll</font>()
+        
+        <font color='#878787'>// Add items to the listbox
+</font>        <font color="#993300">for</font> (<font color="#993300">var</font> i:<font color="#993300">String</font> <font color="#993300">in</font> userList)
+        {
+                <font color="#993300">var</font> user:User = userList[i]
+                box.<font color="#000087">addItem</font>(user.getName(), user.getId())
+        }
+        
+        <font color='#878787'>// Sort names
+</font>        box.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+        
+        <font color='#878787'>// Add a notice in the chat box
+</font>        txtObj.<font color="#000087">text</font> += "<font color='blue'>&lt;font color='#cc0000'&gt;&gt;&gt; Room [ </font>" + roomObj.getName() + "<font color='blue'> ] joined&lt;/font&gt;</font>";
+}
+</pre>
+ <p>As you can notice the code checks if we've joined the &quot;Main Lobby&quot; or
+   just one of the other available rooms.<br>
+   In the first case the mainLobby variable is assigned the roomId and the box
+   variable is pointed to the listbox on the left side of the screen. If we've
+   joined another room we store its <strong>roomId</strong> in the <strong>privRoom</strong> variable and box is
+ pointed to the listbox on the right side of the screen.</p>
+ <p>The rest of the code just populates the appropriate list box with the names
+   of the users in the room.</p>
+ <p><span class="subTitle">&raquo; The Join() command</span></p>
+ <p>The <strong>smartFox.join()</strong> method has already been inspected in
+   the past tutorials and we know it is pretty simple to use: you just pass the
+   name or id of the room you'd like to join.</p>
+ <p>In the previous examples we have seen how a room called &quot;The Hall&quot; could
+   be joined simply by using this line of code:</p>
+ <pre class="code">smartFox.joinRoom(&quot;The Hall&quot;)</pre>
+ <p>Now it is time to see the advanced usages of this command. Here follows the
+   complete set of paramaters that you can pass to the method:</p>
+ <pre class="code">smartFox.joinRoom(roomId, password, isSpectator, dontLeave, oldRoom)</pre>
+ <table width="100%"  border="0" cellspacing="0" cellpadding="2">
+   <tr>
+     <td><strong>roomId </strong></td>
+     <td>&nbsp;</td>
+     <td>the id of the room you want to join</td>
+   </tr>
+   <tr>
+     <td><strong>password</strong></td>
+     <td>&nbsp;</td>
+     <td>the password for the room (needed if the room is password protected)</td>
+   </tr>
+   <tr>
+     <td><strong>isSpectator</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional booelan flag) If true joins the user as a spectator in a game
+     room</td>
+   </tr>
+   <tr>
+     <td><strong>dontLeave</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional boolean flag) If true the user will not leave the room where
+     he/shw is currently in</td>
+   </tr>
+   <tr>
+     <td><strong>oldRoom</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) the roomId of the room to leave</td>
+   </tr>
+ </table>
+ <p>As you can see the last two arguments are those we need to instruct the server
+   that we don't want to leave the room we're currently in, while we're joining
+   a new room. Actually the last one allows the developer to specify the id of
+ the room he'd like to leave when he has joined the new one.</p>
+ <p>Let's take a look at the <strong>changeRoom()</strong> method which handles the room change
+   request when a user clicks in the room list box:</p>
+ <pre class="code"><font color="#993300">function</font> changeRoom(evtObj)
+{
+        <font color="#993300">if</font>(!<font color="#000087">_global</font>.isBusy)
+        {
+                <font color='#878787'>// new Room id
+</font>                <font color="#993300">var</font> newRoom:<font color="#993300">Number</font> = evtObj.<font color="#000087">target</font>.value
+                
+                <font color="#993300">if</font> (newRoom != mainLobby &amp;&amp; newRoom != privRoom)
+                {
+                        <font color='#878787'>// Check if new room is password protected
+</font>                        <font color="#993300">var</font> priv:<font color="#993300">Boolean</font> = smartfox.getRoom(newRoom).isPrivate()
+                        
+                        <font color="#993300">if</font> (priv)
+                        {
+                                <font color='#878787'>// Save newroom as _global for later use
+</font>                                <font color="#000087">_global</font>.newRoom = newRoom
+                                
+                                showWindow("<font color='blue'>passwordWindow</font>")
+                        }
+                        <font color="#993300">else</font>
+                        {
+                                <font color='#878787'>// Pass the room id
+</font>                                <font color="#993300">if</font> (privRoom == -1)
+                                smartfox.joinRoom(newRoom, "<font color='blue'></font>", <font color="#000087">false</font>, <font color="#000087">true</font>)
+                                <font color="#993300">else</font>
+                                smartfox.joinRoom(newRoom, "<font color='blue'></font>", <font color="#000087">false</font>, <font color="#000087">false</font>, privRoom)
+                        }
+                }
+        }
+}
+</pre>
+ <p>As you may recall the <strong>_global.isBusy</strong> variable is a flag
+   that tells us if the application GUI is currently busy, so we check it before
+   proceeding with the rest of the code. In the next line we get the value of
+   the item selected in the list box and we check it against the two room Ids
+   we've stored previously.
+ <br>
+ First of all we verufy if the clicked room is different from the current ones,
+ then we have to see if we're trying to log in a private room: if so we'll
+ show the password dialog box and ask the user to type a valid password.<br>
+ <br>
+ The
+ approach used here is the same of the previous tutorials: we store the id of
+ the selected room in a<strong> _global.newRoom</strong> variable, we launch
+ the dialog box by using the <strong>showWindow()</strong> function and we handle
+ the user input in the <strong>loginProtectedRoom()</strong> method.</p>
+ <p>Let's analyze the remaining four lines of code: before sending the join request
+   we have to check if this is the first time we are logging in a &quot;secondary&quot; room.
+   If <strong>privRoom</strong> is equal to -1 then we can just join the new
+   room using the <strong>dontLeave</strong>   flag
+   set to TRUE, otherwise we have should slightly modify the joinRoom request
+   telling the server that we want to leave the previous secondary room.<br>
+   If you
+   forget to do that, you will join the other rooms without leaving the current
+   one keeping your user present in as many room as you want at the same time.
+   In general this is a bad idea since the more rooms you join simultaneously
+   the more traffic will be generated on the server to send your client all the
+   events from all the connected rooms.<br>
+   Also handling all those events from so many rooms can make your application
+   difficult to code.</p>
+ <p>Usually two or three rooms at the same time can be more than enough for any
+   advanced multiuser applications.<br>
+   An example of using this technique could be a chat with turn-based games where
+   you can keep talking in public chat rooms while waiting the move of your opponent
+   in a game of chess, checkers etc...</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../09_boardGame_p2/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../11_roomVars/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

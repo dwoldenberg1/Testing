@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.13 Tutorials: Custom Login </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available  under the <strong>Examples/AS2/customLogin</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>In this tutorial we will learn how to implement a custom login system that
+   can be integrated seamlessly with <strong>SmartFoxServer BASIC</strong>.<br>
+   While the <strong>PRO edition</strong> is designed to directly connect to many database engines,
+   with the BASIC edition you can use any server side language to create a custom
+ login system for your multiplayer applications.</p>
+ <p>This article provides a simple login example based on the PHP language,
+ but you could easily translate it to ASP/ASP.Net, JSP, Coldfusion etc...</p>
+ <p><span class="subTitle">&raquo; Requirements<br>
+   <br>
+ </span>To complete this tutorial you should already be familiar with the &quot;<a href="../02_simpleChat_p1/index.htm">Simple
+ Chat</a>&quot; example and you should have some basic knowledge of server-side Flash
+ integration. <br>
+     <br>
+     <span class="subTitle">&raquo; Objectives</span></p>
+ <p>The tutorial is based on the previous &quot;<a href="../02_simpleChat_p1/index.htm">Simple
+     Chat</a>&quot; application
+   to which we have added a PHP-based login system.
+     The purpose of this example is to show you how easily a login system can
+     be created using your existent server side technology and integrating it
+     with the multiplayer side handled by <strong>SmartFoxServer</strong>. Also
+     we'll have a look at how you can use moderator priviliges in your applications. </p>
+ <p><img src="images/login.gif" width="500" height="350" class="imgBorder"></p>
+ <p><span class="subTitle">&raquo; The server side</span></p>
+ <p>In all the previous examples we have implemented the most simple login system
+   where the application accepts any user name that is not already in use in
+   the current zone. However applications like chats and games usually require
+   users to input a valid name and password.<br>
+   Adding this feature to your <strong>SmartFoxServer Basic</strong> applications
+   is very easy: you first send user data to your server side page for validation
+   and then log the user in the multiplayer server.</p>
+ <p>Before commenting the actionscript code we can have a look at the <strong>PHP
+     example page</strong>   that will handle the login requests:</p>
+ <pre class="code"><span style="color: rgb(0, 0, 187);">&lt;?php
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(255, 128, 0);">// A Simple List of allowed users
+&nbsp;&nbsp;&nbsp;&nbsp;// You could substitute this code with a database connection
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(0, 0, 187);">$allowedUsers </span><span style="color: rgb(0, 119, 0);">=&nbsp;&nbsp;array (</span><span style="color: rgb(221, 0, 0);">"test" </span><span style="color: rgb(0, 119, 0);">=&gt; </span><span style="color: rgb(221, 0, 0);">"test"</span><span style="color: rgb(0, 119, 0);">,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(221, 0, 0);">"smartfox" </span><span style="color: rgb(0, 119, 0);">=&gt; </span><span style="color: rgb(221, 0, 0);">"smartfox"</span><span style="color: rgb(0, 119, 0);">,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(221, 0, 0);">"flash" </span><span style="color: rgb(0, 119, 0);">=&gt; </span><span style="color: rgb(221, 0, 0);">"flash"</span><span style="color: rgb(0, 119, 0);">);
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(255, 128, 0);">// The response variable
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(0, 0, 187);">$res </span><span style="color: rgb(0, 119, 0);">= </span><span style="color: rgb(221, 0, 0);">"res=KO"</span><span style="color: rgb(0, 119, 0);">;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(255, 128, 0);">// Check incoming data
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(0, 119, 0);">if (</span><span style="color: rgb(0, 0, 187);">$_POST</span><span style="color: rgb(0, 119, 0);">[</span><span style="color: rgb(221, 0, 0);">'name'</span><span style="color: rgb(0, 119, 0);">] != </span><span style="color: rgb(221, 0, 0);">"" </span><span style="color: rgb(0, 119, 0);">&amp;&amp; </span><span style="color: rgb(0, 0, 187);">$_POST</span><span style="color: rgb(0, 119, 0);">[</span><span style="color: rgb(221, 0, 0);">'pass'</span><span style="color: rgb(0, 119, 0);">] != </span><span style="color: rgb(221, 0, 0);">""</span><span style="color: rgb(0, 119, 0);">)
+
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach(</span><span style="color: rgb(0, 0, 187);">$allowedUsers </span><span style="color: rgb(0, 119, 0);">as </span><span style="color: rgb(0, 0, 187);">$name </span><span style="color: rgb(0, 119, 0);">=&gt; </span><span style="color: rgb(0, 0, 187);">$password</span><span style="color: rgb(0, 119, 0);">)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (</span><span style="color: rgb(0, 0, 187);">$_POST</span><span style="color: rgb(0, 119, 0);">[</span><span style="color: rgb(221, 0, 0);">'name'</span><span style="color: rgb(0, 119, 0);">] == </span><span style="color: rgb(0, 0, 187);">$name </span><span style="color: rgb(0, 119, 0);">&amp;&amp; </span><span style="color: rgb(0, 0, 187);">$_POST</span><span style="color: rgb(0, 119, 0);">[</span><span style="color: rgb(221, 0, 0);">'pass'</span><span style="color: rgb(0, 119, 0);">] == </span><span style="color: rgb(0, 0, 187);">$password</span><span style="color: rgb(0, 119, 0);">)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(255, 128, 0);">// Ok, user found
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(0, 0, 187);">$res </span><span style="color: rgb(0, 119, 0);">= </span><span style="color: rgb(221, 0, 0);">"res=OK"</span><span style="color: rgb(0, 119, 0);">;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;print </span><span style="color: rgb(0, 0, 187);">$res</span><span style="color: rgb(0, 119, 0);">;
+</span><span style="color: rgb(0, 0, 187);">?&gt;</span></pre>
+ <p>To keep the server side code as simple as possible we didn't use a database
+   to keep user data since it's not the purpose of this tutorial to teach server
+   side database integration.<br>
+   Once you have learned how to use this code you will be free to add your own
+   implementation using your favourite data source be it a text file, XML or
+ a relational database engine. For our simple example we have used an associative
+   array where the key is the username and the associated value represents the
+   password. <br>
+   The variable called <strong>$res</strong> will output the response
+   and we initially set it to &quot;res=KO&quot; where &quot;res&quot; is the
+   variable name returned to Flash.</p>
+ <p>When a login request is sent we cycle through the <strong>$allowedUsers</strong> array
+   checking if the name and password match, and if they do the loop is stopped
+   and the <strong>$res</strong> variable is set to &quot;res=OK&quot;. This
+   will tell Flash that the login was successfull.</p>
+ <p>You can copy the above code, paste it in your favourite editor and save it
+   with the name &quot;sfsLogin.php&quot; on a local or online webserver.</p>
+ <p><span class="subTitle">&raquo; The server side</span></p>
+ <p>Now you can open the source file for this example and inspect the code located
+   at the frame labeled &quot;<strong>connect</strong>&quot;. The main difference with the original &quot;Simple
+ Chat&quot; example is mainly in these three new variables:</p>
+<pre class="code"><font color="#993300">var</font> serverPage:<font color="#993300">String</font> = "<font color='blue'>http://localhost/sfsLogin.php</font>"
+<font color="#993300">var</font> serverIn:LoadVars = <font color="#993300">new</font> LoadVars()
+<font color="#993300">var</font> serverOut:LoadVars = <font color="#993300">new</font> LoadVars()
+</pre>
+ <p>The <strong>serverPage</strong> var is the url where your PHP page is located,
+   you can change it freely and point it to the webserver where the PHP page
+   was saved. The next two variables are the <strong>LoadVars</strong> objects
+   we will use to send and receive data from the server. As we said before the
+   login data is going to be sent to the PHP page <strong>before</strong> we log the user in <strong>SmartFoxServer</strong>.
+   The following code is executed as soon as the user presses the &quot;LOG IN&quot; button:</p>
+ <pre class="code"><font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Send login data to the server page
+</font><font color='#878787'>//----------------------------------------------------------
+</font><font color="#993300">function</font> validateLogin()
+{
+        <font color="#993300">if</font> (login_txt.<font color="#000087">text</font>.<font color="#000087">length</font> &gt; 0 &amp;&amp; pwd_txt.<font color="#000087">text</font>.<font color="#000087">length</font> &gt; 0)
+        {
+                serverOut.name = login_txt.<font color="#000087">text</font>
+                serverOut.pass = pwd_txt.<font color="#000087">text</font>
+                serverOut.<font color="#000087">sendAndLoad</font>(serverPage, serverIn, "<font color='blue'>post</font>")
+        }
+}
+</pre>
+ <p>After we have checked that both textfields contain data the &quot;<strong>name</strong>&quot; and &quot;<strong>pass</strong>&quot; variables
+   are created and sent as an http POST request to the PHP page. The server response
+ will be handled by the &quot;<strong>serverIn</strong>&quot; object in its <strong>onLoad</strong> method:</p>
+ <pre class="code"><font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Handle the PHP server login response
+</font><font color='#878787'>//----------------------------------------------------------
+</font>serverIn.<font color="#000087">onLoad</font> = <font color="#993300">function</font>(success)
+{
+        <font color="#993300">if</font> (success)
+        {
+                <font color="#993300">if</font> (<font color="#993300">this</font>.res == "<font color='blue'>OK</font>")
+                {
+                        sendLogin()
+                }
+                <font color="#993300">else</font>
+                {
+                        <font color="#993300">var</font> win:<font color="#993300">MovieClip</font> = showWindow("<font color='blue'>errorWindow</font>")
+                        win.errorMsg.<font color="#000087">text</font> = "<font color='blue'>Wrong name or passord</font>"
+                }
+        }
+        <font color="#993300">else</font>
+        {
+                <font color="#993300">var</font> win:<font color="#993300">MovieClip</font> = showWindow("<font color='blue'>errorWindow</font>")
+                win.errorMsg.<font color="#000087">text</font> = "<font color='blue'>Connection failed</font>"
+        }
+}
+</pre>
+ <p>This event handler receives a boolean parameter that tells us if the connection
+   to the server page was successfull. If so we can go ahead by checking the &quot;<strong>res</strong>&quot; variable
+   we were expecting and see if it's equal to &quot;OK&quot;. When the PHP
+   page returns a positive response we can continue by logging the client to
+ the multiplayer server and start the application, otherwise we'll show an error
+   message. </p>
+ <p>The code for login is this:</p>
+ <pre class="code"><font color="#993300">function</font> sendLogin()
+{
+        <font color="#993300">if</font> (!<font color="#000087">_global</font>.isBusy)
+        	smartfox.login(zone, login_txt.<font color="#000087">text</font>, pwd_txt.<font color="#000087">text</font>)
+}
+</pre>
+ <p><span class="subTitle">&raquo; Moderators</span></p>
+ <p>When you send a login and password to <strong>SmartFoxServer</strong> they are checked against
+   a moderator list that is fully customizable in the <strong>config.xml</strong> file. </p>
+ <pre class="code">&lt;Moderators status=&quot;on&quot;&gt; 
+	&lt;Mod name=&quot;test&quot; pwd=&quot;test&quot; /&gt;
+	&lt;Mod name=&quot;mod&quot; pwd=&quot;mod&quot; /&gt;
+&lt;/Moderators&gt;</pre>
+ <p>You can define as many moderators as you want by adding this xml block in
+   each zone of the config file. If one user logs in using a moderator account
+   he will have special powers for 
+   kicking and banning users. To check if the current user has moderator privileges
+   you can call the <strong>smartFox.isModerator() </strong>method: </p>
+ <pre class="code"><font color="#993300">if</font> (smartFox.isModerator())
+{
+        <font color="#993300">trace</font>("<font color='blue'>Welcome, moderator</font>")
+}
+</pre>
+ <p><span class="subTitle">&raquo; The Admin Extension</span></p>
+ <p>The administrator commands for kicking and banning are available as an Extension
+   for <strong>SmartFoxServer. </strong>Extensions are special modules written
+   in either Java or Actionscript and executed on the server side. They allow
+   to add new features to the server pretty easily. Even if it's not the purpose
+   of this article to give an in-depth look at <strong>SmartFoxServer</strong> Extensions
+   we are going to learn how invoke commands on the Administrator Extension.</p>
+ <p>In general a server side Extension can be called from the Client API with
+   this method:</p>
+ <pre class="code">smartFox.sendXtMessage("<font color='blue'>$dmn</font>", action, dataObj)
+</pre>
+ <p>The <strong>sendXtMessage</strong> will send a request to a certain Extension
+   loaded by <strong>SmartFoxServer</strong>. The first parameter is the unique
+   name of the Extension, so in this case the string &quot;$dmn&quot; represents
+   the name of the Administrator Extension.<br>
+   <br>
+   The
+second parameter is the name of the action we want to execute and third argument
+   is an object containing the parameters needed for that action.<br>
+   <br>
+   Let's see an example:</p>
+ <pre class="code"><font color="#993300">var</font> dataObj:<font color="#993300">Object</font> = {}
+
+dataObj.id = userId.<font color="#000087">toString</font>()
+dataObj.msg = msg
+
+smartFox.sendXtMessage("<font color='blue'>$dmn</font>", "<font color='blue'>kick</font>", dataObj)
+</pre>
+ <p>In the above code a &quot;kick&quot; request is sent. <br>
+   In order to kick a user we must provide two string parameters: the id of the
+     user (called &quot;<strong>id</strong>&quot;) and a text message (called &quot;<strong>msg</strong>&quot;).<br>
+     The message will be sent as an Administrator Message and the user will be
+     kicked after a few seconds.</p>
+ <p><strong>NOTE: </strong>An important thing to notice is that all parameter in the dataObj <strong>need
+   to be strings</strong>: that's why we have added a .toString() to the userId variable. </p>
+ <p>In order to ban a user from the current application we use a very similar
+   request:</p>
+ <pre class="code"><font color="#993300">var</font> dataObj:<font color="#993300">Object</font> = {}
+
+dataObj.id = userId.<font color="#000087">toString</font>()
+dataObj.msg = msg
+dataObj.mode = "<font color='blue'>0</font>"
+
+smartFox.sendXtMessage("<font color='blue'>$dmn</font>", "<font color='blue'>ban</font>", dataObj)
+</pre>
+ <p>The <strong>mode</strong> parameter can be either &quot;0&quot; or &quot;1&quot; and it represents the ban-mode
+   the server will use:</p>
+ <p> 0 &raquo; ban the user by name<br>
+   1 
+ &raquo; ban the user by its IP address </p>
+ <p>The client that is going to be disconnected will receive an <strong>onAdminMessage</strong>   event
+   which could be handled by showing a dialogue box on screen:</p>
+ <pre class="code"><font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Handles an Administrator / Moderator Message
+</font><font color='#878787'>//----------------------------------------------------------
+</font>smartFox.onAdminMessage = <font color="#993300">function</font>(msg)
+{
+        <font color="#993300">var</font> mc = showWindow("<font color='blue'>win_adminMessage</font>")
+        mc.message_txt.<font color="#000087">text</font> = msg
+}
+</pre>
+ <p><strong>NOTE:</strong> It is important that every application that you develop handles the
+   <strong>onAdminMessage</strong>. These messages are sent not only by the moderators but also
+   by the server Administrator through the <a href="../../running/adminTool.htm">Admin
+   Tool. </a></p>
+ <p><span class="subTitle">&raquo; Conclusions</span></p>
+ <p>In this article you have learned how to integrate a login system with your
+   current server technology, handle moderators and use the Administrator Extension
+ to kick/ban users. By mixing these new features with the other things learned
+   so far you will be able to create pretty advanced Flash applications and games
+   with multiplayer interaction. </p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../12_buddyList/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../14_advBoardGame/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+.itemName {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 24px;
+	font-weight: bold;
+	color: #CC0000;
+}
+
+.title {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FF3300;
+}
+
+.plain {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 15px;
+	color: #333333;
+}
+
+pre { font: 11px "Courier New", monospace; }
+
+.code 
+{
+	border: 1px Solid #999999; 
+	background-color:#f6f6f6;  
+	margin:2px;
+	padding:10px; 
+	color:#000000; 
+}
+a {
+	font-weight: bold;
+	color: #CC0000;
+	text-decoration: none;
+}
+a:hover {
+	font-weight: bold;
+	color: #ff3300;
+	text-decoration: none;
+}
+
+.tHead {
+	color: #FFFFFF;
+	background-color: #FF6600;
+	font-weight: bold;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">setTimeout()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.5.4 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">setTimeout(scope, fn, delay, params)</p>
+ <p class="title">Description:</p>
+ <p class="plain">Calls a function after a certain amount of time expressed in milliseconds. 
+ <p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>scope</strong></td>
+	 <td>&nbsp;&nbsp;&nbsp;</td>
+     <td>- the object on which the function should be called</td>
+   </tr>
+   <tr>
+     <td><strong>fn</strong></td>
+     <td>&nbsp;</td>
+     <td>- The function to be invoked</td>
+   </tr>
+   <tr>
+     <td><strong>delay</strong></td>
+     <td>&nbsp;</td>
+     <td>- The amount of time (in milliseconds) to wait</td>
+   </tr>
+   <tr>
+     <td><strong>params</strong></td>
+     <td>&nbsp;</td>
+     <td>- A variable number of parameters to pass to the function</td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="title">Example:</p>
+<pre class="code">
+function delayedFunction(s,n,b)
+{
+   trace("I was called with the following arguments:")
+   
+   trace("String : " + s)
+   trace("Number : " + n)
+   trace("Boolean: " + b)
+   
+}
+
+setTimeout(this, delayedFunction, 1000, "Hello world!", 123456, true) 
+</pre>
+<br />
+ <p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong>setInterval()</p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

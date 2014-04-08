@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.8 Tutorials: Board game (part 1) </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available under the <strong>Examples/(Actionscript version)/smartFoxTris</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p><strong>SmartFoxTris</strong> is  a complete mutiplayer version of the famous &quot;Tic-Tac-Toe&quot; game. </p>
+ <p><img src="images/game.jpg" width="550" height="358" class="imgBorder"></p>
+ <p>Here's a list of features that we're going to achieve:</p>
+ <p>&raquo; users will log in and join a room called &quot;The Entrance&quot; by default;<br>
+&raquo; users will be able to create a game room where 2 clients can play the tic-tac-toe game;<br>
+&raquo; as soon as the user creates the game he/she will enter the new game room and wait for the second player;<br>
+&raquo; when the 2nd player joins, the game starts;<br>
+&raquo; the application will alternatively set the player's turn and after every move it will check if there's a winner;<br>
+&raquo; the game ends when no more moves are available or one of the player makes a row of three;<br>
+&raquo; at the end of a game the user will be able to either start a new game or to go back in the main chat room.</p>
+ <p><span class="subTitle">&raquo; The application Zone</span></p>
+<p>In the source .FLA file you will notice that we have added a new frame label
+  called &quot;<strong>game</strong>&quot;: that's the frame where we will send
+  the movie clip playhead when we join a game room.</p>
+ <p>Now bring the playhead on the &quot;<strong>connect</strong>&quot; label and open the Actionscript panel (F9).
+  We didn't change much of the code here, however the zone name is different. We wanted our game application to have one main room, called &quot;<strong>The entrance</strong>&quot;, users will enter by default: in this room they will
+  be able to chat and create or join new games.</p>
+ <p>If you open the <strong>config.xml</strong> file in the SmartFoxServer  folder you can better see how this zone is configured:</p>
+ <pre class="code">&lt;Zone name="<font color='blue'>sftris</font>"&gt;
+    &lt;Rooms&gt;
+        &lt;Room name="<font color='blue'>The Entrance</font>" maxUsers="<font color='blue'>50</font>" isPrivate="<font color='blue'>false</font>" isTemp="<font color='blue'>false</font>" autoJoin="<font color='blue'>false</font>" /&gt;
+    &lt;/Rooms&gt;
+&lt;/Zone&gt;</pre>
+ <p>The zone is setup to contain only one room at start. Then clients will be able to dynamically create as many game rooms as they want from the smartFoxTris interface.</p>
+ <p><span class="subTitle">&raquo; Join and Chat </span></p>
+ <p>Let's move on to the next label and open the Actionscript panel (F9). As usual we will use the same application logic adopted so far, and you will notice that most of the code here is almost
+  identical to the previous examples.</p>
+ <p>The following line of code setups a flag that will tell us if the user is currently playing a game:</p>
+ <pre class="code"><font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Setup global vars
+</font><font color='#878787'>//----------------------------------------------------------
+</font>inGame = <font color="#000087">false</font> <font color='#878787'>// flag to see if we're currently playing a game
+</font></pre>
+ <p>The &quot;<strong>inGame</strong>&quot; flag will not be changed until we move to the &quot;game&quot; label so we'll talk about it later.</p>
+ <p>Next we have a look a the <strong>onJoinRoom</strong> event handler:</p>
+ <pre class="code">smartfox.onJoinRoom = <font color="#993300">function</font>(roomObj)
+{
+        <font color="#993300">if</font> (roomObj.isGame())
+        {
+                <font color="#000087">_global</font>.myID = <font color="#993300">this</font>.playerId
+                
+                <font color="#993300">if</font> (<font color="#000087">_global</font>.myID == 1)
+                       <font color="#000087">_global</font>.myColor = "<font color='blue'>green</font>"
+                <font color="#993300">else</font>
+                       <font color="#000087">_global</font>.myColor = "<font color='blue'>red</font>"
+                
+                <font color='#878787'>// let's move in the "game" label
+</font>                <font color="#000087">gotoAndStop</font>("<font color='blue'>game</font>")
+        }
+        <font color="#993300">else</font>
+        {
+                <font color="#993300">var</font> roomId = roomObj.getId()
+                <font color="#993300">var</font> userList = roomObj.getUserList()
+                resetRoomSelected(roomId)
+                <font color="#000087">_global</font>.currentRoom = roomObj
+                
+                <font color='#878787'>// Clear current list
+</font>                userList_lb.<font color="#000087">removeAll</font>()
+                
+                <font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> userList)
+                {
+                        <font color="#993300">var</font> user = userList[i]
+                        <font color="#993300">var</font> uName = user.getName()
+                        <font color="#993300">var</font> uId = user.getId()
+                        
+                        userList_lb.<font color="#000087">addItem</font>(uName, uId)
+                }
+                
+                <font color='#878787'>// Sort names
+</font>                userList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+                
+                chat_txt.<font color="#000087">htmlText</font> += "<font color='blue'>&lt;font color='#cc0000'&gt;&gt;&gt; Room [ </font>" + roomObj.getName() + "<font color='blue'> ] joined&lt;/font&gt;</font>";
+        }
+}</pre>
+ <p>The first thing that we have to do is checking if the client has joined a game room. In fact this time we're dealing with two type of rooms: &quot;<strong>regular</strong>&quot; ones and &quot;<strong>game</strong>&quot; ones, so each time a room is joined we have to check what type of room the user joined and take the appropriate action. </p>
+ <p>The <strong>isGame()</strong> method returns true if the current room is a game room.</p>
+ <p>The code used to handle the non-game room is always the same used before so we can analyze the part used
+  when a game room is detected.</p>
+ <p>The <strong>playerId</strong> variable is a new client API property that we haven't met before. It represent our unique <strong>player numeric id</strong><br>
+  in the room. This way we will be able to check which user is the client that is currently using the application and take the proper decision.</p>
+ <p>In this sample application every game room will have a capacity of 2 users so the <strong>playerId</strong> will only be assigned two possible<br>
+  values: 1 or 2, depending on the room state.</p>
+ <p>We save the <strong>playerId</strong> in a _global variable and then, based on its value, we assign a player color and a player name. If playerId is 1, we'll be player 1 and we'll play with the green colored balls, otherwise we will impersonate player 2 and<br>
+  we'll use red balls.</p>
+ <p>Then the playhead is stopped on the &quot;<strong>game</strong>&quot; label.</p>
+ <p>Before we analyze the Actionscript in the game section we need to take a look at the new <strong>createRoom</strong> function:</p>
+ <pre class="code"><font color="#993300">function</font> createRoom(name, pwd, <font color="#000087">max</font>)
+{
+        hideWindow("<font color='blue'>newGameWindow</font>")
+        
+        gameRoom = {}
+        gameRoom.name = name
+        gameRoom.<font color="#000087">password</font> = pwd
+        gameRoom.maxUsers = 2
+        gameRoom.isGame = <font color="#000087">true</font>
+        gameRoom.isTemp = <font color="#000087">true</font>
+        
+        smartfox.createRoom(gameRoom)
+}</pre>
+ <p>As usual the &quot;create game&quot; dialog is closed and then we proceed creating the object representing the room that we are going to<br>
+create. This time the <strong>isGame</strong> flag is set to true: this will tell the server that the room will hold a game.</p>
+ <p>What's the difference between a &quot;regular&quot; room and a &quot;game&quot; one? Almost no difference, however there is a slight difference in the behaviour when the room is empty. In the &quot;<strong>Advanced Chat</strong>&quot; tutorial we said that &quot;regular&quot; rooms are removed only when the last user exits 
+  and the room creator is not connected anymore in the zone. If the creator is still around the room will not be destroyed.<br>
+                <br>
+A game room behaves a little differently because it will be removed as soon as the last user leaves it. This is the ony difference.</p>
+ <p>Also it is important that game rooms are recognizable from the others so that you can group them together for example<br>
+  in a different list box. This is exactly what we've done in this demo game.</p>
+ <p>Also the <strong>sendChatMsg</strong> function was slightly modified:</p>
+ <pre class="code"><font color="#993300">function</font> sendChatMsg()
+{
+        <font color="#993300">if</font> (ingame)
+        {
+                <font color="#993300">if</font> (<font color="#000087">_global</font>.gameStarted &amp;&amp; input_txt.<font color="#000087">text</font>.<font color="#000087">length</font> &gt; 0)
+                {
+                        smartfox.sendPublicMessage(input_txt.<font color="#000087">text</font>)
+                        input_txt.<font color="#000087">text</font> = "<font color='blue'></font>"
+                }
+        }
+        <font color="#993300">else</font> <font color="#993300">if</font> (input_txt.<font color="#000087">text</font>.<font color="#000087">length</font> &gt; 0)
+        {
+                smartfox.sendPublicMessage(input_txt.<font color="#000087">text</font>)
+                input_txt.<font color="#000087">text</font> = "<font color='blue'></font>"
+        }
+}</pre>
+ <p>In a moment we will see that that the game area also contains a small chat window where players can keep chatting while playing. The chat dynamic text field instance was named just like the one in the main chat to keep things simple.<br>
+However we have added some more checks to prevent text from being submitted if the game is not started yet.</p>
+ <p><span class="subTitle">&raquo; The game board </span></p>
+ <p>Move the playehead on the &quot;<strong>game</strong>&quot; label and inspect the game GUI:</p>
+ <p><img src="images/layout.gif" width="383" height="259" class="imgBorder"></p>
+ <p>We've added three new dynamic text fields that will show the names of the players and the one in the middle will show whose turn is. As mentioned before there's a new multiline text field with scrollbar for chatting and the most important movie clip is the game board.</p>
+ <p>The board movie is made up of nine square clips each one called according its grid position: the top-left one is called <strong>sq_1_1</strong> and the bottom right one is called <strong>sq_3_3</strong>.</p>
+<p>Now open the library (F11) and examine the item called &quot;<strong>gridSquare</strong>&quot;, under the _GUI/_gameBoard folder.<br>
+  The symbol is made up of a colored square, a button and an instance of the &quot;<strong>ballElement</strong>&quot; movieclip
+  that can be found in the <strong>_Balls</strong> library folder.</p>
+ <p>Now open this symbol and you will notice that it has three states corresponding to name of the labels: &quot;<strong>off</strong>&quot;, &quot;<strong>red</strong>&quot;, &quot;<strong>green</strong>&quot;.</p>
+ <p>We'll be able to control each of these clips inside the game board to show the right item when a user clicks on of the<br>
+  squares.</p>
+ <p><span class="subTitle">&raquo; Room variables </span></p>
+ <p>Before analyzing the game logic code, we have to understand what &quot;<strong>Room Variables</strong>&quot; are, and the differences between the already known &quot;User Variables&quot;.</p>
+ <p>The one and only big difference between the two is that <strong>Room Variables</strong> are values stored in the room object opposed of the user object.</p>
+<p>To understand why we need to save variables in the Room object, you can think about how the game works: when a user enter the game room he/she will save a variable called &quot;<strong>player1</strong>&quot; or &quot;<strong>player2</strong>&quot; based on which player he is. In order to start the game we need that both variables (<strong>player1</strong>, <strong>player2</strong>) exist in the room otherwise the game will be &quot;paused&quot; until both values are present.</p>
+ <p>By having a &quot;central&quot; place to save our server values, it is very simple to keep track of the status of the game room.</p>
+ <p>Summing it up the &quot;<strong>User variables</strong>&quot; are great when you need to save user specific preferences regardless of which room the client is currently in. On the other hand &quot;<strong>Room variables</strong>&quot; are the right tool when you need to keep track of the status of the Room and this is always an important aspect in game Rooms.</p>
+ <p>Creating a &quot;<strong>Room Variable</strong>&quot; is similar to what we've seen so far:</p>
+ <pre class="code">vObj = <font color="#993300">new</font> <font color="#993300">Array</font>()
+vObj.<font color="#000087">push</font>({name:"<font color='blue'>player</font>" + <font color="#000087">_global</font>.myID, val:<font color="#000087">_global</font>.myName})
+
+smartfox.setRoomVariables(vObj)</pre>
+ <p>You create an array of objects with two properties each, called &quot;name&quot; and &quot;value&quot;, and then call the <strong>setRoomVariables()</strong> API method to set one or more &quot;<strong>Room
+ Variables</strong>&quot; in one shot.</p>
+ <p>As with the &quot;User Variables&quot;, every change in the room variables will be notified to all the clients in that room and you will need to implement a function to handle the &quot;<strong>onRoomVariablesUpdate</strong>&quot; event, which we'll encounter in the next tutorial.</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../07_sendingObjects/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../09_boardGame_p2/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

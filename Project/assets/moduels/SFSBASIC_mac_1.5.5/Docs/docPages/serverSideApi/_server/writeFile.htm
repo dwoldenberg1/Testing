@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.writeFile()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.writeFile(fileName, fileData, append)</p>
+ <p class="title">Description:</p>
+ <p class="plain">Writes a text file on disk.<br />
+   You should provide the file
+   path relative to the folder where the server is located. Default is the <strong>Server/</strong> folder 
+ <p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>fileName</strong></td>
+     <td>&nbsp;</td>
+     <td>the name of the file to write </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>fileData</strong></td>
+     <td>&nbsp;</td>
+     <td>the text data </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>append</strong></td>
+     <td>&nbsp;</td>
+     <td>a boolen, if True data will be appended at the end of the file, otherwise
+       the file will be written as new </td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">A boolean value. True if file writing was successfull </p>
+ <p class="title">Example:</p>
+<pre class="code">
+/*
+* Writes a text file the same folder of the extension.
+*/
+
+var text = "This is a very simple text file!"
+var ok = _server.writeFile("testFile.txt", text)
+
+if (ok)
+	trace("File saved!")
+else 
+	trace("File write failed!")
+</pre>
+<br /> 
+<p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.a Appendix: Actionscript Extension Template </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source </strong> of
+       this example is found in the <strong>Examples/(Flash
+       version)/applicationTemplate</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>This article provides a basic template for creating your you own server side extensions using Actionscript. <br>
+ </p>
+ <p><span class="subTitle">&raquo; Actionscript Extensions in a nuthshell</span> <br>
+   <br>
+Basically an extension has four different tasks to accomplish:<br>
+<br>
+<strong>1) Initialize </strong><br>
+<strong>2) Handle client requests</strong><br>
+<strong>3) Handle internal server events</strong><br>
+<strong>4) Destroy <br>
+<br>
+</strong>These four tasks are handled respectively by four Actionscript functions
+ called: <strong>init()</strong>, <strong>handleRequest()</strong>, <strong>handleInternalEvent()</strong>, <strong>destroy()</strong><br>These four functions <strong>should always be declared</strong> in your
+   extensions, even if they don't contain code. </p>
+ <p><span class="subTitle">&raquo; The template </span> <br>
+   <br>
+ Here's the code of the extension template:</p>
+ <pre class="serverCode">
+ /* 
+* Initializion point:
+* 
+* this function is called as soon as the extension
+* is loaded in the server.
+* 
+* You can add here all the initialization code
+* 
+*/
+function init()
+{
+	trace("Extension initialized")
+}
+
+
+/*
+* This method is called by the server when an extension
+* is being removed / destroyed.
+* 
+* Always make sure to release resources like setInterval(s)
+* open files etc in this method.
+* 
+* In this case we delete the reference to the databaseManager
+*/
+function destroy()
+{
+	trace("Extension destroyed")
+}
+
+
+/*
+* 
+* Handle Client Requests
+* 
+* cmd 		= a string with the client command to execute 
+* params 	= list of parameters expected from the client
+* user 		= the User object representing the sender
+* fromRoom 	= the id of the room where the request was generated
+* 
+*/
+function handleRequest(cmd, params, user, fromRoom)
+{
+	// Add your code here
+}
+
+
+/*
+* This method handles internal events
+* Internal events are dispactched by the Zone or Room where the extension is attached to
+* 
+* the (evt) object
+*/
+function handleInternalEvent(evt)
+{
+	// Add your code here
+}
+
+ </pre>
+<p>&nbsp;</p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../16_theoChat/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../02_simpleChat_p1/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

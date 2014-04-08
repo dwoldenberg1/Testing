@@ -1,0 +1,109 @@
+<!--
+	
+	{ SmartFoxServer Documentation }
+	Sidebar XML topics list
+	
+	revision 1.0.0
+	(c)2005-2006 gotoAndPlay()
+	www.gotoandplay.it
+	www.smartfoxserver.com
+	
+-->
+<topics>
+
+	<section label="1. Introduction">
+           <topic label="1. Overview" url="docPages/intro/overview.htm"/>
+           <topic label="2. Features" new="true" url="docPages/intro/features.htm"/>
+           <topic label="3. Requirements and installation" url="docPages/intro/installation.htm"/>
+		   <topic label="4. Upgrading" url="docPages/intro/upgrading.htm" new="true" />
+	</section>
+	
+	<section label="2. Server configuration">
+		<topic label="1. The Basics"  url="docPages/config/basics.htm"/>
+		<topic label="2. Advanced Settings"  url="docPages/config/advanced.htm"/>
+		<topic label="3. The HTTP server"  url="docPages/config/webServer.htm" new="true" />
+		<topic label="3. Multiple configurations"  url="docPages/config/multipleConfigFiles.htm" new="true" />
+	</section>
+	
+	<section label="3. Running the Server">
+		<topic label="1. The Basics" url="docPages/running/basics.htm"/>
+		<topic label="2. Server logs"  url="docPages/running/logs.htm"/>
+		<topic label="3. The Admin Tool"  url="docPages/running/adminTool.htm"/>
+		<topic label="4. Runtime Zone Management" url="docPages/running/zoneManager.htm"/>
+		<topic label="5. Runtime Extension Management"  url="docPages/running/extManager.htm"/>
+	</section>
+	
+	<section label="4. Flash API">
+		<topic label="1. Installing the API"  url="docPages/api/installing.htm"/>
+		<topic label="2. API Overview"  url="docPages/api/overview.htm"/>
+		<topic label="3. Actionscript 1 API Docs" url="docPages/as1/index.htm" frame="_blank"/>
+		<topic label="4. Actionscript 2 API Docs" url="docPages/as2/index.htm" frame="_blank"/>
+		<topic label="5. Actionscript 3 API Docs" url="docPages/as3/index.html" frame="_blank" new="true"/>
+	</section>
+	
+	<section label="5. SFS Basic Tutorials">
+		<topic label="1. Basic server connection" url="docPages/tutorials_basic/01_connection/index.htm"/>
+		<topic label="2. Simple Chat p.1" url="docPages/tutorials_basic/02_simpleChat_p1/index.htm"/>
+		<topic label="3. Simpler Chat p.2" url="docPages/tutorials_basic/03_simpleChat_p2/index.htm"/>
+		<topic label="4. Advanced Chat p.1"  url="docPages/tutorials_basic/04_advChat_p1/index.htm"/>
+		<topic label="5. Advanced Chat p.2"  url="docPages/tutorials_basic/05_advChat_p2/index.htm"/>
+		<topic label="6. Avatar Chat"  url="docPages/tutorials_basic/06_avatarChat/index.htm"/>
+		<topic label="7. Sending Objects"  url="docPages/tutorials_basic/07_sendingObjects/index.htm"/>
+		<topic label="8. Board Game p.1"  url="docPages/tutorials_basic/08_boardGame_p1/index.htm"/>
+		<topic label="9. Board Game p.2"  url="docPages/tutorials_basic/09_boardGame_p2/index.htm"/>
+		<topic label="10. MultiChat"  url="docPages/tutorials_basic/10_multiChat/index.htm"/>
+		<topic label="11. Room Variables"  url="docPages/tutorials_basic/11_roomVars/index.htm"/>
+		<topic label="12. Buddy List"  url="docPages/tutorials_basic/12_buddyList/index.htm"/>
+		<topic label="13. Custom login integration"  url="docPages/tutorials_basic/13_customLogin/index.htm"/>
+		<topic label="14. Advanced Board Game"  url="docPages/tutorials_basic/14_advBoardGame/index.htm"/>
+		<topic label="15. Multiplayer Yahtzee (by Xelious)"  url="docPages/tutorials_basic/15_yahtzee/index.htm"/>
+		<topic label="16. TheoChat"  url="docPages/tutorials_basic/16_theoChat/index.htm"/>
+		<topic label="17. External Zone Count"  url="docPages/tutorials_basic/17_zoneCount/index.htm" new="true"/>
+		<topic label="-- APPENDIX --" />
+		<topic label="a. Flash application code-template"  url="docPages/tutorials_basic/A_appTemplate/index.htm"/>
+		<topic label="b. Flex 2.0 application code-template"  url="docPages/tutorials_basic/B_as3AppTemplate/index.htm" new="true"/>
+	</section>
+	
+	<section label="6. SmartFoxServer PRO">
+		<topic label="1. Introduction to Extensions" url="docPages/extIntro/whatIsAnExtension.htm"/>
+		<topic label="2. Extensions architecture" url="docPages/extIntro/extArchitecture.htm" />
+		<topic label="3. Connecting to databases" url="docPages/extIntro/databaseConnection.htm" />
+		<topic label="4. Multiple DB connections" url="docPages/extIntro/multipleDbConnections.htm"/>
+		<topic label="5. Sending emails"  url="docPages/extIntro/mailer.htm"/>
+		<topic label="6. Using Java classes with Actionscript" url="docPages/extIntro/javaInActionscript.htm" />
+		<topic label="7. XML and E4X" url="docPages/extIntro/e4x.htm" new="true"/>
+		<topic label="8. Python extensions" url="docPages/extIntro/python.htm" new="true"/>
+		<topic label="9. Java extensions" url="docPages/extIntro/javaExtensions.htm" new="true"/>
+		<topic label="10. Application Architecture" url="docPages/extIntro/roomArchitecture.htm" new="true"/>
+	</section>
+	
+	<section label="7. Serverside Extensions API">
+		<topic label="1. Server-side Actionscript API" url="docPages/serverSideApi/index.htm" frame="_blank" />
+		<topic label="2. Server-side Java Docs" url="docPages/javadoc/index.html" frame="_blank" />
+		<topic label="3. The Server-side framework" url="docPages/extIntro/framework_1.4.0.htm" />
+	</section>
+	
+	<section label="8. SFS PRO Tutorials">
+		<topic label="1. Introduction" url="docPages/tutorials_pro/01_introduction/index.htm" />
+		<topic label="2. Simple Extension" url="docPages/tutorials_pro/02_simpleExtension/index.htm" />
+		<topic label="3. Simple Database Extension" url="docPages/tutorials_pro/03_dbExt/index.htm" />
+		<topic label="4. Advanced Database Extension" url="docPages/tutorials_pro/04_advDbExt/index.htm" />
+		<topic label="5. Login Extension" url="docPages/tutorials_pro/05_loginExt/index.htm" />
+		<topic label="6. Realtime Maze (raw protocol)" url="docPages/tutorials_pro/06_realtimeMaze/index.htm" />
+		<topic label="7. Java objects in Actionscript" url="docPages/tutorials_pro/07_javaInActionscript/index.htm" />
+		<topic label="8. SmartFoxTris PRO" url="docPages/tutorials_pro/08_sfsTrisPro/index.htm" />
+		<topic label="9. Secure Login Tutorial" url="docPages/tutorials_pro/09_secureLogin/index.htm"/>
+		<topic label="10. Pixel game"  url="docPages/tutorials_pro/10_pixelGame/index.htm"/>
+		<topic label="11. The letters game"  url="docPages/tutorials_pro/11_letterGame/index.htm" />
+		<topic label="12. Smart Messenger"  url="docPages/tutorials_pro/12_smartMessenger/index.htm" />
+		<topic label="13. JSON Protocol"  url="docPages/tutorials_pro/13_jsonProtocol/index.htm" new="true"/>
+		<topic label="14. Image Manager"  url="docPages/tutorials_pro/14_imageManager/index.htm" new="true"/>
+		<topic label="15. Dynamite Demolition"  url="docPages/tutorials_pro/15_dynamiteDemolition/index.htm" new="true"/>
+		<topic label="Other examples" url="docPages/tutorials_pro/otherExamples/index.htm" />
+		<topic label="-- APPENDIX --" />
+		<topic label="a. Actionscript Extension template"  url="docPages/tutorials_pro/Appendix/asTemplate.htm" />
+		<topic label="b. Java Extension template"  url="docPages/tutorials_pro/Appendix/javaTemplate.htm" />
+		<topic label="c. Python Extension template"  url="docPages/tutorials_pro/Appendix/pyTemplate.htm" new="true"/>
+	</section>
+</node>
+

@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.14 Tutorials: Image Manager </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source</strong> of 
+       this example is found under the <strong>Examples/AS2/22_pro_fileManager </strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>In this tutorial
+ we'll show how simple is to create a multi user image file manager  using the new embedded HTTP server coming with SmartFoxServer 1.5.0 and higher.<br>
+ The sample application that we're going to build (see picture below) will allow users to upload images from their local folders and share them in real time with the other clients connected. In the example we will also add a delete button to remove uploaded images.
+ <p><img src="images/imageManager.jpg" alt="imgManager" width="946" height="608"> 
+
+<p><span class="subTitle">&raquo; Application setup</span></p>
+ <p>The application runs in its own Zone as defined in the main configuration file:</p>
+ <pre class="code">
+&lt;Zone name=&quot;imgMan&quot; emptyNames=&quot;true&quot;&gt;
+	&lt;AutoReloadExtensions&gt;true&lt;/AutoReloadExtensions&gt;
+	&lt;Rooms&gt;
+		&lt;Room name=&quot;MainLobby&quot; maxUsers=&quot;50&quot; isPrivate=&quot;false&quot; isTemp=&quot;false&quot; autoJoin=&quot;true&quot; /&gt;
+		&lt;/Rooms&gt;
+
+	&lt;Extensions&gt;
+		&lt;extension name=&quot;imgman&quot; className=&quot;imageManager.as&quot; type=&quot;script&quot;&gt;&lt;/extension&gt;
+	&lt;/Extensions&gt;
+&lt;/Zone&gt;  </pre>
+ <p>For the sake of simplicity we just use one main room, set as autojoin, and we  define one extension called &quot;<strong>imgman</strong>&quot; that points to the imageManager.as file inside the default extension folder ( <strong>sfsExtensions/</strong> ). The &lt;AutoReloadExtensions&gt; option allows us to quickly restart the extension each time we modify it. </p>
+ <p><span class="subTitle">&raquo; Uploading files </span></p>
+ <p>Before we start analyzing the example code it is useful to take a look at the following diagram  showing how the file upload is handled and integrated in SmartFoxServer.<br>
+ </p>
+ <p><img src="images/uploadDiagram.gif" alt="upDiag" width="708" height="470"> </p>
+ <p><strong>1 -</strong> The Flash client first connects to the server and joins the &quot;Main Lobby&quot; room inside the example Zone.</p>
+ <p><strong>2 -</strong> The user chooses one file to upload (an image, mp3 file, video file etc...) and hits the &quot;Upload button&quot;. The file is transferred to the embedded web server. </p>
+ <p><strong>3 -</strong> SmartFoxServer handles the file transfer and notifies the Zone extension with an event. From here it's up to the custom extension to handle the event and implement the necessary application logic (for example send an updated file list to all clients inside the &quot;Main Lobby&quot;)</p>
+ <p><span class="subTitle">&raquo; The Server side extension</span> </p>
+ <p>Let's  start by analyzing the code in the server extension, located inside the <strong>sfsExtensions/</strong> folder. </p>
+ <pre class="serverCode">
+var imageList = null
+var imagePath = "./webserver/webapps/default/uploads/"
+var zone = null
+
+function init()
+{
+	zone = _server.getCurrentZone()
+	imageList = []
+
+	// Get the list of images in the folder
+	var dir = _server.getFileList(imagePath)
+	
+	// Cycle through all files
+	for (var i in dir)
+	{
+		var file = dir[i]
+		
+		// Check if the current file is a jpg or png image 
+		if (file.indexOf(".jpg") > -1 || file.indexOf(".png") > -1)
+		{
+			// Add it to the local list
+			imageList.push(String(dir[i]))
+		}
+		
+	}
+	
+	trace("Image Manager extension starts...")
+}
+ </pre>
+ <p>
+   We start by defining three global variables: <strong>imageList</strong>  stores the current list of images available, <strong>imagePath</strong> points to the default path of the uploaded files, and <strong>zone</strong> is a reference to the current Zone object. The <strong>init()</strong> method is called as soon as the server starts and it populates the imageList array with all files available having a &quot;.jpg&quot; or &quot;.png&quot; extension.
+  <br>
+   You may be probably wondering why we store the list of files instead of reading it every time it's requested by the client. The reason is that usually disk accesses are slower especially with many files, so we prefer to keep a local list of files and avoid to continuously read the directory structure.</p>
+ <p>If you now scroll the code a few lines down you will see that the <strong>handleRequest()</strong> method essentially handles  two different requests:</p>
+ <ul>
+   <li><strong>getImgList</strong>, returns the current list of images available in an array</li>
+   <li><strong>delImg</strong>, handles the request to delete one of the images. If the deletion is successful the reference to the file is also removed from the local list and finally an update is sent to all users in the room. </li>
+ </ul>
+ <p>One more &quot;task&quot; is handled inside the <strong>handleInternalEvent()</strong> method when a new file is uploaded: the file name is added to the local list and a message is dispatched to the clients so that they update their local view.</p>
+ <pre class="serverCode">
+function handleInternalEvent(evt)
+{
+	if (evt.name == "fileUpload")
+	{
+		var files = evt.files
+		var user = evt.user
+		var room = zone.getRoom(user.getRoom())
+		var fList = []
+		
+		for (var i in files)
+		{
+			trace("Upload file: " + files[i].fileName + ", " + files[i].originalName)
+			imageList.push(files[i].fileName)
+			fList.push(files[i].fileName)
+		}
+		
+		var resp = {}
+		resp._cmd = "fileAdd"
+		resp.files = fList
+		
+		_server.sendResponse(resp, -1, null, room.getAllUsers(), _server.PROTOCOL_JSON)
+	}
+} 
+</pre>
+ <p>The <strong>files</strong> parameter received in the event handler is an array of files that were uploaded. In this specific example we didn't allow the client to select and upload multiple files, however since this is technically possible, we prefer to use a more generic version of the code that can handle multiple uploads. </p>
+ <p><span class="subTitle">&raquo; The client side</span></p>
+ <p>You can now open the source FLA file and position the playhead on the &quot;<strong>chat</strong>&quot; frame label.<br>
+ In order to avoid problems with the flash player security policy we first call the <strong>System.allowDomain()</strong> method specifying the current IP address and  current http port.</p>
+ <pre class="code">System.security.allowDomain("http://" + ip + ":" + smartfox.httpPort)</pre>
+ <p>
+   By default <strong>SmartFoxServer</strong> runs the embedded webserver on port 8080, so the result of the above string concatenation should be <strong>http://127.0.0.1:8080</strong> ( the <strong>ip</strong> variable is defined under the &quot;connect&quot; frame label ). The few next lines of code assign the event handlers to the files list component and to the three buttons available on stage.</p>
+ <pre class="code">
+lb_files.addEventListener("change", loadImage)
+bt_choose.addEventListener("click", chooseFile)
+bt_upload.addEventListener("click", uploadFile)
+bt_delete.addEventListener("click", deleteFile) 
+</pre>
+ <p>After we have successfully auto-joined the &quot;Main Lobby&quot; room we can request the list of images to the server extension. The call is performed at the end of the <strong>onJoinRoom()</strong> handler: </p>
+ <pre class="code">
+// Request list of images
+smartfox.sendXtMessage(xtName, "getImgList", {}, SmartFoxClient.PROTOCOL_JSON)
+</pre>
+<p>We don't need to pass any parameter to the extension so an empty object is used in the 3rd argument. Also notice that we're using the <a href="../13_jsonProtocol/index.htm">JSON format</a> as serialization / deserialization protocol. <br>
+The server will send a response with the same command name (<strong> getImgList</strong> ) that we will handle in the <strong>onExtensionResponse()</strong> function: </p>
+<pre class="code">
+smartfox.onExtensionResponse = function(resObj:Object):Void
+{
+	var cmd:String = resObj._cmd
+	
+	if (cmd == "getImgList")
+	{
+		for (var i:String in resObj.imgList)
+		{
+			lb_files.addItem( {label:resObj.imgList[i], data:resObj.imgList[i]} )
+		}
+		
+		lb_files.sortItemsBy("label", "ASC")
+	}
+	
+</pre>
+<p>Here we simply handle the list of images by adding them to the List component on stage. When one of the names in the list is clicked the following code is executed:</p>
+<pre class="code">
+//----------------------------------------------------------
+//	Handle selection in the image listbox
+//	Load the image that is currently selected in the image list
+//----------------------------------------------------------
+function loadImage()
+{
+	var imgName = lb_files.selectedItem.data
+	imgLoader.visible = false
+	imgLoader.load(smartfox.getUploadPath() + imgName)
+}
+</pre>
+<p>First we obtain the name of the selected file from the <strong>selectedItem.data</strong> property of the List component. In order to build the complete url of the image we call the SmartFoxClient <strong>getUploadPath()</strong> method and concatenate it with the image name. Finally we pass the full url to the <strong>load()</strong> method of the Loader component on stage which will load and display the image. </p>
+<p><span class="subTitle">&raquo; Uploading images </span></p>
+<p>In order to transfer files to the webserver we first need to create a FileReference object. <br>
+  The <strong>FileReference</strong> class was introduced in Flash since version 8: it allows to select one or more files from the local folders and  upload them to a webserver. <br>
+ ( You can read more about the  <a href="http://livedocs.macromedia.com/flash/8/main/wwhelp/wwhimpl/common/html/wwhelp.htm?context=LiveDocs_Parts&file=00002204.html" target="_blank">flash.net.FileReference class here</a> ) </p>
+<pre class="code">
+var fileRef:FileReference = new FileReference()
+fileRef.addListener(this)
+</pre>
+<p>By passing <strong>this</strong> as the even listener object we maintain the  scope in the main timeline, so the event listener methods can be defined in our main code:</p>
+<pre class="code">
+//----------------------------------------------------------
+//	Handles file selection
+//----------------------------------------------------------
+function onSelect(fr:FileReference)
+{
+	filename_txt.text = fr.name
+}
+
+
+//----------------------------------------------------------
+//	Handles file upload complete
+//----------------------------------------------------------
+function onComplete(fr:FileReference)
+{
+	bt_upload.enabled = true
+	bt_upload.label = "Upload"
+}
+
+
+//----------------------------------------------------------
+//	Show upload progress in the button label
+//----------------------------------------------------------
+function onProgress(fr:FileReference, bl:Number, bt:Number)
+{
+	bt_upload.label = Math.floor((bl * 100) / bt) + "%"
+}
+</pre>
+<p>The <strong>onSelect</strong> event will show the name of the selected file in the textfield near the button. <br>
+  When the &quot;Upload&quot; button is pressed the button itself is disabled and it's label will show the percentage of the upload. (see onProgress handler) <br>
+In the <strong>onComplete()</strong> handler the button label is restored and the button re-enabled. </p>
+<p>After a successful file transfer the extension will send a &quot;fileAdd&quot; event to all the clients in the room. The event is handled, as usual, in the <strong>onExtensionResponse()</strong> method: </p>
+<pre class="code">
+	else if (cmd == "fileAdd")
+	{
+		var files:Array = resObj.files
+		for (var i:String in files)
+		{
+			var file:String = files[i]
+			lb_files.addItem( {label:file, data:file} )
+		}
+	}
+</pre>
+<p>The extension response sends an array of files that were uploaded, so we just iterate over it and add the file names to the List component</p>
+<p><span class="subTitle">&raquo; Deleting images </span>  </p>
+<p>When an image is selected in the image list it can be removed by simply clicking the &quot;Delete Image&quot; button. This is the request sent to the server side extension:</p>
+<pre class="code">
+//----------------------------------------------------------
+//	Send a delete-file request
+//----------------------------------------------------------
+function deleteFile()
+{
+	var fName:String = lb_files.selectedItem.data
+	
+	if (fName != undefined)
+		smartfox.sendXtMessage(xtName, "delImg", {fName:fName}, SmartFoxClient.PROTOCOL_JSON)
+}
+</pre>
+<p>We check that a file is selected and send its name to the extension. If no error occurs during the file deletion a &quot;<strong>delImg</strong>&quot; response will be received and handled in the <strong>onExtensionResponse()</strong> method: </p>
+<pre class="code">
+	else if (cmd == "delImg")
+	{
+		var currFile = lb_files.selectedItem.data
+		
+		for (var i:Number = 0; i < lb_files.length; i++)
+		{
+			var file:String = lb_files.getItemAt(i).data
+			if (file == resObj.fName)
+			{
+				lb_files.removeItemAt(i)
+				
+				// Hide current image if it was deleted
+				if (file == currFile)
+					imgLoader.visible = false
+					
+				break
+			}
+		}
+	}
+</pre>
+<p>The server response contains the name of the removed file in a property called <strong>fName</strong>. In order to remove it from our List component we have to iterate over its items, find that name and remove it. Also we check if the image we're currently watching is the one that was deleted and set its <strong>visibility</strong> property to <strong>false</strong>.</p>
+<p><span class="subTitle">&raquo; Conclusions</span></p>
+<p>The example application shows how simple is adding realtime file exchange features with the embedded webserver. This is not just limited to image files but it can also be extended to any other type of document, especially audio files and video files. In fact one of the great features of the flash player is the ability to stream audio and video through the HTTP protocol.</p>
+<p>&nbsp;</p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../14_advBoardGame/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../16_theoChat/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

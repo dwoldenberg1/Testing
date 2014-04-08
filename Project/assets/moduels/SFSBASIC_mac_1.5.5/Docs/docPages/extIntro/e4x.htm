@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.7 XML and E4X </p>
+<p>The <strong>Actionscript</strong> Server Side Framework does not provide the same XML parsing tools provided in Flash, in particular the <strong>XML()</strong> object is missing, at least in the form that  Flash developer know it since the days of Flash 5. <br>
+ <br>
+ In <a href="/docs/docPages/tutorials_pro/07_javaInActionscript/index.htm" target="_top">chapter 8.7</a> we provide a tutorial showing how to use a Java-based parser, integrating it in the Actionscript code.<br>
+ <br>A more powerful way of handling XML data is provided by the<strong> ECMAScript for XML (E4X)</strong> language which extends the standard Actionscript / Javascript set of functionalities.<br>
+ <br>
+ From <strong>SmartFoxServer version 1.5.0</strong> we've added support to the E4X extensions, thanks to the <a href="http://www.mozilla.org/rhino/" target="_blank">Rhino</a> javascript engine. 
+ <p><span class="subTitle">&raquo; A quick introduction to E4X</span> 
+ <p>A lot of documentation already exist about E4X with good and detailed examples. Additionally E4X was also adopted by Adobe in the latest Actionscript 3.0 specifications, which will probably make it quite popular.<br>
+ <br>Here's a selection of articles that may help you learning more about E4X:
+ <p>-&gt; <a href="http://livedocs.macromedia.com/flex/2/docs/wwhelp/wwhimpl/js/html/wwhelp.htm?href=00001910.html" target="_blank">Adobe labs introduction</a> <br>
+   -&gt; <a href="http://www.brajeshwar.com/archives/2005/10/e4x_or_ecmascript_for_xml_in_flash/" target="_blank">Brajeshwar's article on E4X</a><br>
+   -&gt;   <a href="http://www.w3schools.com/e4x/default.asp" target="_blank">W3Schools introduction to E4X</a><br> -&gt; <a href="http://www.ecma-international.org/publications/standards/Ecma-357.htm" target="_blank">Ecmascript E4X language specifications</a>
+<p>The most interesting aspect of E4X is that it makes XML a native datatype, allowing developers to traverse the XML tree  easily and efficiently. 
+<p>In this article we will reuse the same XML example file from <strong>tutorial 8.7</strong> and we'll use E4X to parse it. You will notice how simple and concise is the resulting code:
+<pre class="serverCode">
+// Global extension variables
+var xmlObj = null
+
+function init()
+{
+	// Read xml file from disk
+	var xmlData = _server.readFile("sfsExtensions/data/books.xml")
+	
+	// Create an XML object
+	xmlObj = new XML(xmlData)
+	
+	// Show data
+	readTheXmlFile()
+}
+
+
+/*
+* Read and parse the XML file
+*/
+function readTheXmlFile()
+{
+	// Show the <collectionName> and <collectionOwner> nodes
+	trace("Collection Name: " + xmlObj.collectionName)
+	trace("Collection Owner: " + xmlObj.collectionOwner + newline)
+	
+	var bookList = xmlObj.bookList.book
+
+	for (var i = 0; i < bookList.length(); i++)
+	{
+		trace("Title    : " + bookList[i].@title)
+		trace("Author   : " + bookList[i].@author)
+		trace("Year     : " + bookList[i].@year)
+		trace("Publisher: " + bookList[i].@publisher)
+		trace("-------------------------------------")
+	}
+}
+</pre> 
+<p>If you are familiar with object-based languages like Javascript and Actionscript, you will notice that the code is very simple to understand. The <strong>XML</strong> object <strong>behaves exactly like any other generic object</strong> with the peculiarity that nodes are represented as object properties, and  attributes are identified by a &quot;@&quot; prefix. </p>
+<p>The power of E4X is not just in the ability to traverse the XML tree as an object, but also to provide conditions for filtering nodes and attributes. The following example searches all books in our sample XML that were published in  2003. </p>
+<pre class="serverCode">
+// Global extension variables
+var xmlObj = null
+
+function init()
+{
+	// Read xml file from disk
+	var xmlData = _server.readFile("sfsExtensions/data/books.xml")
+	
+	// Create an XML object
+	xmlObj = new XML(xmlData)
+
+	
+	// Example #1: search all books published in 2003
+
+	var books = xmlObj.bookList.book.(@year == 2003)
+
+	for (var i = 0; i < books.length(); i++)
+	{
+		trace("Title    : " + books[i].@title)
+		trace("Author   : " + books[i].@author)
+		trace("Year     : " + books[i].@year)
+		trace("Publisher: " + books[i].@publisher)
+		trace("-------------------------------------")
+	}
+}
+</pre>
+<p>All the &quot;magic&quot; is performed in one single line of code:</p>
+<pre class="serverCode">
+var books = xmlObj.bookList.book.(@year == 2003)
+</pre>
+<p>Here follows one more example showing how to retrieve all books that contain the keyword &quot;Java&quot; in their title attribute:</p>
+<pre class="serverCode">
+// Global extension variables
+var xmlObj = null
+
+function init()
+{
+	// Read xml file from disk
+	var xmlData = _server.readFile("sfsExtensions/data/books.xml")
+	
+	// Create an XML object
+	xmlObj = new XML(xmlData)
+	
+	// Example #2: match a substring in name attribute
+	var books = xmlObj.bookList.book.(@title.toString().indexOf("Java") > -1)
+
+	for (var i = 0; i < books.length(); i++)
+	{
+		trace("Title    : " + books[i].@title)
+		trace("Author   : " + books[i].@author)
+		trace("Year     : " + books[i].@year)
+		trace("Publisher: " + books[i].@publisher)
+		trace("-------------------------------------")
+	}
+}
+</pre>
+<p>Not only E4X is great at quickly parsing complex XML data but it's also extremely handy in dynamically populating new XML data.<br>
+  In order to learn more we highly recommend to check the articles presented at the beginnig of this article.</p>
+<p>&nbsp;</p>
+<hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="mailer.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right">&nbsp;</td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.logoutUser()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.5.5 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.logoutUser(user, fireClientEvent, fireInternalEvent)</p>
+ <p class="title">Description:</p>
+ <p class="plain">Logout a user from the current Zone. <br />
+ The client will still be connected to the server but he will have to login again in a Zone, in order to interact with the server. 
+ <p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>user</strong></td>
+     <td>&nbsp;</td>
+     <td>can be either the <strong>user id</strong> (number) or the <strong>User object</strong> (it.gotoandplay.smartfoxserver.data.User) </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>fireClientEvent</strong></td>
+     <td>&nbsp;</td>
+     <td>flag, by default = true. It fires the onLogout event on the client side  </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>fireInternalEvent</strong></td>
+     <td>&nbsp;</td>
+     <td>flag, by default = true. It fires the logOut internal server event  </td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">Nothing</p>
+ <p class="title">Example:</p>
+<pre class="code">
+/*
+* The server extension receives a custom request from the client
+* and logs out the user.
+*
+* Additional flags are not passed, so default values will be used
+*/
+function handleRequest(cmd, params, user, fromRoom)
+{
+	if (cmd == "letMeOut")
+	{
+		trace("User " + user.getName() + " wants to go out!")
+		_server.logoutUser(user)
+	}
+}
+</pre>
+<br />
+ <p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

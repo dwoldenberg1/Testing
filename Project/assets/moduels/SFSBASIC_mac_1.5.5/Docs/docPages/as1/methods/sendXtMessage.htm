@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">sendXtMessage()</p>
+ <p class="title">Availability:</p>
+<p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer  Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.sendXtMessage(xtName, cmdName, paramObj,
+ type, roomId) </p>
+ <p class="title">Description:</p>
+<p class="plain">Sends a request to an extension in the current Zone / Room </p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>xtName</strong></td>
+     <td>&nbsp;</td>
+     <td>name of the extension to call </td>
+   </tr>
+   <tr>
+     <td><strong>cmdName</strong></td>
+     <td>&nbsp;</td>
+     <td>name of the command to execute in the extension</td>
+   </tr>
+   <tr>
+     <td><strong>paramObj</strong></td>
+     <td>&nbsp;</td>
+     <td>an object containing all the data to pass to the extension </td>
+   </tr>
+   <tr>
+     <td><strong>type</strong></td>
+     <td>&nbsp;</td>
+     <td>can be &quot;<strong>xml</strong>&quot; or &quot;<strong>str</strong>&quot;,
+       based on the type of protocol you want to use. By default &quot;<strong>xml</strong>&quot; is used </td>
+   </tr>
+   <tr>
+     <td><strong>roomId</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) the id of the room where the request is coming from </td>
+   </tr>
+ </table>
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong><strong>onExtensionResponse</strong></strong> event </p>
+ <p class="title">Example:</p>
+ <pre class="code">
+// A bullet is being fired
+// Let's notify the server side extension
+
+var request = {}
+request.type = "bullet"
+request.posx = 100
+request.posy = 200
+request.speed = 10
+request.angle = 45
+
+// Invoke "fire" command on the extension called "gameExt"
+smartFox.sendXtMessage("gameExt", "fire", request)
+</pre><br /><br />
+You can learn more about Server side extensions by checking <strong>section 6</strong> of the SmartFoxServer PRO documentation.
+ <p class="title">See also:</p>
+ <p class="plain"><strong><strong><strong><strong><strong><strong>onPublicMessage</strong></strong>,
+           sendPrivateMessage() </strong></strong></strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

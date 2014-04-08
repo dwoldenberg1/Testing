@@ -1,0 +1,566 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.14 Tutorials: Advanced Board Game </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available  under the <strong>Examples/AS2/sfsTris_advanced</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>In this tutorial we will learn how to add support for spectators in game
+   rooms. Spectators are a particular class of users that can join a game room
+   but  can't interact with the game. When one of the players in the room
+ leaves the game one of the spectators can take its place.<br>
+ To demonstrate how <strong>SmartFoxServer</strong> handles
+ spectators we will use the previous &quot;<strong>SmartFoxTris</strong>&quot; board
+   game and we'll add spectators to it.<br>
+   By the end of this tutorial you will have learned how to create a full turn-based
+   games with spectator support all done on the client side. Also using the previous
+   tutorials you will be able to add extra features like a buddy list or multi-room
+capabilities.</p>
+ <p><span class="subTitle">&raquo; Requirements<br>
+   <br>
+ </span>Before proceeding with this tutorial it is necessary that you're already
+ familiar with the basic SmartFoxServer concepts and that you've already studied
+ the &quot;<strong>SmartFoxTris</strong>&quot; board game tutorial.<br>
+     <br>
+     <span class="subTitle">&raquo; Objectives</span></p>
+ <p>We will enhance the previous &quot;<strong>SmartFoxTris</strong>&quot; board game by adding
+ the following features:<br>
+ <br>
+ &raquo; new options in the &quot;create room&quot; dialogue
+ box: you will be able to specify the maximum amount of spectators for the game
+ room<br>
+   &raquo; new options in the &quot;join&quot; dialogue box: the user will have
+   to choose if joining as a spectator or player<br>
+ &raquo; the ability to switch from spectator to player when a player slot is free</p>
+ <p><img src="images/advBoardGame.gif" width="500" height="325" class="imgBorder"></p>
+ <p><span class="subTitle">&raquo; Creating rooms with spectators and handling
+ user count updates</span></p>
+ <p>Before we dive in the game code we'd like to have a look at the <strong>createRoom</strong>(roomObj)
+ command.<br>
+ The <strong>roomObj</strong> argument is an object with the following properties:</p>
+ <table width="100%"  border="0" cellspacing="0" cellpadding="2">
+   <tr>
+     <td width="140"><strong>name</strong></td>
+     <td>the room name</td>
+   </tr>
+   <tr>
+     <td><strong>password</strong></td>
+     <td>a password for the room (optional)</td>
+   </tr>
+   <tr>
+     <td><strong>maxUsers</strong></td>
+     <td>the max. number of users for that room</td>
+   </tr>
+   <tr>
+     <td><strong>maxSpectators</strong></td>
+     <td>the max. number of spectator slots (only for game rooms )</td>
+   </tr>
+   <tr>
+     <td><strong>isGame</strong></td>
+     <td>a boolean, true if the game is a game room</td>
+   </tr>
+   <tr>
+     <td><strong>variables</strong></td>
+     <td>an array of room variables (see below)</td>
+   </tr>
+ </table>
+ <p>As you can see, not only you can specify the maximum number of users but
+   also how many spectators you want for each game room. When you have created
+   a game room with players and spectators you will receive user count updates
+   not only for players but for spectators too. <br>
+   As you may recall we can handle
+   user count updates through the <strong>onUserCountChange(roomId)</strong> event handler where
+   the <strong>roomId</strong> parameter tells us in which room the update occured.</p>
+ <p>Here follows the code used in this new version of &quot;<strong>SmartFoxTris</strong>&quot;:</p>
+ <pre class="code"><font color="#993300">function</font> updateRoomStatus(roomId:<font color="#993300">Number</font>)
+{
+        <font color="#993300">var</font> room:Room = smartfox.getRoom(roomId)
+        <font color="#993300">var</font> newLabel:<font color="#993300">String</font>
+        
+        <font color="#993300">if</font> (!room.isGame())
+        newLabel = room.getName() + "<font color='blue'> (</font>" + room.getUserCount() + "<font color='blue'>/</font>" + room.getMaxUsers() + "<font color='blue'>)</font>"
+        <font color="#993300">else</font>
+        {
+                newLabel = room.getName() + "<font color='blue'> (</font>" + room.getUserCount() + "<font color='blue'>/</font>" + room.getMaxUsers()
+                newLabel += "<font color='blue'>)-(</font>" + room.getSpectatorCount() + "<font color='blue'>/</font>" + room.getMaxSpectators() + "<font color='blue'>)</font>"
+        }
+        
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i:<font color="#993300">Number</font> = 0; i &lt; roomList_lb.<font color="#000087">getLength</font>(); i++)
+        {
+                <font color="#993300">var</font> item:<font color="#993300">Object</font> = roomList_lb.<font color="#000087">getItemAt</font>(i)
+                
+                <font color="#993300">if</font> (roomId == item.data)
+                {
+                        roomList_lb.<font color="#000087">replaceItemAt</font>(i, newLabel, item.data)
+                        <font color="#993300">break</font>;
+                }
+        }
+}
+</pre>
+ <p> In the first line we get the room object, then we check if the room is a
+   game and we dynamically create a label for the game list component we have
+on screen.</p>
+ <p>The label will be formatted like this: &quot;roomName (currUsers / maxUsers) -
+   (currSpectators / maxSpectators)&quot; and we get the updated values by calling
+   the following room methods:</p>
+ <table width="100%"  border="0" cellspacing="0" cellpadding="2">
+   <tr>
+     <td width="180"><strong>room.getUserCount()</strong></td>
+     <td>returns the number of users in the room</td>
+   </tr>
+   <tr>
+     <td><strong>room.getMaxUsers()</strong></td>
+     <td>returns the max. amount of users for that room</td>
+   </tr>
+   <tr>
+     <td><strong>room.getSpectatorCount()</strong></td>
+     <td>returns the number of spectators currently in the room</td>
+   </tr>
+   <tr>
+     <td><strong>room.getMaxSpectators()</strong></td>
+     <td>returns the max. number of spectators for that room</td>
+   </tr>
+ </table>
+ <p><span class="subTitle">&raquo; Handling Spectators</span></p>
+ <p>Adding spectators to the game introduces a few difficulties which we'll overcome
+by using <strong>Room Variables</strong>. The first problem  is how to
+keep an &quot;history&quot; of the game
+   in progress so that when a spectator joins a game room he's immediately updated
+to the current status of the game.</p>
+ <p>If you go back to the previous version of this board game you will notice
+   that we've been using the <strong>sendObject()</strong> command to send moves
+   from one client to the other. For the purpose of that game it was very easy
+   to send game moves. Unfortunately in this new scenario using the <strong>sendObject</strong> is
+   not going to work because moves are sent only between clients: if a
+   spectator enters the room in the middle of a game we wouldn't be able to synch
+   him with the current game status.</p>
+ <p>The solution to the problem is to keep the game status on the server side
+   by storing the  game board data in a Room Variable that we will call &quot;<strong>board</strong>&quot;.
+   By doing so each move is stored in the server side and a spectator joining
+   in the middle of the game can easily read the current game status and get
+   in synch with the other clients. In order to optimize the Room Variable as
+   much as possible we will make our &quot;<strong>board</strong>&quot; variable
+   a string of 9 characters, each one representing one cell of the 3x3 board.   </p>
+ <p>We'll use a dot (<strong>.</strong>) for empty cells a &quot;<strong>G</strong>&quot; for green balls and an &quot;<strong>R</strong>&quot; for
+   red balls: this way we send a very small amount of data each time we make
+   a move.</p>
+ <p>Also we need another Room Variable to indicate which cell the player clicked
+   and who sent the move: the new variable will be called &quot;<strong>move</strong>&quot; and
+   it will be a string with 3 comma separated parameters: <strong>p, x, y</strong></p>
+ <p><strong>p</strong> = playerId<br>
+   <strong>x</strong> = x pos of the cell<br>
+   <strong>y</strong> = y pos of the cell</p>
+ <p>In other words this move: &quot;1,2,1&quot; will mean that player 1 has
+   clicked on the cell at x=2 and y=1</p>
+ <p>Each time a move is done we will send the new status of the board plus the
+   move variable to the other clients.<br>
+   Summing up we will have four room variables
+   in each game room: <strong>player1</strong>, <strong>player2</strong>, <strong>move</strong>, <strong>board. </strong>As
+   you remember &quot;<strong>player1</strong>&quot; and &quot;<strong>player2</strong>&quot; are
+   the names of the users playing in the room. These variables tell us how many
+   players are inside and if we can start/stop the game.</p>
+ <p><span class="subTitle">&raquo; Advanced Room Variables features</span><br>
+   <br>
+   If you look at the documentation of the <strong>onRoomVariablesUpdate()</strong> event you
+will notice that it sends two arguments: roomObj and changedVars. We already
+   know the <strong>roomObj</strong> argument but whe should introduce the second one: <strong>changedVars</strong>   is an associative array with the names of the variables that were updated
+as keys.</p>
+ <p>In other words if you want to know if a variable called &quot;test&quot; was
+   changed in the last update, you can just use this code:</p>
+<pre class="code">smartfox.onRoomVariablesUpdate = <font color="#993300">function</font>(roomObj:Room, changedVars:<font color="#993300">Object</font>)
+{
+        <font color='#878787'>// Get variables
+</font>        <font color="#993300">var</font> rVars:<font color="#993300">Object</font> = roomObj.getVariables()
+        
+        <font color="#993300">if</font> (changedVars["<font color='blue'>test</font>"])
+        {
+                <font color='#878787'>// variable was updated, do something cool here...
+</font>        }
+}
+</pre>
+ <p>This feature may not seem particularly interesting at the moment, however
+   it will become very useful as soon as we progress with the analysis of the
+   code.<br>
+   The actionscript code located in the frame labeled &quot;<strong>chat</strong>&quot; is very
+   similar to the one in the previous version of the game, however we have added
+   an important new flag called &quot;<strong>iAmSpectator</strong>&quot; which will indicate
+ if the current player is a spectator or not.</p>
+ <p>Let's see how this flag is handled in the <strong>onJoinRoom</strong> event handler:</p>
+ <pre class="code">smartfox.onJoinRoom = <font color="#993300">function</font>(roomObj:Room)
+{
+        <font color="#993300">if</font> (roomObj.isGame())
+        {
+                <font color="#000087">_global</font>.myID = <font color="#993300">this</font>.playerId;
+                
+                <font color="#993300">if</font> (<font color="#000087">_global</font>.myID == -1)
+                	iAmSpectator = <font color="#000087">true</font>
+                
+                <font color="#993300">if</font> (<font color="#000087">_global</font>.myID == 1)
+                	<font color="#000087">_global</font>.myColor = "<font color='blue'>green</font>"
+                <font color="#993300">else</font> <font color="#993300">if</font> (<font color="#000087">_global</font>.myID == 2)
+                <font color="#000087">	_global</font>.myColor = "<font color='blue'>red</font>"
+                
+                <font color='#878787'>// let's move in the "game" label
+</font>                <font color="#000087">gotoAndStop</font>("<font color='blue'>game</font>")
+        }
+        <font color="#993300">else</font>
+        {
+                <font color="#993300">var</font> roomId:<font color="#993300">Number</font> 		= roomObj.getId()
+                <font color="#993300">var</font> userList:<font color="#993300">Object</font> 	= roomObj.getUserList()
+                
+                resetRoomSelected(roomId)
+                
+                <font color="#000087">_global</font>.currentRoom = roomObj
+                
+                <font color='#878787'>// Clear current list
+</font>                userList_lb.<font color="#000087">removeAll</font>()
+                
+                <font color="#993300">for</font> (<font color="#993300">var</font> i:<font color="#993300">String</font> <font color="#993300">in</font> userList)
+                {
+                        <font color="#993300">var</font> user:User 		= userList[i]
+                        <font color="#993300">var</font> uName:<font color="#993300">String</font> 	= user.getName()
+                        <font color="#993300">var</font> uId:<font color="#993300">Number</font>		= user.getId()
+                        
+                        userList_lb.<font color="#000087">addItem</font>(uName, uId)
+                }
+                
+                <font color='#878787'>// Sort names
+</font>                userList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+                
+                chat_txt.<font color="#000087">htmlText</font> += "<font color='blue'>&lt;font color='#cc0000'&gt;&gt;&gt; Room [ </font>" + roomObj.getName() + "<font color='blue'> ] joined&lt;/font&gt;</font>";
+        }
+}
+</pre>
+ <p>In the past tutorials you have learned that every player in a game room is
+   automatically assigned a <strong>playerId</strong>, which will help us recognize player numbers.
+   When a spectator joins a game room you will be able to recognize him because
+ his/her playerId is set to -1. In other words all players will have their own
+ unique playerId while the spectator will be identified with a playerId = -1</p>
+ <p>In the first lines of the code, after checking if the currently
+   joined room is a game, we check the playerId to see if we'll be acting as
+   a regular player or as a spectator. The rest of the code is just the same
+   as the previous version so we can move on the next frame, labeled &quot;<strong>game</strong>&quot;.</p>
+ <p><span class="subTitle">&raquo; The game code</span></p>
+ <p>The first part of the code inside this frame sets up the player based on
+ the &quot;<strong>iAmSpectator</strong>&quot; flag.</p>
+ <pre class="code"><font color="#993300">var</font> vObj:<font color="#993300">Array</font> = <font color="#993300">new</font> <font color="#993300">Array</font>()
+
+<font color='#878787'>// If user is a player saves his name in the user variables
+</font><font color="#993300">if</font> (!iAmSpectator)
+{
+        vObj.<font color="#000087">push</font>({name:"<font color='blue'>player</font>" + <font color="#000087">_global</font>.myID, val:<font color="#000087">_global</font>.myName})
+        smartfox.setRoomVariables(vObj)
+}
+
+<font color='#878787'>// If I am a spectator we analyze the current status of the game
+</font><font color="#993300">else</font>
+{
+        <font color='#878787'>// Get the current board server variable
+</font>        <font color="#993300">var</font> rVars:<font color="#993300">Object</font> = smartfox.getActiveRoom().getVariables()
+        <font color="#993300">var</font> serverBoard:<font color="#993300">String</font> = rVars["<font color='blue'>board</font>"]
+        
+        <font color='#878787'>// If both players are in the room the game is currently active
+</font>        <font color="#993300">if</font> (rVars["<font color='blue'>player1</font>"].<font color="#000087">length</font> &gt; 0 &amp;&amp; rVars["<font color='blue'>player2</font>"].<font color="#000087">length</font> &gt; 0)
+        {
+                <font color="#000087">_global</font>.gameStarted = <font color="#000087">true</font>
+                
+                <font color='#878787'>// Show names of the players
+</font>                showPlayerNames(rVars)
+                
+                <font color='#878787'>// Draw the current game board
+</font>                redrawBoard(serverBoard)
+                
+                <font color='#878787'>// Check if some has won or it's a tie
+</font>                checkBoard()
+        }
+        
+        <font color='#878787'>// ... the game is idle waiting for players. We show a dialog box asking the spectator to join the game
+</font>        <font color="#993300">else</font>
+        {
+                win = showWindow("<font color='blue'>gameSpecMessage</font>")
+                win.message_txt.<font color="#000087">text</font> = "<font color='blue'>Waiting for game to start!</font>" + <font color="#993300">newline</font> + <font color="#993300">newline</font> + "<font color='blue'>press [join game] to play</font>"
+        }
+}
+</pre>
+ <p>
+   As you will notice in each action we will take, we'll check if the current
+     user is a player or not and behave appropriately. In this case we save the
+     user name in a room variable if the client is a player. On the contrary,
+     if we are handling a spectators, we have to check the status of the game.</p>
+ <p>In the first &quot;else&quot; statement we first verify if
+   the game is currently running or not. If the game is not ready yet (i.e. there's
+   only one player in the room) a dialogue box will be shown on screen with a
+   button allowing the user to join the game and become a player. If the game
+   is running we set the <strong>_global.gameStarted</strong> flag, show the
+   player names on screen and call the redrawBoard method passing the &quot;board&quot; room
+   variable (which represents the game status).</p>
+ <p>Also the <strong>checkBoard()</strong> method is invoked to verify if there's
+   a winner in the current game: this covers the case in which the spectator
+   enters the room when a match has just finished with a winner or a tie. Now
+   it's time to analyze the <strong>onRoomVariablesUpdate</strong> handler which
+   represents the core of the whole game logic. Don't be scared by the length
+   of this function, we'll dissect it in all its sections:</p>
+ <pre class="code">smartfox.onRoomVariablesUpdate = <font color="#993300">function</font>(roomObj:Room, changedVars:<font color="#993300">Object</font>)
+{
+        <font color='#878787'>// Is the game started?
+</font>        <font color="#993300">if</font> (inGame)
+        {
+                <font color='#878787'>// Get the room variables
+</font>                <font color="#993300">var</font> rVars:<font color="#993300">Object</font> = roomObj.getVariables()
+                
+                <font color='#878787'>// Player status changed!
+</font>                <font color="#993300">if</font> (changedVars["<font color='blue'>player1</font>"] || changedVars["<font color='blue'>player2</font>"])
+                {
+                        <font color='#878787'>// Check if both players are logged in ...
+</font>                        <font color="#993300">if</font> (rVars["<font color='blue'>player1</font>"].<font color="#000087">length</font> &gt; 0 &amp;&amp; rVars["<font color='blue'>player2</font>"].<font color="#000087">length</font> &gt; 0)
+                        {
+                                <font color='#878787'>// If game is not yet started it's time to start it now!
+</font>                                <font color="#993300">if</font> (!<font color="#000087">_global</font>.gameStarted)
+                                {
+                                        <font color="#000087">_global</font>.gameStarted = <font color="#000087">true</font>
+                                        
+                                        <font color="#993300">if</font> (!iAmSpectator)
+                                        {
+                                                hideWindow("<font color='blue'>gameMessage</font>")
+                                                <font color="#000087">_root</font>["<font color='blue'>player</font>" + opponentID].name.<font color="#000087">text</font> = rVars["<font color='blue'>player</font>" + opponentID]
+                                        }
+                                        <font color="#993300">else</font>
+                                        {
+                                                hideWindow("<font color='blue'>gameSpecMessage</font>")
+                                                showPlayerNames(rVars)
+                                        }
+                                        
+                                        <font color='#878787'>// It's player one turn
+</font>                                        <font color="#000087">_global</font>.whoseTurn = 1
+                                        
+                                        <font color='#878787'>// Let's wait for the player move
+</font>                                        waitMove()
+                                }
+                        }
+                        
+                        <font color='#878787'>// If we don't have two players in the room we have to wait for them!
+</font>                        <font color="#993300">else</font>
+                        {
+                                <font color='#878787'>// Reset game status
+</font>                                <font color="#000087">_global</font>.gameStarted = <font color="#000087">false</font>
+                                
+                                <font color='#878787'>// Clear the game board
+</font>                                resetGameBoard()
+                                
+                                <font color='#878787'>// Reset the moves counter
+</font>                                moveCount = 0
+                                
+                                <font color='#878787'>// movieclip reference used for showing a dialog box on screen
+</font>                                <font color="#993300">var</font> win:<font color="#993300">MovieClip</font>
+                                
+                                <font color='#878787'>// If I am a the only player in the room I will get a dialogue box saying we're waiting
+</font>                                <font color='#878787'>// for the opponent to join the game.
+</font>                                <font color="#993300">if</font> (!iAmSpectator)
+                                {
+                                        win = showWindow("<font color='blue'>gameMessage</font>")
+                                        win.message_txt.<font color="#000087">text</font> = "<font color='blue'>Waiting for player </font>" + ((<font color="#000087">_global</font>.myID == 1) ? "<font color='blue'>2</font>" : "<font color='blue'>1</font>") + <font color="#993300">newline</font> + <font color="#993300">newline</font> + "<font color='blue'>press [cancel] to leave the game</font>"
+                                        
+                                        <font color='#878787'>// Here we reset the server variable called "board"
+</font>                                        <font color='#878787'>// It represents the status of the game board on the server side
+</font>                                        <font color='#878787'>// Each dot (.) is an empty cell of the board (3x3)
+</font>                                        <font color="#993300">var</font> vv:<font color="#993300">Array</font> = []
+                                        vv.<font color="#000087">push</font>({name:"<font color='blue'>board</font>", val:"<font color='blue'>.........</font>", persistent: <font color="#000087">true</font>})
+                                        
+                                        smartfox.setRoomVariables(vv)
+                                }
+                                
+                                <font color='#878787'>// The spectator will be shown a slightly different dialogue box, with a button for becoming a player
+</font>                                <font color="#993300">else</font>
+                                {
+                                        
+                                        win = showWindow("<font color='blue'>gameSpecMessage</font>")
+                                        win.message_txt.<font color="#000087">text</font> = "<font color='blue'>Waiting for game to start!</font>" + <font color="#993300">newline</font> + <font color="#993300">newline</font> + "<font color='blue'>press [join game] to play</font>"
+                                }
+                        }
+                }
+                
+                <font color='#878787'>// The game restart was received
+</font>                <font color="#993300">else</font> <font color="#993300">if</font> (changedVars["<font color='blue'>move</font>"] &amp;&amp; rVars["<font color='blue'>move</font>"] == "<font color='blue'>restart</font>")
+                {
+                        restartGame()
+                }
+                
+                <font color='#878787'>// A move was received
+</font>                <font color="#993300">else</font> <font color="#993300">if</font> (changedVars["<font color='blue'>move</font>"])
+                {
+                        <font color='#878787'>// A move was done
+</font>                        <font color='#878787'>// the MOVE room var is a string of 3 comma separated elements
+</font>                        <font color='#878787'>// p,x,y
+</font>                        <font color='#878787'>// p = player who did the move
+</font>                        <font color='#878787'>// x = pos x of the tile
+</font>                        <font color='#878787'>// y = pos y of the tile
+</font>                        
+                        <font color='#878787'>// Get an array from the splitted room var
+</font>                        <font color="#993300">var</font> moveData:<font color="#993300">Array</font> = rVars["<font color='blue'>move</font>"].<font color="#000087">split</font>("<font color='blue'>,</font>")
+                        <font color="#993300">var</font> who:<font color="#993300">Number</font> = moveData[0]
+                        
+                        <font color="#993300">var</font> tile:<font color="#993300">String</font> = "<font color='blue'>sq_</font>" + moveData[1] + "<font color='blue'>_</font>" + moveData[2]
+                        <font color="#993300">var</font> <font color="#000087">color</font>:<font color="#993300">String</font> = (moveData[0] == 1) ? "<font color='blue'>green</font>" : "<font color='blue'>red</font>"
+                        
+                        <font color='#878787'>// Draw move on player board
+</font>                        <font color="#993300">if</font> (!iAmSpectator)
+                        {
+                                <font color='#878787'>// Ignore my moves
+</font>                                <font color="#993300">if</font> (who != <font color="#000087">_global</font>.myID)
+                                {
+                                        <font color='#878787'>// Visualize opponent move
+</font>                                        setTile(tile, <font color="#000087">color</font>)
+                                        moveCount++
+                                        
+                                        checkBoard()
+                                        
+                                        nextTurn()
+                                }
+                        }
+                        
+                        <font color='#878787'>// Draw move on spectator board
+</font>                        <font color="#993300">else</font>
+                        {
+                                redrawBoard(rVars["<font color='blue'>board</font>"])
+                                
+                                checkBoard()
+                                
+                                nextTurn()
+                        }
+                }
+        }
+}
+</pre>
+ <p>Before we start commenting each section of the code it would be better to
+   isolate the most important things that this method does. <br>
+ Basically the code checks three different conditions:</p>
+ <p><strong>1)</strong> If there's been a change in the player room variables,
+   called <strong>player1</strong> and <strong>player2</strong>. When one of these vars changes, the game must
+   be started or stopped, based on their values. The code related with this condition
+starts with this line: </p>
+ <pre class="code">if (changedVars[&quot;player1&quot;] || changedVars[&quot;player2&quot;])</pre>
+ <p><strong>2)</strong> If the &quot;<strong>move</strong>&quot; variable was set to &quot;restart&quot;.
+   This is a special case and it's the signal that one of the players has clicked
+   on the &quot;restart&quot; button to start a new game. The code related to
+   this section start with this line: </p>
+ <pre class="code">else if (changedVars[&quot;move&quot;] &amp;&amp; rVars[&quot;move&quot;] == &quot;restart&quot;)</pre>
+ <p><strong>3)</strong> If the &quot;<strong>move</strong>&quot; variable was updated with a new player move. In
+   this case we'll update the game board, check for a winner and switch the player
+ turn. The code related to this section start with this line: </p>
+ <pre class="code">else if (changedVars[&quot;move&quot;])</pre>
+ <p>Let's start by analyzing <strong>section one</strong>: the code should look
+   familiar as it is very similar to the one used in the first &quot;SmartFoxTris&quot; game.<br>
+   If one of the two player variables was changed then a change in the game status
+   will occur: if the game was already started (_global.gameStarted = true) and
+   one of the player left, we have to stop the current game showing a message
+   window. The message is going to be slightly different if you are a player
+   or a spectator. The latter will be shown a button to join the game and become
+   a player.<br>
+   <br>
+   Please also note that the player that remains in the game will clear
+   both his board game and the &quot;<strong>board</strong>&quot; room variable which in turn
+   will update the other spectators. On the contrary if the game was idle and
+   now the two player variables are ready, we can start a new game.<br>
+   <br>
+   The <strong>second section</strong>   of the code is much simpler: when the &quot;move&quot; variable
+   is set to &quot;restart&quot; the restartGame() method is called which will
+   clear the game board making it ready for a new match.<br>
+   <br>
+   Finally the <strong>third section</strong> is responsible of handling the moves sent by the
+   opponent.<br>
+   As we said before in this article we have used a comma separated string to
+   define a single player move. By using the <strong>split()</strong> String method we obtain
+   an array of 3 items containing the <strong>playerId</strong> followed by the coordinates of
+   the board cell that was clicked.</p>
+ <p><span class="subTitle">&raquo; Turning spectators into players</span></p>
+ <p>As we have mentioned before when one of the player slots is free, spectators
+ will be able to join the game and become players.</p>
+ <p>The message box showed to spectators is called &quot;gameSpecMessage&quot; and
+   you can find it in the library under the &quot;_windows&quot; folder. By opening
+   the symbol you will notice a button called &quot;<strong>Join
+   Game</strong>&quot; that
+   calls the <strong>switchSpectator()</strong> function in the main game code:</p>
+ <pre class="code"><font color="#993300">function</font> switchSpectator()
+{
+        smartfox.switchSpectator(smartfox.activeRoomId)
+}
+</pre>
+ <p>This very simple function invokes the <strong>switchSpectator()</strong> command
+   of the <strong>SmartFoxServer</strong>   client API which will try to join
+   the spectator as player<br>
+   in the game room. There's no guarantee that the request will succeed as another
+   spectator might have sent this request before, filling the empty slot before
+our request gets to the server. In any case the server will respond with a <strong>onSpectatorSwitched</strong> event:</p>
+ <pre class="code">smartfox.onSpectatorSwitched = <font color="#993300">function</font>(success:<font color="#993300">Boolean</font>, newId:<font color="#993300">Number</font>, room:Room)
+{
+        <font color="#993300">if</font> (success)
+        {
+                <font color='#878787'>// turn off the flag
+</font>                iAmSpectator = <font color="#000087">false</font>
+                
+                <font color='#878787'>// hide the previous dialogue box
+</font>                hideWindow("<font color='blue'>gameSpecMessage</font>")
+                
+                <font color='#878787'>// setup the new player id, received from the server
+</font>                <font color="#000087">_global</font>.myID = newId
+                
+                <font color='#878787'>// Setup the player color
+</font>                <font color="#000087">_global</font>.myColor = (<font color="#000087">_global</font>.myID == 2) ? "<font color='blue'>red</font>" : "<font color='blue'>green</font>"
+                
+                <font color='#878787'>// Setup player name
+</font>                <font color="#000087">_root</font>["<font color='blue'>player</font>" + <font color="#000087">_global</font>.myID].name.<font color="#000087">text</font> = <font color="#000087">_global</font>.myName
+                opponentID = (<font color="#000087">_global</font>.myID == 1) ? 2 : 1
+                
+                <font color='#878787'>// Store my new player id in the room variables
+</font>                <font color="#993300">var</font> vObj:<font color="#993300">Array</font> = []
+                vObj.<font color="#000087">push</font>({name:"<font color='blue'>player</font>" + <font color="#000087">_global</font>.myID, val:<font color="#000087">_global</font>.myName})
+                
+                smartfox.setRoomVariables(vObj)
+        }
+        
+        <font color='#878787'>// The switch from spectator to player failed. Show an error message
+</font>        <font color="#993300">else</font>
+        {
+                <font color="#993300">var</font> win:<font color="#993300">MovieClip</font> = showWindow("<font color='blue'>gameMessage</font>")
+                win.message_txt.<font color="#000087">text</font> = "<font color='blue'>Sorry, another player has entered</font>"
+        }
+}
+</pre>
+ <p>As you can see we get a &quot;success&quot; boolean argument which will tell
+   us if the operation was successfull or not. If it was we can turn the user
+   into a player by assigning him the newId paramater as playerId, then setting
+   the appropriate player color and finally we update the room variables with
+ the new player name.</p>
+ <p><span class="subTitle">&raquo; Conclusions</span></p>
+ <p>In this tutorial you have learned how to use server-side variables to keep
+   the game status and handle spectators in a turn-based game.<br>
+   We reccomend to examine the full source code of this multiplayer game to better
+   understand every part of it. Once you will be confident with this code you
+   will be able to create an almost unlimited number of multiplayer turn-based
+   games and applications by combining the many features we have discussed in
+   the the other tutorials.</p>
+ <p>Also you if you have any questions or doubts, post them in our forums. </p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../13_customLogin/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right">&nbsp;</td>
+  </tr>
+</table>
+
+</body>
+</html>

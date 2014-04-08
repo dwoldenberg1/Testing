@@ -1,0 +1,410 @@
+<ServerSettings Encrypted="false">
+
+	<!-- Admin user information -->
+	<Admin>
+		<Username>System</Username>
+		<Password>ElectroServer</Password>
+
+		<!--  This is the port the server listens on for command line requests --> 
+                <AdminListenPort>60504</AdminListenPort> 
+	</Admin>
+
+	<!-- Path to the license file of this server instance -->
+	<LicenseFile>DemoLicense_20Users.lic</LicenseFile>
+
+	<!-- This indicates if the server should check for updates when it starts -->
+        <CheckForUpdates>true</CheckForUpdates>
+
+        <!-- This configures the server's policy file support -->
+        <PolicyFileSupport>
+            <Enabled>true</Enabled>
+            <PolicyFile AutoGenerate="true"></PolicyFile>
+        </PolicyFileSupport>
+
+	<!-- Web Server Configuration
+		All fields listed are required if Enabled is true
+	 -->
+	<WebServer>
+		<Enabled>false</Enabled>
+		<IP>127.0.0.1</IP>
+		<Port>8080</Port>
+		<DirectoryListingEnabled>true</DirectoryListingEnabled>
+		<Root>webserver-root\</Root>
+		<Templates>
+		    <Template Type="404">webserver-docs\404.html</Template>
+		    <Template Type="DirectoryListing">webserver-docs\DirectoryListing.html</Template>
+		    <Template Type="DirectoryListingDenied">webserver-docs\DirectoryListingDenied.html</Template>
+		</Templates>
+	</WebServer>
+
+
+	<!-- Chat Server Configuration
+		These are the IP addresses and port numbers the chat server will use
+	 -->
+	<ChatServer>
+		<Addresses>
+		    <Address>
+			<IP>127.0.0.1</IP>
+			<Port>9875</Port>
+		    </Address>			
+		</Addresses>
+		<MaximumConnections>20</MaximumConnections>
+		<Client>
+                        <!-- This specifies the maximum size of incoming and outgoing messages as well as how many can be 
+                                queued up to be delivered before they start dropping. -->
+			<Queue>
+				<InputSize>10000</InputSize>
+				<OutputSize>20000</OutputSize>
+				<OutputMessageLimit>50</OutputMessageLimit>
+			</Queue>
+                        
+                        <!-- Time (in seconds) a client can be idle before they are disconnected automatically -->
+                        <InactivityTimeout>1200</InactivityTimeout>
+                        
+                        <!-- Time a client can be connected but not logged in before the server disconnects them -->
+                        <LoginDelay>60</LoginDelay>
+		</Client>
+                
+                <!-- These settings are used to configure the thread pool
+                        Change these with care as they make or break the servers performance.
+                        The defaults should be adequate for most needs unless you are developing
+                        CPU-intensive plugins
+                 -->
+		<ThreadPool>
+			<Enabled>true</Enabled>
+			<MinimumThreads>1</MinimumThreads>
+			<MaximumThreads>10</MaximumThreads>
+			<KeepAliveSeconds>60</KeepAliveSeconds>
+		</ThreadPool>
+	</ChatServer>
+
+
+	<!-- Logging Configuration
+                A single file will not get larger then MaxSize.
+                Logs rotate automatically when the server is restarted.
+                No more then NumberOfFiles will be created. 
+                LogToScreen will mirror any message out to the console
+                
+                RootFile is a pattern onsisting of a string that includes the following special components 
+                that will be replaced at runtime: 
+                
+                    "/" the local pathname separator 
+                    "%t" the system temporary directory 
+                    "%h" the value of the "user.home" system property 
+                    "%g" the generation number to distinguish rotated logs 
+                    "%u" a unique number to resolve conflicts 
+                    "%%" translates to a single percent sign "%" 
+                
+                If no "%g" field has been specified and the file count is greater than one, then the generation 
+                number will be added to the end of the generated filename, after a dot. 
+                    
+                Thus for example a pattern of "%t/ElectroServer%g.log" with a count of 2 would typically cause log files to 
+                be written on Solaris to /var/tmp/ElectroServer0.log and /var/tmp/ElectroServer1.log whereas on Windows 95 they would 
+                be typically written to to C:\TEMP\ElectroServer0.log and C:\TEMP\ElectroServer1.log 
+
+                Generation numbers follow the sequence 0, 1, 2, etc. 
+
+	 -->
+	<Logging>
+		<RootFile>logs\electroserver_%g.log</RootFile>
+		<MaxSize>500000</MaxSize> <!-- in bytes -->
+		<NumberOfFiles>5</NumberOfFiles> <!-- Files rotate when max size is reachecd -->
+		<Level>WARNING</Level>
+		<LogToScreen>true</LogToScreen>
+	</Logging>
+
+
+	<!-- Moderator Configuration
+		Moderators are able to kick and ban other users. The user lists contain a 
+                flag to indicate if a user is a moderator.
+	 -->
+	<Moderators>
+		<Moderator>
+			<Username>ExampleModerator</Username>
+			<Password>Password</Password>
+		</Moderator>
+	</Moderators>
+
+	<!-- Banned Users
+                In this section, you specify users that have been permanatly banned. 
+                In a later update of the server, this will be moved into a seperate file
+         -->
+	<BannedUsers>
+		<BannedUser>
+			<IP></IP>
+		</BannedUser>
+		<BannedUser>
+			<Name></Name>
+		</BannedUser>
+	</BannedUsers>
+
+
+	<!-- Language Filter
+		This is used to filter out vulgarity that might occur in public
+		and private chat messages. It works by taking a sentence and searching
+		it for either type of word below. To handle generic vulgar words, it
+		appends a " " to the begining and end of the sentence.
+	 -->
+	<LanguageFilter>
+
+	     <!-- Is the language filter active or not -->
+	    <Enabled>true</Enabled>
+
+	    <!-- Is the language filter filtering room names? -->
+	    <FilterRoomNames>true</FilterRoomNames>
+
+	    <!-- Is the language filter filtering user names? -->
+	    <FilterUserNames>true</FilterUserNames>
+
+	    <!-- This determines if the server will let vulgar messages be sent to the room/user -->
+	    <SuppressVulgarMessages>true</SuppressVulgarMessages>
+
+	    <!-- This is the number of times a user can be warned before the server kicks them.
+		If it is 2, then on the third vulgar message, they are kicked. -1 for never kicking
+	     -->
+	    <WarningsBeforeKick>1</WarningsBeforeKick>
+
+	    <!-- This is the number of times a user can be kicked before the server bans them.
+		If it is 2, then on the third time they would be kicked, they are banned.
+		This is NOT a persistent ban list, it will be reset when the server is restarted
+		-1 to disable banning
+	     -->
+	    <KicksBeforeBan>1</KicksBeforeBan>
+
+	    <!-- This is the length of time someone will be banned (in minutes) -->
+	    <BanDuration>15</BanDuration>
+
+	    <!-- Various message texts -->
+	    <WarningMessage>Hey! No swearing!</WarningMessage>
+	    <KickMessage>Hey! I'm sick of your swearning, you're outta here!</KickMessage>
+	    <BanMessage>Ok, that's it, you're banned!</BanMessage>
+
+	    <!-- This determines if the language filter is able to strip down the messages or not. For example:
+				This is a test message! I love Electro-Server
+		    would become
+				ThisisatestmessageIloveelectroserver
+		    and then all of the root words would be checked against the string (case insensitive).
+		    While this dramatically improves the accuracy, it comes at a performance penalty.
+			This also requires you to be very careful that your root words are not too broad. For example,
+			if one of your root words was "the" then the message " My cat helps catch mice" would fail.
+	    -->
+	    <StripPunctuation>false</StripPunctuation>
+
+            <!-- This determines if the language filter is able to HTML from the messages before testing them. 
+                    For example:
+				This is a <b>t</b>est message! I love Electro-Server
+		    would become
+				This is a test message! I love Electro-Server
+	    -->
+	    <StripHtml>false</StripHtml>
+
+	    <!-- This is a list of words that can never exist in any position in the message. Period. -->
+	    <RootWords>
+			<RootWord>fuck</RootWord>
+			<RootWord>cunt</RootWord>
+			<RootWord>cock</RootWord>
+			<RootWord>bastard</RootWord>
+			<RootWord>nigger</RootWord>
+			<RootWord>vagina</RootWord>
+	    </RootWords>
+
+	     <!-- This is a list of words that can exist only by themselves " word " -->
+    	 <Words>
+			<Word>damn</Word>
+			<Word>shit</Word>
+			<Word>shithead</Word>
+			<Word>ass</Word>
+			<Word>asshole</Word>
+			<Word>twat</Word>
+			<Word>pussy</Word>
+			<Word>dike</Word>
+			<Word>whore</Word>
+			<Word>cum</Word>
+	    </Words>
+	</LanguageFilter>
+        
+        
+        
+        <!-- Flooding Filter
+                The flooding filter determines if a user is flooding a room/user with too many messages 
+                or repeat messages. This dramatically helps cut down on routine chat room abusers.
+        -->
+        <FloodingFilter>
+            <!-- Is the flooding filter active or not -->
+	    <Enabled>true</Enabled>
+
+	    <!-- Is the flooding filter filtering private messages -->
+	    <FilterPrivateMessages>true</FilterPrivateMessages>
+
+            
+            <!-- These two fields are used to determine if someone is flooding. With each message, 
+                the server will check if MaximumMessages exceeds the Interval specified. So if interval 
+                is 10 and maximum messages is 5, then someone can't send more then five messages per ten 
+                seconds else they are flooding 
+            -->
+            <Interval>5</Interval> <!-- In seconds -->
+            <MaximumMessages>5</MaximumMessages>
+            
+            <!-- This is the maximum number of times a message can be repeated in a row before the server 
+                determines that you are flooding. On the next message, you will be warned. -1 means no checking
+            -->
+            <MaxRepeatedMessages>5</MaxRepeatedMessages>
+            
+            <!-- This is the number of times a user can be warned before the server kicks them.
+		If it is 2, then on the third flood attempt they are kicked. -1 for never kicking
+	     -->
+	    <WarningsBeforeKick>1</WarningsBeforeKick>
+
+	    <!-- This is the number of times a user can be kicked before the server bans them.
+		If it is 2, then on the third time they would be kicked, they are banned.
+		This is NOT a persistent ban list, it will be reset when the server is restarted
+		-1 to disable banning
+	     -->
+	    <KicksBeforeBan>1</KicksBeforeBan>
+
+	    <!-- This is the length of time someone will be banned (in minutes) -->
+	    <BanDuration>10</BanDuration>
+
+	    <!-- Various message text -->
+	    <WarningMessage>Hey! No flooding!</WarningMessage>
+	    <KickMessage>Hey! I'm sick of your flooding, you're outta here!</KickMessage>
+	    <BanMessage>Ok, that's it, you're banned!</BanMessage>
+        </FloodingFilter>
+
+
+	<!-- Persistent Room Configuration
+		This section allows you to create persistent rooms on the server
+		These rooms exist when the server is started and won't be removed automatically when everyone leaves
+		They are primarily used for general chat areas, etc.
+	 -->
+	<PersistentRooms>
+		<Zones>
+		    <Zone>
+			    <Name>TheoChat</Name>
+			    <Rooms>
+				<Room Updatable="true" Hidden="false" Numbered="false" UserVariablesEnabled="true">
+					<Name>The Dance Room</Name>
+					<Password></Password>
+					<Description></Description>
+					<Capacity>10</Capacity>
+					<RoomVariables>
+						<RoomVariable Persistent="True" Locked="true">
+							<Name>MapPath</Name>
+							<Data>dance.xml</Data>
+						</RoomVariable>
+					</RoomVariables>
+					<Plugins />
+				</Room>
+				<Room Updatable="true" Hidden="false" Numbered="false" UserVariablesEnabled="true">
+					<Name>The Atrium</Name>
+					<Password></Password>
+					<Description></Description>
+					<Capacity>10</Capacity>
+					<RoomVariables>
+						<RoomVariable Persistent="True" Locked="true">
+							<Name>MapPath</Name>
+							<Data>atrium.xml</Data>
+						</RoomVariable>
+					</RoomVariables>
+					<Plugins />
+				</Room>
+				<Room Updatable="true" Hidden="false" Numbered="false" UserVariablesEnabled="true">
+					<Name>The Lounge</Name>
+					<Password></Password>
+					<Description></Description>
+					<Capacity>10</Capacity>
+					<RoomVariables>
+						<RoomVariable Persistent="True" Locked="true">
+							<Name>MapPath</Name>
+							<Data>lounge.xml</Data>
+						</RoomVariable>
+					</RoomVariables>
+					<Plugins />
+				</Room>
+					<Room Updatable="true" Hidden="false" Numbered="false" UserVariablesEnabled="true">
+					<Name>The Garden</Name>
+					<Password></Password>
+					<Description></Description>
+					<Capacity>10</Capacity>
+					<RoomVariables>
+						<RoomVariable Persistent="True" Locked="true">
+							<Name>MapPath</Name>
+							<Data>garden.xml</Data>
+						</RoomVariable>
+					</RoomVariables>
+					<Plugins />
+				</Room>
+			    </Rooms>
+		    </Zone>
+	    </Zones>
+	</PersistentRooms>
+
+
+
+
+	<!-- Plugin Configuration
+		This section allows you to define plugins
+	 -->
+	<Plugins>
+		<Plugin>
+			<Name>SimpleActionScriptPlugin</Name>
+			<Type>Script</Type>
+			<Scope>Room</Scope>
+			<File>plugins\SimpleActionScriptPlugin.as</File>
+			<Variables/>
+		</Plugin>
+		<Plugin>
+			<Name>SimpleJavaPlugin</Name>
+			<Type>Java</Type>
+			<Scope>Room</Scope>
+			<File>com.electrotank.electroserver.plugins.SimpleJavaPlugin</File>
+			<Variables/>
+		</Plugin>
+		<Plugin>
+			<Name>LoadVarsScriptPlugin</Name>
+			<Type>Script</Type>
+			<Scope>Server</Scope>
+			<File>plugins\LoadVarsExample.as</File>
+			<Variables />
+		</Plugin>
+		<Plugin>
+			<Name>VariablesExampleJavaPlugin</Name>
+			<Type>Java</Type>
+			<Scope>Server</Scope>
+			<File>com.electrotank.electroserver.plugins.VariablesExampleJavaPlugin</File>
+			<Variables>
+				<Variable>
+					<Name>TestVariable</Name>
+					<Value>Blah Blah, Java test variable</Value>
+				</Variable>
+			</Variables>
+		</Plugin>
+		<Plugin>
+			<Name>VariablesExampleScriptPlugin</Name>
+			<Type>Script</Type>
+			<Scope>Server</Scope>
+			<File>plugins\VariablesExampleScriptPlugin.as</File>
+			<Variables>
+				<Variable>
+					<Name>TestVariable</Name>
+					<Value>Blah Blah, Script test variable</Value>
+				</Variable>
+			</Variables>
+		</Plugin>
+		<Plugin>
+			<Name>AbilitiesShowcasePlugin</Name>
+			<Type>Script</Type>
+			<Scope>Room</Scope>
+			<File>plugins\AbilitiesShowcasePlugin.as</File>
+			<Variables/>
+		</Plugin>
+		<Plugin>
+			<Name>SharedBallPlugin</Name>
+			<Type>Script</Type>
+			<Scope>Room</Scope>
+			<File>plugins\SharedBallPlugin.as</File>
+			<Variables/>
+		</Plugin>
+        </Plugins>
+
+</ServerSettings>

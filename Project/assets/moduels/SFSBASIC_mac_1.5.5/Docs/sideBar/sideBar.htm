@@ -1,0 +1,83 @@
+<html>
+<head>
+<title>docTopics</title>
+<script>
+	/**
+	*
+	* SmartFoxServer
+	* Documentation Side Bar
+	* v 1.0.0
+	*
+	* gotoAndPlay() 2006
+	* www.gotoandplay.it 
+	* www.smartfoxserver.com
+	*
+	*/
+	
+	var increment = 40
+
+	function enlarge()
+	{
+
+		var fset = parent.document.getElementById("mainFset")
+		var ww = Number(fset.cols.substring(0, fset.cols.indexOf(",")))
+		
+		if (ww < 680)
+		{
+			ww += increment	
+			fset.cols = ww + ", *"
+		}
+	}
+
+	function shrink()
+	{
+		var fset = parent.document.getElementById("mainFset")
+		var ww = Number(fset.cols.substring(0, fset.cols.indexOf(",")))
+		if (ww > 160)
+		{
+			ww -= increment	
+			fset.cols = ww + ", *"
+		}
+	}
+
+
+	function dumpObj(obj)
+	{
+		var dbg = ""
+	
+		for (var i in obj)
+			dbg += "<b>" + i + ": </b>" + obj[i] + "<br>"
+	
+		var pp = document.getElementById("debug")
+		pp.innerHTML = dbg
+	}
+	
+	var p = parent.location.href.toString().indexOf("?")
+	var pageUrl = ""
+	
+	if (p > 0)
+	{
+		var theUrl = parent.location.href.toString().substring(p + 1)
+		p = theUrl.indexOf("docPages/")
+	
+		// get the destination
+		if (p >  0)
+			pageUrl = theUrl.substring(p)
+	}
+	
+	var html = '<body bgcolor="#ffffff" style="margin:0px">'
+	html += '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="100%" height="100%" id="docTopics" align="middle">'
+	html += '<param name="allowScriptAccess" value="sameDomain" />'
+	html += '<param name="movie" value="docTopics.swf" />'
+	html += '<param name="quality" value="high" />'
+	html += '<param name="bgcolor" value="#ffffff" />'
+	html += '<param name="flashVars" value="pageUrl=' + pageUrl + '" />'
+	html += '<embed src="docTopics.swf?r=' + Math.floor(Math.random() * 9999999) + '" quality="high" bgcolor="#ffffff" width="100%" height="100%" name="docTopics" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"'
+	html += ' flashVars="pageUrl=' + pageUrl + '" pluginspage="http://www.macromedia.com/go/getflashplayer" />'
+	html += '</object></body>'
+	
+	document.write(html)
+	
+</script>
+</head>
+</html>

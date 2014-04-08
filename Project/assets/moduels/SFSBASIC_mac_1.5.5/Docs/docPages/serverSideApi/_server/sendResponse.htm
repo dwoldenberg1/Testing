@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.sendResponse()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.sendResponse(response, fromRoom, sender, recipients,
+   type)</p>
+ <p class="title">Description:</p>
+ <p class="plain">Send a message to a client or list of clients using the default
+ XML format or a raw, string-based format.
+ <p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>response</strong></td>
+     <td>&nbsp;</td>
+     <td>An object containing all properties and objects that you want to send
+       to the client(s). On the client side you will obtain the same exact object.<br />
+       As a convention there should be always a property called <strong>_cmd</strong> containing
+       the name of the action being performed. <br />
+       <br />
+       If you use the <strong>raw/string protocol</strong>, you will have to
+       pass an Array of parameters instead of an object. (Check the example below)</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>fromRoom</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) The roomId from where this message is coming. If you don't
+       need it, just set it to <strong>-1</strong></td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>sender</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) The User object that you want to pass as the sender of this
+       message. If you don't need this just use <strong>null</strong></td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>recipients</strong></td>
+     <td>&nbsp;</td>
+     <td>an Array containing one ore more User objects </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>type</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) By default it is set to &quot;xml&quot;, and the message will be XML
+       formatted. You can also specify &quot;str&quot; if you wish to send a raw, string
+     based message.</td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">Nothing</p>
+ <p class="title">Example:</p>
+   This example shows how to send some game status data to a list of clients:<br />
+   <br />
+<pre class="code">
+/*
+* Sending some game status data to the clients
+*/ 
+
+var responseObj = {}
+responseObj._cmd = "status"
+responseObj.score = 1500
+responseObj.energy = 30
+responseObj.ammo = {laser:100, ringLaser:50, nuclearBeam:40}
+
+// "type" is not specified, we'll use XML protocol
+_server.sendResponse(responseObj, -1, null, userList)
+</pre>
+<br />
+This example shows how to send some game status data to a list of clients using
+raw/string protocol:<br />
+<br /> 
+<pre class="code">
+/*
+* Sending some game status data to the clients
+*/ 
+
+var responseObj = []
+responseObj.push("status") // 1st element is the command name
+responseObj.push(1500)
+responseObj.push(30)
+responseObj.push(100)
+responseObj.push(50)
+responseObj.push(40)
+
+// type is set to "str", we'll user raw/string protocol
+_server.sendResponse(responseObj, -1, null, userList, "str")
+</pre>
+<p class="plain"><span class="title">Note:<br />
+  <br />
+See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

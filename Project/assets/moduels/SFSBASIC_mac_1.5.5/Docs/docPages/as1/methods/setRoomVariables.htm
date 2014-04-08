@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">setRoomVariables()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.setRoomVariables(variables, roomId, setOwnership) </p>
+ <p class="title">Description:</p>
+<p class="plain">Stores data on the server side. When you set one or more Room
+  Variables all the other users in the room will be notified.<br />
+  It is a usefull feature to share data across the client, keeping it in a centralized
+  place: the server.</p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>variables</strong></td>
+     <td>&nbsp;</td>
+     <td>an array of variables. Each variable is an object with the following
+     properties: </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>roomId</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) The id of the room where the variables are going to be stored.<br />
+       By default SmartFoxServer uses the current room, that is
+       stored in the activeRoomId property. <br />
+       You can pass this extra argument if you are allowing users to be present
+       in more than one room at the same time. </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>setOwnership</strong></td>
+     <td>&nbsp;</td>
+     <td>A boolean flag, by default = true.<br />
+       If set to false the room variable won't change ownership. </td>
+   </tr>
+ </table>
+    <br />
+    Each variable object can have the following properties: <br />
+    <br />
+    <table  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><strong>name</strong></td>
+        <td>&nbsp;</td>
+        <td>the variable name </td>
+      </tr>
+      <tr>
+        <td><strong>val</strong></td>
+        <td>&nbsp;</td>
+        <td>value of the variable</td>
+      </tr>
+      <tr>
+        <td><strong>priv</strong></td>
+        <td>&nbsp;</td>
+        <td>true if a variable is private. A private variable can only be overwritten
+        by the user that created it </td>
+      </tr>
+      <tr>
+        <td valign="top"><strong>persistent</strong></td>
+        <td>&nbsp;</td>
+        <td>true if the variable is persistent. A persistent variable is not
+          destroyed when the user goes out of the room. <br />
+          The default behaviour
+          deletes all the variables of a user that left the room </td>
+      </tr>
+    </table>
+    <br />
+    Allowed datatypes are Strings, Numbers, Booleans.<br />
+    If a room variable is set to <strong>null</strong> it is going to be deleted
+    from the server.<br />
+    <br />
+    To save bandwidth arrays and objects are not supported but it is easy to
+    &quot;simulate them&quot;. Check the examples below.<br />
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong><strong>onRoomVariablesUpdate</strong></strong> event </p>
+ <p class="plain"><span class="title">Example:</span><br />
+   <br />
+ <strong class="plain">Example #1</strong>
+ <br />
+ save a persistent &quot;score&quot; room variable. This variable will not be destroyed
+ when the user that created it leaves the room.
+<pre class="code">
+var rVars = []
+rVars.push( {name:"score", val:2500, persistent:true} )
+
+smartFox.setRoomVariables(rVars)
+</pre> 
+ </p>
+<strong class="plain"><br />
+Example #2</strong></p>
+<br />
+Save two room variables at once. The one called &quot;bestTime&quot; is private and no
+other users except its owner will be able to modify it.<br /> 
+<br /> 
+<pre class="code">
+var rVars = []
+rVars.push( {name:"bestTime", val:100, priv:true} )
+rVars.push( {name:&quot;bestLap&quot;, val:120} )
+
+smartFox.setRoomVariables(rVars)
+</pre>
+<strong class="plain"><br />
+Example #3</strong></p>
+<br /> 
+Delete a variable called &quot;myVar&quot;. To delete a room variable just set
+it to null <br /> 
+<br /> 
+<pre class="code">
+var rVars = []
+rVars.push( {name:"bestTime", val:null} )
+
+smartFox.setRoomVariables(rVars)
+</pre>
+<strong class="plain"><br />
+Example #4</strong></p>
+<br /> 
+Simulate an array of values, by using an index in front of the name of the variable.
+This way you can send an array-like of data without consuming too much bandwidth.<br /> 
+<br /> 
+<pre class="code">
+var rVars = []
+var names = ["john", "dave", "sam"]
+
+for (var i = 0; i < names.length; i++)
+{
+	rVars.push( {name:"name" + i, val:names[i]} )
+}
+
+smartFox.setRoomVariables(rVars)
+</pre><br />
+Here's
+how you can handle this data when the other users receive the <strong><strong><strong><strong><strong><strong>onRoomVariablesUpdate</strong></strong></strong></strong></strong></strong> event:
+<pre class="code">
+smartFox.onRoomVariablesUpdate = function(roomVars)
+{
+	for (var i = 0; i < 3; i++)
+	{
+		trace("name " + i + ": " + roomVars["name" + i])
+	}
+}
+
+</pre>
+<br />
+<strong class="plain">Example #5<br />
+</strong>This example shows how to update Room Variables without affecting the
+variable ownership.<br />
+By default, when a user updates a server variable, he becomes the &quot;owner&quot; of
+that variable. In some cases you may need to disable this behavoir by setting
+the <strong>setOwnership</strong> to false.<br />
+<br />
+For example: a variable that is defined in the config.xml will be owned by the
+Server. If it's not set to private its owner will change as soon as a client
+updates it. To avoid this change of ownership set the flag to false.
+<strong class="plain"><br />
+</strong>
+</p>
+<br />
+<pre class="code">
+var rVars = []
+rVars.push( {name:"shipPosX", val:100} )
+rVars.push( {name:&quot;shipPosY&quot;, val:200} )<br />
+smartFox.setRoomVariables(rVars, smartFox.getActiveRoom(), false)
+</pre>
+<p class="title">See also:</p>
+ <p class="plain"><strong><strong><strong><strong><strong><strong>onRoomVariablesUpdate</strong></strong></strong></strong></strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

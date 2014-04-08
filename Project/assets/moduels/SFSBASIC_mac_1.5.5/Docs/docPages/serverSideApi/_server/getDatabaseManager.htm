@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.getDatabaseManager()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.getDatabaseManager()</p>
+ <p class="title">Description:</p>
+ <p class="plain">Get a reference to the DatabaseManager object in the current
+   Zone.<br />
+   The DatabaseManager allows you to connect to external data sources.<br />
+   <br />For more informations on how to configure and activate the DatabaseManager
+   please check section ... of the documentation. 
+ <p class="title">Parameters:</p>
+ <p>none</p>
+ <p class="title">Returns:</p>
+ <p class="plain">The DatabaseManager object</p>
+ <p class="title">Example:</p>
+<pre class="code">
+var dbManager = _server.getDatabaseManager()
+</pre>
+<br />
+The DatabaseManager object exposes 3 methods:<br />
+<br />
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>executeQuery</strong></td>
+    <td>&nbsp;</td>
+    <td>Executes any SQL &quot;SELECT&quot; statement. It returns a &quot;RecordSet&quot;.</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>executeCommand</strong></td>
+    <td>&nbsp;</td>
+    <td>Execute any other SQL command (INSERT, UPDATE, DELETE ... etc ...). Returns
+      a boolean telling if the operation was successfull </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>getConnection()</strong></td>
+    <td>&nbsp;</td>
+    <td>Retrieve a  java.sql.Connection object from the database connection pool. This allows advanced database interaction by using the JDBC API<br />
+      (available since SmartFoxServer 1.5.0 </td>
+  </tr>
+</table>
+<br />
+<strong>1) Example using executeQuery:</strong> <br />
+<br />
+<pre class="code">
+// create a SQL statement
+var sql = "SELECT * FROM contacts ORDER BY name"		
+
+// execute query on DB
+// queryRes is a ResultSet object
+var queryRes = dbase.executeQuery(sql)
+
+// If the queryRes is not null the query was successfull
+if (queryRes != null)
+{
+	// Cycle through all records in the ResultSet
+	for (var i = 0; i < queryRes.size(); i++)
+	{
+		// Get a record
+		var tempRow = queryRes.get(i)
+		
+		trace("Record n." + i)
+		trace("Name: " + tempRow.getItem("name"))
+		trace("Location: " + tempRow.getItem("location"))
+		trace("Email: " + tempRow.getItem("email"))
+		trace("-------------------------------------------")
+	}
+}
+else
+	trace("DB Query failed")
+</pre>
+<br />
+In the first line the SQL statement is created: a simple SELECT from a contacts
+database:<br />
+&raquo; The variable called <strong>queryRes</strong> will hold the Record
+Set returned by the DatabaseManager. <br />
+&raquo; queryRes is going to be null if the SQL statements fails. <br />
+<br />
+The Record Set object is similar to a plain array, it contains all the database
+rows selected by the SQL statement numbered from 0 to n.<br />
+You can use two methods on a RecordSet:<br />
+<br /> 
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>size()</strong></td>
+    <td>&nbsp;</td>
+    <td>Returns the number of rows in the RecordSet </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>get(n)</strong></td>
+    <td>&nbsp;</td>
+    <td>Retrieve a Record from the RecordSet. &quot;n&quot; is the record number (n &lt; size()) </td>
+  </tr>
+</table>
+<br />
+The <strong>Record</strong> object is similar to an associative array where each key represents
+the database column names (field names).<br />
+You have only one method for the <strong>Record</strong> object:<br />
+<br />
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>getItem(name)</strong></td>
+    <td>&nbsp;</td>
+    <td>Retrieve the value of the field in the Record object. All values are
+      returned as Strings.</td>
+  </tr>
+</table>
+<br />
+Back to the above code, in the for loop 
+we cycle through all records returned by the SQL statement and for each of them
+we show some fields on screen (name, location, email)<br />
+<br />
+<br />
+<strong>2) Example using executeCommand:</strong><br />
+<br />
+<pre class="code">
+// A simple INSERT SQL statement
+var sql = "INSERT INTO contacts (name, location, email) VALUES ('Lapo','Italy','lapo@mail.it')"
+
+// Execute the SQL command
+var success = dbase.executeCommand(sql)
+
+if (success)
+	trace("Record inserted!")
+else
+	trace("Ouch, record insertion failed")
+</pre>
+<br />
+If the operation fails an the DatabaseManager will throw an error (warning level)
+in the SmartFoxServer log.<br />
+ <p class="plain"><strong>3) Example using getConnection() and JDBC APIs:</strong></p>
+<pre class="code">
+// Obtain a reference to the  databaseManager object
+var db = _server.getDatabaseManager()
+
+// Get a connection from the connection pool
+var conn = dbase.getConnection()
+	
+if (conn != null)
+{
+	try
+	{
+		// create a statement
+		var stmt = conn.createStatement()
+		var sql = "SELECT * FROM contacts ORDER BY name"
+		
+		// Execute the query, the returned object is a java.sql.ResultSet
+		var rs = stmt.executeQuery(sql)
+		
+		// Get the resultset metadata
+		var md = rs.getMetaData()
+	
+		// obtain the number of colums
+		var cnt = md.getColumnCount()
+		
+		// Show each column's name, type and length
+		for (var i = 1; i <= cnt; i++)
+			trace("Column " + i + ": " +  md.getColumnName(i) + ", " + md.getColumnTypeName(i) + ", " +  md.getColumnDisplaySize(i))
+	}
+	catch (e)
+	{
+		trace("Problems executing query: " + e)
+	}
+	
+	// Return the connection to the pool and release the resources
+	conn.close()
+	stmt.close()
+	rs.close()
+}	
+
+else
+{
+	trace( "Can't get a connection to the database")
+}
+</pre>
+<p class="plain">
+The above example shows how to execute a SQL query using the JDBC API and how to read the column properties from the ResultSet object.
+  <br />
+  You can learn more<a href="http://java.sun.com/docs/books/tutorial/jdbc/overview/index.html" target="_blank"> about JDBC here</a>. Check also this <a href="http://www.cs.unc.edu/Courses/wwwp-s98/members/thornett/jdbc/183.html" target="_blank">JDBC in a nutshell</a> article. </p>
+<p class="plain">Also check the documentation of the objects used in the example: <br />
+  <br />
+  <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/sql/Connection.html" target="_blank">java.sql.Connection</a><br />
+  <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/sql/Statement.html" target="_blank">java.sql.Statement</a><br />
+  <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/sql/ResultSet.html" target="_blank">java.sql.ResultSet</a><br />
+<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/sql/ResultSetMetaData.html" target="_blank">java.sql.ResultSetMetaData</a></p>
+<p class="plain">&nbsp;</p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

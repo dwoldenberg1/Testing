@@ -1,0 +1,348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.9 Tutorials: Secure Login Example </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is found under the <strong>Examples/AS2/pro_secureLogin</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+<p>Security is one of the most important aspects in any client-server applications.
+  Very often sensitive data, like user password, are transferred over the network
+  in a readable form and they could be captured with relatively simple software
+  tools.<br>
+  <br>
+  This technique is also known as &quot;sniffing&quot; and it is usually done
+  analyzing the data that is being sent and received from your network card.
+  Capturing the packets going in and out of your computer is usually not trivial,
+  because the &quot;hacker&quot; would need to have a direct access to your network
+  or computer, however the amount of effort put into these type of &quot;attacks&quot;
+  depends also on what the &quot;reward&quot; is. <br>
+  <br>
+  While most online games may not need an encrypted login system,
+  multiplayer prize-based games would definately attract more malicious users
+  trying to crack the highscore system and obtain the prizes illegally. </p>
+<p>SmartFoxServer has already a good number of bulit-in tools to avoid server
+  hacking attempts and malicious requests. <br>
+  In this article we will concentrate
+  on the authentication system and we will analyze a simple and effective technique
+  to create a <strong>secure login system.</strong><br>
+  <br>
+  Finally, in the conclusions of this article, we will list some important guidelines
+  that will help you secure your multiuser applications.<br>
+  <br> 
+  <span class="subTitle">&raquo; The CHAP Technique </span><br>
+  <br>
+  The technique we are going to use in this example, is called <strong>CHAP</strong> (acronym
+  for Challenge Handshake
+  Authentication Protocol) and it can be implemented very easily with a few lines
+  of server-side actionscript code. For detailed info about CHAP please check
+  this <a href="http://en.wikipedia.org/wiki/Challenge-handshake_authentication_protocol" target="_blank">wikipedia
+  page</a>. <br>
+  <br>
+In a nutshell, this is how a CHAP-based login works:</p>
+<p align="center">  <img src="images/secureLoginDiagram.gif" alt="CHAP diagram" width="550" height="448" class="imgBorder"><br>
+</p>
+<p align="left">As you can see we only have two basic steps to create this type
+  of login procedure.<br>
+  In the first step the client requests a random key to the server. A key is
+  just a simple string made of random characters. We will use this key  to
+  hide the user password, applying the MD5 encryption algorithm to it (more about
+  MD5 in a moment)<br>
+  <br>
+  The second step sends the client password and the key as a single string encoded
+  in MD5 to the server. In other words we concatenate the client's password 
+  and the key we received previously, in a single string and we encrypt it.
+  The resulting string is called a &quot;<strong>hash</strong>&quot; and to the
+  eyes of a possible &quot;hacker&quot; spying your communicatons, it wouldn't
+  just make any sense. <br>
+  <br>
+  ( 
+  For more in-depth informations about hashes and MD5 <a href="http://en.wikipedia.org/wiki/Hash_function" target="_blank">check
+  this article </a>and <a href="http://en.wikipedia.org/wiki/MD5" target="_blank">this
+  article</a> ) <br>
+  <br>
+On the server side we get the client password by looking for it in our user database,
+then we proceed in the same exact way we did on the client side and generate
+the hash of the password + key.<br>
+<br>
+If the hash coming from the client is equal to the server-side generated hash,
+we can definately allow this user inside the application. On the other hand if
+the two hashes don't match we can be sure that the client used the wrong password,
+and we won't let him in.<br>
+<br>
+The interesting aspects of this technique are essentially the following:<br>
+<br>
+1) The user password is never sent through the network in a readable form <br>
+2) The random key that we use is unique for each user session. This means that
+the key you get from the server is <strong>only valid for your session</strong>.
+<br>
+If someone captures your random key by sniffing your network traffic, he won't
+be able to use it.</p>
+<p align="left"><span class="subTitle">&raquo; The example code </span><br>
+  <br>
+Our example is based on the Login Extension tutorial presented in chapter 8.5
+  of this documentation. We strongly reccomend to read that article before proceeding,
+  if you haven't already done it.<br>
+  <br>
+  For this application we have created a new zone called &quot;<strong>slogin</strong>&quot;
+  to which we have attached an extension called <strong>secureLogin.as</strong> that you can find
+  in the &quot;sfsExtensions/&quot; folder. <br>
+  <br>
+In the source folder you will also notice a file called &quot;<strong>md5.as</strong>&quot;.
+This file contains the MD5 encryption algorithm created in javascript by Paul
+Johnston, which is released under the BSD licence. You can also check his <a href="http://pajhome.org.uk/crypt/index.html" target="_blank">website</a>,
+which has some interesting articles on this topic. </p>
+<p align="left">  You can now open the source .FLA file and inspect the actionscript code located
+  in the label called &quot;connect&quot;.<br>
+  We will now analyze the new parts that were added to the original example:
+
+</p>
+<pre class="code"><font color="#993300">function</font> handleConnection(success)
+{
+        <font color="#993300">if</font> (success)
+        {
+                <font color='#878787'>// Let's get a random secret key from the server
+</font>                <font color="#993300">if</font> (<font color="#000087">_global</font>.key == <font color="#000087">undefined</font>)
+                	smartfox.getRandomKey()
+                <font color="#993300">else</font>
+                	showLoginFields()
+        }
+        <font color="#993300">else</font>
+        {
+                status_txt.<font color="#000087">text</font> = "<font color='blue'>Can't connect!</font>"
+        }
+}
+</pre>
+<br>
+In the <strong>handleConnection()</strong> method we check if we already received
+our unique random key. This is important because the key will be sent by the
+server one time only in a user session. In other words you will not be able to
+obtain a new key for the same user session.<br>
+<br>
+The unique key is going to be stored in the <strong>_global</strong> object so
+that we can use it from everywhere inside the Flash application.<br>
+If the key doesn't exist we request it by calling the <strong>getRandomKey()</strong> method
+of the <strong>SmartFoxClient</strong> class, which will in turn fire an <strong>onRandomKey</strong> event.<br>
+<br>
+<pre class="code">
+<font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Handle the server random key
+</font><font color='#878787'>//----------------------------------------------------------
+</font>smartfox.onRandomKey = <font color="#993300">function</font>(key:<font color="#993300">String</font>)
+{
+        <font color='#878787'>// Save the key in the global scope, we'll use it later
+</font>        <font color="#000087">_global</font>.key = key
+        showLoginFields()
+}
+
+<font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Show the login Textfields
+</font><font color='#878787'>//----------------------------------------------------------
+</font><font color="#993300">function</font> showLoginFields()
+{
+        status_txt.<font color="#000087">text</font> = "<font color='blue'>Connected, please login:</font>"
+        showLogin(<font color="#000087">true</font>)
+        butt_login.<font color="#000087">onRelease</font> = validateLogin
+}
+</pre>
+<br>
+The  <strong>onRandomKey() </strong>handler  saves the key for later use and
+calls the <strong>showLoginFields()</strong> function which in turn activates
+the text input fields in the user interface.<br>
+<br>
+Finally when the &quot;Send&quot; button is pressed the 
+<strong>sendLogin()</strong> method is invoked:
+<br>
+<br>
+<pre class="code"><font color="#993300">function</font> sendLogin()
+{
+        <font color="#993300">if</font> (!<font color="#000087">_global</font>.isBusy)
+        {
+                <font color='#878787'>// Get the name from the textfield
+</font>                <font color="#993300">var</font> pass:<font color="#993300">String</font> = pwd_txt.<font color="#000087">text</font>
+                
+                <font color='#878787'>// Create an MD5 hash of the "secret" key + userName
+</font>                <font color="#993300">var</font> md5:<font color="#993300">String</font> = hex_md5(<font color="#000087">_global</font>.key + pass)
+                
+                <font color='#878787'>// Send the encrypted password
+</font>                smartfox.login(zone, login_txt.<font color="#000087">text</font>, md5)
+        }
+}
+</pre>
+<p><br>
+  In these few lines of code you can see how we secure the password before sending
+  it through the network: the text of the input field is concatenated to the
+    previously received key and finally encoded by calling the <strong>hex_md5()</strong> function,
+  that we've imported with the <strong>#include</strong> directive at the beginning
+  of the source code. <br>
+  <br>
+<span class="subTitle">&raquo; The server side extension code </span></p>
+<p>You will notice that the code on the server side was changed a little from
+  the example that originated this tutorial: 
+</p>
+<pre class="serverCode">
+<font color="#993300">var</font> userList
+
+<font color="#993300">function</font> init()
+{
+        <font color='#878787'>// Simple list of users
+</font>        <font color='#878787'>// The key is the username, the value is the password
+</font>        userList = <font color="#993300">new</font> <font color="#993300">Object</font>()
+        
+        userList["<font color='blue'>tom</font>"] 	= "<font color='blue'>tom</font>"
+        userList["<font color='blue'>jerry</font>"] 	= "<font color='blue'>jerry</font>"
+        userList["<font color='blue'>smart</font>"] 	= "<font color='blue'>fox</font>"
+}
+
+<font color="#993300">function</font> destroy()
+{
+        <font color="#993300">trace</font>("<font color='blue'>Bye bye!</font>")
+}
+
+<font color="#993300">function</font> handleRequest(cmd, params, user, fromRoom)
+{
+        
+        <font color='#878787'>// no requests to handle here...
+</font>}
+
+<font color="#993300">function</font> handleInternalEvent(evt)
+{
+        <font color="#993300">if</font> (evt.name == "<font color='blue'>loginRequest</font>")
+        {
+                <font color='#878787'>// This will hold an error message
+</font>                <font color="#993300">var</font> error = "<font color='blue'></font>"
+                
+                
+                <font color="#993300">var</font> nick = evt["<font color='blue'>nick</font>"]
+                <font color="#993300">var</font> pass = evt["<font color='blue'>pass</font>"]
+                <font color="#993300">var</font> chan = evt["<font color='blue'>chan</font>"]
+                
+                <font color='#878787'>// Get the secret key of this channel
+</font>                <font color="#993300">var</font> key = _server.getSecretKey(chan)
+                
+                <font color='#878787'>// Generate the MD5 of the key + password
+</font>                <font color="#993300">var</font> md5 = _server.md5(key + userList[nick])
+                
+                
+                <font color="#993300">if</font> (md5 != pass)
+                {
+                        error = "<font color='blue'>Authentication failed</font>"
+                }
+                <font color="#993300">else</font>
+                {
+                        
+                        <font color="#993300">var</font> obj = _server.loginUser(nick, pass, chan)
+                        
+                        <font color="#993300">if</font> (obj.success == <font color="#000087">false</font>)
+                        error = obj.error
+                        
+                }
+                
+                <font color='#878787'>// Send response to client
+</font>                <font color="#993300">var</font> response = <font color="#993300">new</font> <font color="#993300">Object</font>()
+                
+                <font color="#993300">if</font> (error == "<font color='blue'></font>")
+                {
+                        response._cmd = "<font color='blue'>logOK</font>"
+                }
+                <font color="#993300">else</font>
+                {
+                        response._cmd = "<font color='blue'>logKO</font>"
+                        response.err = error
+                }
+                
+                
+                _server.sendResponse(response, -1, <font color="#993300">null</font>, chan)              
+        }
+}
+
+</pre>
+<p><br>
+  Just like in the previous article our "user database" is kept in a local array
+  called userList.<br>
+  The little change we did in the server side code is located in the first lines
+of the <strong>handleInternalEvent()</strong> method:<br>
+<br>
+1) we retrieve the key associated with the client channel. Please remember that
+in this phase of the authentication procedure the client is not yet a &quot;User&quot;
+for the SmartFoxServer. It will become a &quot;User&quot; only when the login is successfull. 
+<br>
+In order to retrieve the unique key attached to the client channel we call the <strong>_server.getSecretKey()</strong>, passing the channel object as an argument. </p>
+<p>2) we concatenate the password received with the unique key and create the
+  MD5 hash string, just like we did previously on the client side.<br>
+  In order to create the hash we just need to call the <strong>_server.md5()</strong> method.</p>
+<p>3) Finally we can check if the client and server hashes match, and take the
+  appropriate action.</p>
+<p><span class="subTitle">&raquo; Conclusions</span></p>
+<p>In closing this article we'd like to reccomend some important security guidelines
+  that should be always kept in mind when developing multiplayer online games
+  and applications.<br>
+  <br>
+  <strong>1) Keep important data on the server side:</strong> it's crucial
+  to understand that the client application is always the weaker side of your
+  project.<br>
+  This is particularly true for Flash SWF files as we all know how easily they
+  can be  reverse-engineered. <br>
+  Also memory editors are commonly used by &quot;crackers&quot;
+  to find and alter important game/application data at runtime.<br>
+  Beacause of these reasons, you should always keep the game score and the other
+  relevant application properties on the server side and communicate changes
+  to the clients when appropriate.<br>
+  Hacking the way a score is calculated on the server side is definately way
+  harder and it will discourage most of the 
+  malicious users. <br>
+  <br>
+  <strong>2) Always validate client requests</strong>: in other words, never
+  trust the client requests.<br>
+  If a certain method on the server side accepts  values between certain
+ranges, always be sure to check that those values are within the expected ranges.
+  When your're writing your server side code, always keep in mind what could
+  happen if a bad value is sent by the client to your extension methods, and
+  do your best to avoid that these values affect the game. <br>
+  <br>
+  <strong>3) Secure the client application: </strong>there are different ways
+  to enforce security on the client side.<br>
+  To avoid modifications it is always good to obfuscate the SWF file bytecode.<br>
+  Another simple technique is checking the filesize of the client and see if
+  it matches the expected value, or if it was altered.<br>
+  More advanced techniques involve splitting the SWF file in different modules
+  that are loaded dynamically.<br>
+  Use the secure authentications method that we have illustrated in this
+  article to avoid user password detection. <br>
+  <br>
+  4) <strong>Use the SmartFoxServer security tools:</strong> the server comes
+  with many high-level and low-level options that can be used to fine tune your
+  security settings. You can use the auto-disconnect tool,
+  the ip filter, the flood-filter, the badwords filter to
+  avoid resource stealing.<br>
+  Moreover you can limit the size of incoming requests, the number of variables
+  that can be created, the size of the server queues and more...<br>
+  All these settings are documented in <strong>section 2</strong> of this documentation
+  and they will help you to have the maximum control on the server configuration. <br>
+  <br>
+  Finally applying all these techniques in your multiuser applications
+  will definately help you improve their solidity and reliability,  avoiding
+annoying problmes once the project is live. </p>
+<p>&nbsp;</p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../08_sfsTrisPro/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../10_pixelGame/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

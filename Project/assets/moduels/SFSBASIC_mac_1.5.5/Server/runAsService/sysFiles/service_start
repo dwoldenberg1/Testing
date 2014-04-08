@@ -1,0 +1,2 @@
+cd /Library/StartupItems/SmartFoxServer && ./start.sh
+

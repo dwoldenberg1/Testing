@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">sendObject()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.sendObject(obj, roomId)</p>
+ <p class="title">Description:</p>
+<p class="plain">Sends an Actionscript object to the other users in the room.<br />
+Can be useful for sending complex/nested data structures to clients, like a
+  game move or a game status change.<br />
+  <br />
+  Supported datatypes are: Strings, Booleans, Numbers, Arrays, Objects</p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>obj</strong></td>
+     <td>&nbsp;</td>
+     <td>An object containing all data that you need to send. The Object can
+       contain other objects, arrays etc... </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>roomId</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) the Id of the target room. By default SmartFoxServer uses
+       the id of the current room.<br />
+       You may want to use this extra parameters if you're sending the object
+       in a room that is different from the one you're currently in </td>
+   </tr>
+ </table>
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong><strong>onObjectReceived</strong></strong> event </p>
+ <p class="title">Example:</p>
+ <p class="plain"><strong>Example #1</strong><br />
+   A simple object with primitive data is sent to the other clients. </p>
+ <pre class="code">
+move = {}
+move.x = 150
+move.y = 250
+move.speed = 8
+
+smartFox.sendObject(move)
+</pre>
+<p class="plain"><strong>Example #2</strong><br />
+   An object with two arrays of items is being sent to the other clients. </p>
+ <pre class="code">
+itemsFound = {}
+itemsFound.jewels = ["necklace", "ring"]
+itemsFound.weapons = ["sword", "sledgehammer"]
+
+smartFox.sendObject(itemsFound)
+</pre>
+ <p class="title">See also:</p>
+ <p class="plain"><strong><strong><strong>onObjectReceived</strong></strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

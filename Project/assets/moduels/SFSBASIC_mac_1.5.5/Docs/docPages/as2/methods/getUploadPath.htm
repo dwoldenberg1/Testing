@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">getUploadPath()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 7, 8 <br />
+ SmartFoxServer Pro (1.5 or higher)</p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.getUploadPath()</p>
+ <p class="title">Description:</p>
+<p class="plain">
+	Return the current image upload path. It can be used to dynamically load images uploaded 
+	by other clients from the embedded web server.
+	<br /><br />
+	By default the path is: <em>http://127.0.0.1:8080/default/uploads</em>
+</p>
+ <p class="title">Parameters:</p>
+	None
+  <p class="title">Returns:</p>
+ <p class="plain">Nothing.</p>
+ <p class="title">Example:</p>
+ <pre class="code">
+/*
+* Dynamically load uploaded images
+*/
+
+var url:String = sfs.getUploadPath()
+var imgLoader:MovieClipLoader = new MovieClipLoader()
+var mc:MovieClip = _root.createEmptyMovieClip("image", 0)
+
+imgLoader.loadClip(url + "myImage.jpg", mc)
+</pre>
+ <p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong>uploadFile</strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

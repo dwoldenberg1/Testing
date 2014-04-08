@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.4 Tutorials: Advanced Database Extension </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is found under the <strong>Examples/AS2/pro_dbExtensionAdvanced</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+<p>Now that we've seen how to connect to a database and the basics of the Database
+  Manager object we're ready to create some more advanced server side interaction.<br> 
+  <br> 
+  In this new example we'll complete our contact list application by adding the
+  possibility to add new records and edit and delete  existing ones.<br>
+  <br>
+  <img src="images/interface.jpg" width="600" height="420" class="imgBorder"><br>
+  <br>
+  As you can see from the simple interface of the application you will be able
+  to select any record from the Datagrid component and edit/delete it in the
+  form on the right side or you can add new records using the form on the left
+  side. <br>
+  <br>
+   The example connects to the Zone called &quot;<strong>dbZone</strong>&quot; and
+   it will call methods on the extension called <strong>dbExtensionAdv.as</strong>,
+   that you can find in the main <strong>sfsExtensions/</strong> folder.<br> 
+   <br>
+   <br>
+<span class="subTitle">&raquo; Extension actions</span></p>
+<p>For this application we will need four different command names, one for each
+  possible action: </p>
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>getData</strong></td>
+    <td>&nbsp;</td>
+    <td>get all the records from the db </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>addData</strong></td>
+    <td>&nbsp;</td>
+    <td>add a new record</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>updData</strong></td>
+    <td>&nbsp;</td>
+    <td>update a record</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>delData</strong></td>
+    <td>&nbsp;</td>
+    <td>delete a record</td>
+  </tr>
+</table>
+<p>We have already seen how to get all the database records and show them in
+  the Datagrid component, so we will analyze how the other three actions are
+  perfomed on the server side.</p>
+<p><span class="subTitle">&raquo; Adding records</span><br>
+  <br>
+  When the &quot;<strong>Add New</strong>&quot; button is clicked the request is sent
+  to the server:
+<pre class="code"><font color="#993300">function</font> addRecord()
+{
+        <font color='#878787'>// prepare the request object
+</font>        <font color="#993300">var</font> req:<font color="#993300">Object</font> = {}
+        
+        <font color="#993300">if</font> (add_name_txt.<font color="#000087">text</font> != "<font color='blue'></font>")
+        {
+                req.name 		= add_name_txt.<font color="#000087">text</font>
+                req.location 	= add_location_txt.<font color="#000087">text</font>
+                req.email 		= add_email_txt.<font color="#000087">text</font>
+                
+                <font color='#878787'>// Clear textfields
+</font>                add_name_txt.<font color="#000087">text</font> = add_location_txt.<font color="#000087">text</font> = add_email_txt.<font color="#000087">text</font> = "<font color='blue'></font>"
+                
+                smartfox.sendXtMessage(extensionName, "<font color='blue'>addData</font>", req, "<font color='blue'>xml</font>")
+        }
+}
+</pre>
+  <br>
+  First we create an empty object and we add the name, location and email properties
+  to it by reading the values in the input text fields. Then we send the message
+  to the extension passing the &quot;addData&quot; as the command name that we
+  want to execute.<br>
+  <br>
+  Let's see how this is handled in our extension:<br>
+  <br>
+  <pre class="serverCode"><font color='#878787'>//--- Handle and "add record" request ----------------------------------------------------------
+</font><font color="#993300">else</font> <font color="#993300">if</font> (cmd == "<font color='blue'>addData</font>")
+{
+        <font color="#993300">var</font> id = <font color="#993300">getTimer</font>()
+        
+        <font color='#878787'>// Create the SQL statement to update the record
+</font>        <font color="#993300">var</font> sql = "<font color='blue'>INSERT INTO contacts (id, name, location, email) VALUES (</font>"
+        sql += "<font color='blue'>'</font>" + id + "<font color='blue'>', </font>"
+        sql += "<font color='blue'>'</font>" + _server.escapeQuotes(params.name) + "<font color='blue'>', </font>"
+        sql += "<font color='blue'>'</font>" + _server.escapeQuotes(params.location) + "<font color='blue'>', </font>"
+        sql += "<font color='blue'>'</font>" + _server.escapeQuotes(params.email) + "<font color='blue'>')</font>"
+        
+        <font color="#993300">var</font> success = dbase.executeCommand(sql)
+        
+        <font color='#878787'>// If it was successfully updated send a response
+</font>        <font color="#993300">if</font> (success)
+        {
+                <font color="#993300">var</font> response 		= {}
+                response._cmd		= "<font color='blue'>addData</font>"
+                response.id 		= id
+                response.name 		= params.name
+                response.location 	= params.location
+                response.email 		= params.email
+                
+                _server.sendResponse(response, -1, <font color="#993300">null</font>, [user])
+        }
+}
+</pre>
+</p>
+<br>
+As you can see the code is almost straightforward. We create the <strong>INSERT</strong> sql
+statement dynamically and then call the <strong>executeCommand()</strong> method
+on the Database Manager object, which we encounter for the first time.<br>
+
+<br />
+To summarize the <strong>DatabaseManager</strong> object exposes two methods:<br />
+<br />
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>executeQuery</strong></td>
+    <td>&nbsp;</td>
+    <td>Executes any SQL &quot;SELECT&quot; statement. It returns a &quot;RecordSet&quot;.</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>executeCommand</strong></td>
+    <td>&nbsp;</td>
+    <td>Execute any other SQL command (INSERT, UPDATE, DELETE ... etc ...). Returns
+      a boolean telling if the operation was successful </td>
+  </tr>
+</table>
+<br>
+It is also important to note that we have used the <strong>_server.escapeQuotes() </strong>method
+to process each parameter coming from the client.
+The method fixes possible problems with quotes (') and double quotes (&quot;) that
+may cause SQL syntax errors. <br>
+In the sql statement all values to be insterted in the database
+are enclosed in single quotes('). If one of those values contains the same symbol
+the statement will be malformed and the command execution will fail. Always remember
+to use the <strong>escapeQuotes()</strong> method to avoid these problems. <br>
+<br>
+At the end of the code, if the insertion was successful, a message is sent back
+to the client with the data inserted and this is the code that handles the response: <br>
+<pre class="code"><font color="#993300">else</font> <font color="#993300">if</font> (resObj._cmd == "<font color='blue'>addData</font>")
+{
+        <font color='#878787'>// Remove the _cmd property
+</font>        <font color="#993300">delete</font> resObj._cmd
+        
+        grid_dg.<font color="#000087">addItem</font>(resObj)
+}
+</pre>
+<br>
+The object received is directly added to the Datagrid, removing the
+<strong>_cmd</strong> property that is not needed by the component.<br>
+<br>
+<span class="subTitle">&raquo; Updating records</span><br>
+<br>
+Modifying an existing record is very similar to what we've done in the previous
+example:<br>
+<br>
+<pre class="code"><font color="#993300">function</font> updateRecord()
+{
+        <font color="#993300">var</font> obj = grid_dg.selectedItem
+        
+        <font color="#993300">if</font> (obj != <font color="#000087">undefined</font>)
+        {
+                <font color='#878787'>// prepare the request object
+</font>                <font color="#993300">var</font> req:<font color="#993300">Object</font> = {}
+                
+                req.id 			= obj["<font color='blue'>id</font>"]
+                req.name 		= mod_name_txt.<font color="#000087">text</font>
+                req.location 	= mod_location_txt.<font color="#000087">text</font>
+                req.email 		= mod_email_txt.<font color="#000087">text</font>
+                
+                smartfox.sendXtMessage(extensionName, "<font color='blue'>updData</font>", req, "<font color='blue'>xml</font>")
+        }
+}
+</pre>
+<br>
+First we check if an element is selected in the Datagrid, the we proceed by sending
+the id, name, location and email fields to the server by wrapping them into an
+object as we did before. This time the command to be executed in the extension
+is called &quot; <strong>updData</strong>&quot;.<br>
+<br>
+The server code is also very similar to what we have done so far:<br>
+<br>
+<pre class="serverCode"><font color='#878787'>//--- Handle and "update record" request -------------------------------------------------------
+</font><font color="#993300">else</font> <font color="#993300">if</font> (cmd == "<font color='blue'>updData</font>")
+{
+        <font color='#878787'>// Create the SQL statement to update the record</font>
+        <font color="#993300">var</font> sql = "<font color='blue'>UPDATE contacts SET </font>"
+        sql += "<font color='blue'> name='</font>" + _server.escapeQuotes(params.name) + "<font color='blue'>',</font>"
+        sql += "<font color='blue'> location='</font>" + _server.escapeQuotes(params.location) + "<font color='blue'>',</font>"
+        sql += "<font color='blue'> email='</font>" + _server.escapeQuotes(params.email) + "<font color='blue'>'</font>"
+        sql += "<font color='blue'> WHERE id='</font>" + params.id + "<font color='blue'>'</font>"
+        
+        <font color="#993300">var</font> success = dbase.executeCommand(sql)
+        
+        <font color='#878787'>// If it was successfully updated send a response
+</font>        <font color="#993300">if</font> (success)
+        {
+                <font color="#993300">var</font> response 		= {}
+                response._cmd		= "<font color='blue'>updData</font>"
+                response.id 		= params.id
+                response.name 		= params.name
+                response.location 	= params.location
+                response.email 		= params.email
+                
+                _server.sendResponse(response, -1, <font color="#993300">null</font>, [user])
+        }
+}
+</pre>
+<br>
+The UPDATE sql command is built using the client side parameters and a response
+is sent back to the user if the database was updated successfully.<br>
+<br>
+The code in the source .FLA that handles the response looks like this:<br>
+<br>
+<pre class="code"><font color="#993300">else</font> <font color="#993300">if</font> (resObj._cmd == "<font color='blue'>updData</font>")
+{
+        <font color='#878787'>// Remove the _cmd property
+</font>        <font color="#993300">delete</font> resObj._cmd
+        
+        <font color='#878787'>// Look for the correct row ID
+</font>        <font color='#878787'>// If found, replace the row with the new, updated one
+</font>        <font color="#993300">for</font> (<font color="#993300">var</font> i = 0; i &lt; grid_dg.<font color="#000087">length</font>; i++)
+        {
+                <font color="#993300">var</font> row = grid_dg.<font color="#000087">getItemAt</font>(i)
+                <font color="#993300">if</font> (row["<font color='blue'>id</font>"] == resObj.id)
+                {
+                        grid_dg.<font color="#000087">replaceItemAt</font>(i, resObj)
+                        <font color="#993300">break</font>
+                }
+        }
+}
+</pre> 
+<br>
+We cycle through all the elements in the Datagrid looking for the one with the
+ID passed by the server: when we find it we replace the object in that position
+with the new one sent by the extension. Also note that we have deleted the <strong>_cmd</strong> property
+as it is not needed in the visual component. <br>
+<br>
+<span class="subTitle">&raquo; Deleting records and conclusions<br>
+<br>
+</span> Deleting records is also done using the same coding scheme. We check
+on the client which record was selected, we send the id of that record to the
+extension invoking the &quot;<strong>delData</strong>&quot; command, and we finally
+send a message  to the client (if the operation was successful) so that
+we can update the local view. <br>
+<br>
+In conclusion we have seen how to interact with databases using this example
+contact list application. We've kept everything as simple as possible in order
+to concentrate on the way requests are exchanged between your client and your
+custom extensions.<br>
+<br>
+Now that you have learned all the basics, you should easily see how these concepts
+could be applied to real world mutiplayer applications: for example a registration
+form for an online game, the management of a server side high score table, database
+driven user profiles, game statuses and much more...<br> 
+<br>
+<br>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%">&nbsp;</td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../05_loginExt/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

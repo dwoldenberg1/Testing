@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">sendModeratorMessage()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 7, 8 <br />
+ SmartFoxServer Basic / Pro (version 1.4.5+) </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.sendModeratorMessage(msg:String, type:Number, id:Number) </p>
+ <p class="title">Description:</p>
+<p class="plain">Sends a moderator message to an entire Zone, a Room or a single User. </p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td><strong>msg</strong></td>
+     <td>&nbsp;</td>
+     <td>The message </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>type</strong></td>
+     <td>&nbsp;</td>
+     <td>You can use the following constants:<br />
+       <br />
+       SmartFoxClient.MODMSG_TO_ZONE<br />
+       SmartFoxClient.MODMSG_TO_ROOM<br />
+       SmartFoxClient.MODMSG_TO_USER</td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>id</strong></td>
+     <td>&nbsp;</td>
+     <td>the id of the recipient Room or User, ignored if you're sending the message to a Zone </td>
+   </tr>
+ </table>
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong><strong>onPublicMessage</strong></strong> event </p>
+ <p class="title">Example:</p>
+ <pre class="code">
+/*
+* Send message to all the clients in the currently active room
+* NOTE: sfs is the name of the SmartFoxClient class instance
+*/
+
+smartFox.sendModeratorMessage("Greetings from the moderator", SmartFoxClient.MODMSG_TO_ROOM, sfs.getActiveRoom())
+</pre>
+ <p class="title">See also:</p>
+ <p class="plain"><strong><strong><strong><strong><strong><strong>onModeratorMessage(), onAdminMessage()</strong></strong></strong></strong></strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

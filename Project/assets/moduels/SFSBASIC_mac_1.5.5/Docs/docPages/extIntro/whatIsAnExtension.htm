@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.1 Introduction to Server Side Extensions </p>
+ <p>The idea behind a<strong> server side extension</strong> is very simple:
+   it allows developers to extend the server functionalities allowing them to
+   create all kinds of new features and behaviors.<br>
+   <strong>SmartFoxServer PRO</strong> comes with a standard set of features
+   that cover all the basic tasks of a multi user server: handling applications,
+   user connections, room
+   creation and destruction, broadcasting user messages etc..<br>
+   With these built-in features  you can already create a good number of multiplayer
+   applications, but when things get more sophisticated, it is necessary to have
+   new behaviors at hand. Server side extensions are an easy and powerful tool
+   for developers to implement simple to very complex application logic on
+   the server side. <br>
+ <br>
+ <span class="subTitle">&raquo; An Example <br>
+ </span>If you have already been using <strong>SmartFoxServer Lite
+ or Basic</strong> you should
+ know the <strong>SmartFoxTris</strong> example, essentially it is a multiplayer
+ tic-tac-toe game.<br>
+ Using the server-side variables we can keep the game logic all on the client
+ without worrying of the server side.<br>
+ Let's say  we now want to make it more complex: we'd like to add registered
+ user support with a high score table, user profile and user registration. With
+ the SFS <strong>Extensions</strong> you can implement all the registration/login/high
+ score handling on the server side pretty easily.<br>
+ <br>
+ You can connect to your existing database, retrieve and modify user data, save
+ high scores and even send html-formatted confirmation emails!</p>
+<p><img src="images/asCode.gif" width="600" height="192" class="imgBorder"><br>
+   <br>
+   <span class="subTitle">&raquo; How do Extensions work? </span><br>
+   Extensions can be written using <strong> Java</strong> or <strong>Actionscript
+   1.0</strong>   (Javascript/ECMA-262).<br>
+  Using the provided <strong>Actionscript framework</strong> is the easiest
+     and more productive way of creating your own custom server logic, and these
+     articles <strong>will be focused  on the Actionscript framework</strong>. </p>
+ <p>Basically an extension consists of a simple  <strong>.as file</strong> (just
+   like you would do in Flash) saved in the <strong>sfsExtensions/</strong> folder,
+   which is the root directory for all Actionscript extensions. You can also
+   create your own folder structure starting from the root, to better organize
+   your <strong> .as</strong> files. </p>
+ <p><img src="images/folders.gif" width="143" height="123" class="imgBorder"></p>
+ <p>The next step is to tell the server that you have created an extension for
+   a certain <strong>Zone</strong> or <strong>Room</strong> (more on this in
+   the next chapters) and activate it, by modifying the config.xml. Below follows
+   an example of the XML used to load an extension. 
+ <pre class="code">
+&lt;Extensions&gt;
+	&lt;extension name=&quot;myExt&quot; className=&quot;myExtension.as&quot; type=&quot;script&quot; /&gt;
+&lt;/Extensions&gt;</pre>
+   <br>
+   The <strong>name</strong> attribute represents the name you will use to &quot;invoke&quot; the
+   extension from the client application, and the <strong>className</strong> is
+   the Actionscript file to load. Alternatively you can
+   dynamically attach your extensions to dynamic rooms (both regular or game
+   ones) from the client:<br>
+   <br>
+<pre class="code">
+	var gameRoom:Object		= new Object()
+	gameRoom.name 			= name
+	gameRoom.password 		= pwd
+	gameRoom.maxUsers 		= 2
+	gameRoom.maxSpectators 	= spec
+	gameRoom.isGame 		= true
+	gameRoom.isTemp 		= true
+	
+	xt = {}
+	xt.name = "tris"
+	xt.script = "sfsTris.as"
+	gameRoom.extension		= xt
+	
+	smartfox.createRoom(gameRoom)
+</pre>
+   <br>
+   The above example is taken from the <strong>pro_sfsTris</strong> example file,
+   provided with <strong>SmartFoxServer PRO</strong>, and it shows how simple
+   is to dynamically create a new game room and attach a server side extension
+   to it. If your are familiar with <strong>SmartFoxServer Basic</strong> you will notice that
+   the only addition in the code is the the new &quot;extension&quot; property.<br>
+   <br>
+Now you are ready to start sending requests from your Flash client to the extensions
+and handle the its responses. <br>
+<br>
+Essentially an extension should take care of two different tasks: responding
+to client requests and handling internal server events. <br>
+Here's an example of a client
+request:<br>
+<br>
+<pre class="code">server.sendXtMessage("myExt", "helloWorld", obj)</pre>
+<br>
+The first argument is the name of the extension that we want to call, the second one
+is the name of the command / request we want the extension to execute, and the
+last parameter is an object containing data to pass to the server.<br>
+<br>
+In order to handle extension responses on the client you will use the <strong>onExtensionResponse</strong> event handler: <br>
+<br>
+<pre class="code">
+smartfox.onExtensionResponse = function(resObj:Object, type:String)
+{
+	var cmd:String = resObj._cmd
+	
+	if (cmd == "myCommand")
+	{
+		// Handle the response here
+	}
+}
+</pre>
+<br>
+All the data sent by the server is held in the <strong>resObj</strong> object and, as a convention, you will always find a property called &quot;<strong>_cmd</strong>&quot; which contains the name of the response command sent by the server. <br>
+<br>
+Internal server events are sent by <strong>SmartFoxServer</strong> to its extensions to notify
+that something important is happening, for example a new room was created in
+the Zone where the extension is attached to, or a login request was sent etc...<br>
+<br>
+Finally each extension can be monitored from the <strong>AdminTool</strong>.
+They can be restarted and paused while the server is running and you can also
+debug them remotely using the <strong>AdminTool</strong> trace window. <br>
+
+<br>
+<span class="subTitle">&raquo; Raw protocols vs XML</span><br>
+<br>
+One of the most important features of <strong>SmartFoxServer Extensions</strong> is the possibility to use a raw string-based protocol for messages instead of the standard XML format used by default.<br>
+This feature allows client and server to send very small messages, saving a lot of bandwidth which is ideal for real time action-based games. Also you can mix the two formats transparently.<br>
+In other words you can send some requests using the default protocol and some others using the raw format. For example in a multiplayer car game you can send all the non time-critical messages using plain XML and use the raw format for quickly updating the car positions, collisions etc...<br>
+<br> 
+You will find detailed informations about this feature in the <strong>SmartFoxServer
+PRO</strong> tutorials section.<br>
+<br>
+<br>
+<hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%">&nbsp;</td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="extArchitecture.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

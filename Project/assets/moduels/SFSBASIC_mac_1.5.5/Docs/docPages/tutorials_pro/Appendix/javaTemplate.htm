@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.b Appendix: Java Extension Template </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source </strong> of
+       this example is found in the <strong>Examples/(Flash
+       version)/applicationTemplate</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>This article provides a basic template for creating your you own server side extensions written in Java. <br>
+</p>
+ <p><span class="subTitle">&raquo; Java Extensions in a nuthshell</span> <br>
+   <br>
+Basically an extension has four different tasks to accomplish:<br>
+<br>
+<strong>1) Initialize </strong><br>
+<strong>2) Handle client requests</strong><br>
+<strong>3) Handle internal server events</strong><br>
+<strong>4) Destroy <br>
+<br>
+</strong>These four tasks are handled respectively by four Java methods
+ called: <strong>init()</strong>, <strong>handleRequest()</strong>, <strong>handleInternalEvent()</strong>, <strong>destroy()</strong><br>
+ Please note that the <strong>handleRequest()</strong> method is overloaded in order to handle both XML based and String based messages. </p>
+ <p><span class="subTitle">&raquo; The template </span> (server version &lt; 1.5.0) <br>
+   <br>
+Here's the code of the extension template:</p>
+ <pre class="serverCode">
+import java.nio.channels.SocketChannel;
+import java.util.*;
+
+import it.gotoandplay.smartfoxserver.db.*;
+import it.gotoandplay.smartfoxserver.data.*;
+import it.gotoandplay.smartfoxserver.exceptions.*;
+import it.gotoandplay.smartfoxserver.extensions.*;
+import it.gotoandplay.smartfoxserver.lib.ActionscriptObject;
+import it.gotoandplay.smartfoxserver.events.InternalEventObject;
+
+public class ExtensionTemplate extends AbstractExtension
+{
+	/** 
+	* Initializion point:
+	* 
+	* this method is called as soon as the extension
+	* is loaded in the server.
+	* 
+	* You can add here all the initialization code
+	*/
+	public void init()
+	{
+		trace("Extension initialized");	
+	}
+	
+	
+	/**
+	* This method is called by the server when an extension
+	* is being removed / destroyed.
+	* 
+	* Always make sure to release resources like setInterval(s)
+	* open files etc in this method.
+	* 
+	* In this case we delete the reference to the databaseManager
+	*/
+	public void destroy()
+	{
+		trace("Extension destroyed");
+	}
+	
+	
+	/**
+	 * Handle Client Requests in XML format
+	 * 
+	 * @param cmd		the command name
+	 * @param ao		the actionscript object with the request params
+	 * @param u			the user who sent the request
+	 * @param fromRoom	the roomId where the request was generated
+	 */
+	public void handleRequest(String cmd, ActionscriptObject ao, User u, int fromRoom)
+	{
+		// Your code here
+	}
+	
+	
+	/**
+	 * Handle Client Requests in String format
+	 * 
+	 * @param cmd		the command name
+	 * @param params	an array of String parameters
+	 * @param u			the user who sent the request
+	 * @param fromRoom	the roomId where the request was generated
+	 */
+	public void handleRequest(String cmd, String params[], User u, int fromRoom)
+	{
+		// Your code here
+	}
+	
+	/**
+	 * Handle Internal Server Events
+	 * 
+	 * @param ieo		the event object
+	 */
+	public void handleInternalEvent(InternalEventObject ieo)
+	{
+		// Your code here
+	}
+}
+ </pre>
+<p><span class="subTitle">&raquo; The template </span> (server version &gt;= 1.5.0) <br>
+  <br>
+  Since SmartFoxServer 1.5.0 a new protocol based on JSON serialization is supported.<br>
+  The template provided differs only by one new overloaded <strong>handleRequest</strong> method.<br>
+Also notice that we import the JSON classes that are found in the <strong>json.jar </strong>package found in the Server/lib/ folder. </p>
+<pre class="serverCode">
+import java.nio.channels.SocketChannel;
+import java.util.*;
+
+import it.gotoandplay.smartfoxserver.db.*;
+import it.gotoandplay.smartfoxserver.data.*;
+import it.gotoandplay.smartfoxserver.exceptions.*;
+import it.gotoandplay.smartfoxserver.extensions.*;
+import it.gotoandplay.smartfoxserver.lib.ActionscriptObject;
+import it.gotoandplay.smartfoxserver.events.InternalEventObject;
+
+import org.json.JSONObject; 
+
+public class ExtensionTemplate extends AbstractExtension
+{
+	/** 
+	* Initializion point:
+	* 
+	* this method is called as soon as the extension
+	* is loaded in the server.
+	* 
+	* You can add here all the initialization code
+	*/
+	public void init()
+	{
+		trace("Extension initialized");	
+	}
+	
+	
+	/**
+	* This method is called by the server when an extension
+	* is being removed / destroyed.
+	* 
+	* Always make sure to release resources like setInterval(s)
+	* open files etc in this method.
+	* 
+	* In this case we delete the reference to the databaseManager
+	*/
+	public void destroy()
+	{
+		trace("Extension destroyed");
+	}
+	
+	
+	/**
+	 * Handle Client Requests in XML format
+	 * 
+	 * @param cmd		the command name
+	 * @param ao		the actionscript object with the request params
+	 * @param u			the user who sent the request
+	 * @param fromRoom	the roomId where the request was generated
+	 */
+	public void handleRequest(String cmd, ActionscriptObject ao, User u, int fromRoom)
+	{
+		// Your code here
+	}
+	
+	
+	/**
+	 * Handle Client Requests in String format
+	 * 
+	 * @param cmd		the command name
+	 * @param params	an array of String parameters
+	 * @param u			the user who sent the request
+	 * @param fromRoom	the roomId where the request was generated
+	 */
+	public void handleRequest(String cmd, String params[], User u, int fromRoom)
+	{
+		// Your code here
+	}
+	
+	
+	/**
+	 * Handle Client Requests in JSON format
+	 * 
+	 * @param cmd		the command name
+	 * @param params	a JSONObject with the request parameters
+	 * @param u			the user who sent the request
+	 * @param fromRoom	the roomId where the request was generated
+	 */
+	public void handleRequest(String cmd, JSONObject jso, User u, int fromRoom)
+	{
+		// Your code here
+	}
+	
+	
+	/**
+	 * Handle Internal Server Events
+	 * 
+	 * @param ieo		the event object
+	 */
+	public void handleInternalEvent(InternalEventObject ieo)
+	{
+		// Your code here
+	}
+}
+ </pre>
+<p></p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../16_theoChat/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../02_simpleChat_p1/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

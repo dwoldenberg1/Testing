@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">3.5 Administrator Tool: Runtime extensions management.</p>
+ <p>If you're using <strong>SmartFoxServer PRO </strong> you will be able to
+   manage your server side extensions at runtime using the <strong>Administrator
+   Tool</strong>. <br>
+   <br>
+   You will be able to:<br> 
+   <br>
+   &raquo; Remotely debug the extensions using the Trace window <br>
+   &raquo; Enable / Disable extensions<br>
+   &raquo; Reload server side extensions that have been modified<br>
+   <br>
+All these operations can be done without the need of restarting the server.</p>
+ <p class="subTitle"><img src="images/admin_extManager.jpg" width="600" height="421"> </p>
+ <p><span class="subTitle">&raquo; Changing the current View: </span></p>
+ <p>Using the <strong>Zone Browser</strong> you will be able to switch from the <strong>Default
+     View</strong> to
+   the <strong>Extension View</strong> by clicking the combo-box at the top of
+   the screen (see the orange arrow in the picture above).<br>
+   The <strong>Extensions View</strong> will show you all the running extensions
+   for the current selection in the tree on the left side. In other words, once
+   you have selected a Room or a Zone you can switch view and check all the extensions
+   that are running inside it.<br>
+   <br>
+   The <strong>Trace Window</strong> will show the trace messages coming from
+   the extensions running in the selected area (Zone or Room). All messages are
+   kept in a queue so you won't miss any of them, even if you're using another
+   panel of the Admin Tool. The remote trace feature can also be globally disabled
+   from the main configuration file. <br>
+   <br>
+   <span class="subTitle">&raquo; Disabling / Enabling extensions:</span></p>
+ <p>At any time you can disable or enable an extension linked to a Zone or Room.
+   When an extension is deactivated it will stop responding to any requests and
+   it won't handle any internal server event. Also all it's threads (setIntervals)
+   will be paused.<br>
+   <br> 
+   <span class="subTitle">&raquo; Reloading extensions: </span><br>
+   <br>
+   While developing your custom extensions you will be probably testing them
+   many times. Because of this you may need to reload the extension in order
+   to see the new changes in action. Just select the name of the extension to
+   reload and hit the &quot;<strong>RELOAD</strong>&quot; button. <br>
+   Extensions are always compiled before they are available in the server: if
+   a compile error occurs, the extension will not be running and an error will
+   be logged in the server console and file logs. Just check the error message,
+   fix the problem, and finally reload it from the Admin Tool. </p>
+ <p><span class="subTitle">&raquo; Loading new extensions at runtime:</span></p>
+ <p>With <strong>SmartFoxServer PRO</strong> the Zone-Reload command will also
+   load all new extensions found in the config file at runtime, without the need
+   of restarting the server.</p>
+ <hr width="99%" size="1" noshade> 
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="zoneManager.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../api/installing.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

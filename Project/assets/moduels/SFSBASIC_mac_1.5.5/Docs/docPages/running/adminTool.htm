@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">3.3 The Administrator Tool</p>
+<p>The <strong>Administrator Tool </strong>is a powerful application for monitoring and managing
+   the server. <br>
+   These are some of the tasks that can be accomplished with it:<br>
+   <br>
+   &raquo; Monitor the server status<br>
+   &raquo; Browse each zone, inspecting all the details of each room and each
+   user connected.<br>
+   &raquo; Add/Start/Stop new Zones at runtime, without restarting the server.<br>
+   &raquo; Add/Start/Stop new Extensions at runtime without restarting the server. (PRO
+   only) <br>
+   &raquo; Monitor extensions and remotely debug them. (PRO only) <br>
+   &raquo; Send administrator messages to single users, rooms or the entire server.<br>
+   &raquo; Kick, ban user and manage the banned user list<br>
+   &raquo; Inspect the log files<br>
+   &raquo; Remotely edit and save the configuration<br>
+  &raquo; Restart and halt the server</p>
+ <p class="subTitle">&raquo; Login screen:</p>
+ <p><img src="images/admin_login.jpg" width="600" height="424"> </p>
+ <p>This is the first screen you will be presented after launching the tool.
+   In order to login you need to input the server address, port, your nickname
+   as admin and the password. If all data is correct you will be connected to
+   the server as administrator.<br>
+   <br>
+   <strong>NOTE:</strong> By default the administrator account is set to:<br>
+   <br>
+   login
+     = sfs_admin<br>
+ pass = sfs_pass</p>
+ <p><strong>It is very important that you change this account before putting
+     the server online! </strong><br>
+   <br>
+     The Admin tool will show you a warning message to remind you to change user
+     name and password. </p>
+ <p class="subTitle">&raquo; Server Status</p>
+ <p><img src="images/admin_status.jpg" width="600" height="424"> </p>
+ <p>This screen graphically shows the current status of the server with a number
+   of useful informations for the administrator.</p>
+ <table width="100%"  border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td valign="top"><strong>UpTime:</strong></td>
+     <td>Shows you how long the server has been running since it was started
+       or restarted the last time. </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>Server Load: </strong></td>
+     <td>This is an important indicator. It will tell you how busy is the server
+       at the moment.<br>
+       The server starts to get very busy when many concurrent requests are sent
+       and it has to quickly respond to all of them. <br>
+       Another reason because the server may get busy is network congestion:
+       when the available bandwidth is almost filled with incoming and outgoing
+       messages the server will start enqueuing messages in the so called &quot;Outgoing
+       Message Queue&quot; (OMQ) waiting for the network to get ready.<br>
+       <br>
+       As the OMQ increases in size the server load gets higher as more memory
+       is reserved for all these messages that should be sent away but the network
+       condition do not allow the server to send them fast enough. </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>Data Traffic: </strong></td>
+     <td>It shows how much data has been transferred in both directions (in /
+       out) Also it indicates the average data transfer per hour </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>Resources:</strong></td>
+     <td>This panel shows current memory usage in the JVM and the status of the
+       server system queues. <br>
+       We have already mentioned the &quot;<strong>Outgoing Message
+       Queue</strong>&quot;, it represents
+       the queue of response messages that are going to be sent to the clients
+       .<br>
+       The &quot;<strong>System Handler Queue</strong>&quot; is responsible for holding all the incoming
+       messages that should be processed. <br>
+       The &quot;<strong>Extension Handler Queue</strong>&quot; is responsible for holding extensions requests.<br>
+       <br>
+       In most cases these queues should be empty or contain a few hundreds
+       messages which are usually processed in a fraction of a second. When one
+       or more of these queues are filled with thousands of messages for long
+       time then the server may start responding a little slower because of the
+       work load.</td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>Statistics:</strong></td>
+     <td>This panel shows a number of runtime statistics such as: current number
+       of zones, rooms and users, the number of banned users, the maximum number
+       of concurrent connections since startup, and the number of dropped in
+       and out messages.<br>
+       <br>
+       What are dropped messages? In particular stress conditions or bad network
+       performance the server may drop messages to preserve performance and
+       system memory. For example when the maximum amount of queued outgoing
+       messages is reached the server will start dropping. <br>
+       In normal conditions dropped messages are very rare, however if their
+       number becomes consistent it could be the symptom of a lack of bandwidth.<br>       </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>Server Control:</strong></td>
+     <td>Allows the administrator to stop or restart the server.<br>
+       Both tasks will disconnect all the users from the server (administrator
+         included) so you can send a message to all clients before they get disconnected.<br>
+         The admin message is sent immediately while the restart or stop operation
+         is posponed by 6 seconds to let everyone receive the message.</td>
+   </tr>
+ </table>
+ <p><span class="subTitle">&raquo; Zone Browser</span></p>
+ <p><img src="images/admin_browser.jpg" width="600" height="424"></p>
+<p>The zone browser allows the administrator to inspect all the applications
+   running in the server.<br>
+  In the top left of the screen you will find a tree-view with the list of the
+  currently active zones: by collapsing each node you can see all the rooms
+  inside the selected zone and by clicking a room name you can inspect
+   all the room properties.</p>
+ <p>Once you have selected a room  the list box under the tree-view is populated
+   with the names of the users connected to that room. By selecting one of those
+   names you can view all the properties of that user.</p>
+ <p><strong>NOTE:</strong> the tree-view and the client-view are updated in realtime,
+   so you may at times see rooms and users disappear as they are removed.<br>
+   However, to save bandwidth, the right-side panel showing the properties of the
+   selected item is not handled in realtime but it is provided with a &quot;REFRESH&quot;
+button to request and update from the server.<br>
+<br>
+From the right side property-panel you will also be able to send administrator
+messages to
+single clients or to the entire room, plus you will be able to kick and banish
+users when viewing a user profile.<br>
+   <br>
+<span class="subTitle">&raquo; Ban Manager</span></p>
+ <p><img src="images/admin_ban.jpg" width="600" height="424"></p>
+ <p>This simple panel shows the list of users banned by name on the left side
+   and the list of users banned by IP address on the right side. It provides
+   also information about when a certain user or IP was banned. At any time you
+   can re-enable a user or an IP address by selecting it and clicking the &quot;REMOVE&quot;
+   button.</p>
+ <p><span class="subTitle">&raquo; Log Viewer</span></p>
+ <p><img src="images/admin_logs.jpg" width="600" height="424"></p>
+ <p>The log viewer panel allows to inspect the last lines (tail) of the log files
+   up to a maximum of 90 lines. This way you can always monitor the recent events
+   logged by the server. Due to the large size of the log files it would not
+   be possible to see them entirely from a remote location as this would occupy
+   too much bandwidth.<br>
+   If you need to do a more in-depth log analysis you should access the log files
+   directly on the server machine.</p>
+ <p><span class="subTitle">&raquo; Config.xml</span></p>
+ <p><img src="images/admin_cfg.jpg" width="600" height="424"></p>
+ <p>From this panel the administrator can edit and save the <strong>SmartFoxServer</strong> configuration
+   file (config.xml), keeping a backup copy of the previous configuration.<br>
+   When this panel is activated the config file is loaded (it may take a few
+   seconds, depending on its size) and you can edit it.<br>
+   Once you're done just click on &quot;SAVE CONFIG&quot; button to save the configuration
+   file back to the server.<br>
+   <br>
+   We highly reccomend to keep the &quot;<strong>Make backup</strong>&quot; checkbox activated to keep a
+   copy of the previous config file. The backupped file is moved into the confBackup/
+   folder and its renamed using a timestamp formatted as follows:<br>
+   <br>
+   backup_YYYYMMDDHHMMSS <br>
+   <br>
+   YYYY = year (4 digits)<br>
+   MM = month (2 digits)
+   <br>
+   DD = day (2 digits) <br>
+   HH = hour (2 digits)<br>
+ MM = minutes (2 digits)<br>
+ SS = seconds (2 digits)</p>
+ <p>Once the new configuration is saved it will not be active until you will
+   restart the server. </p>
+ <p><span class="subTitle">&raquo; Log out</span></p>
+ <p>When you're finished with your admin tasks you can log out by clicking the
+   &quot;LOG OUT&quot; button. </p>
+ <p><span class="subTitle">&raquo; Admin tool usage</span></p>
+ <p>The Admin tool can either be used as a standalone application or be published
+   in a web page for accessing in from everywhere.<br>
+   <br>
+   In case you choose to publish it on a website we reccomend to password protect
+   the access to the page for even better security.<br>
+   Also if you're using a static IP address you may want to configure the server
+   so that accepts administrator logins only from that IP. Please check the <strong>&lt;AdminAllowedAddresses&gt;</strong> directive
+   in doc  <a href="../config/basics.htm">section
+   2.1</a> for further details. </p>
+ <hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="logs.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="zoneManager.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

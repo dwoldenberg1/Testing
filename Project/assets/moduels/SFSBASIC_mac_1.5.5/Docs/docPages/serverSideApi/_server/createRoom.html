@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.createRoom()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.4.0 / Refactored in version 1.4.5 </p>
+ <p class="title">Usage:</p>
+ <p class="plain"><strong>Version 1.4.0: </strong><br />
+ _server.createRoom(roomObj, user, sendUpdate, broadcastEvt)</p>
+ <p class="plain"><strong>Version 1.4.5 and higher:</strong><br />
+ _server.createRoom(roomObj, user, sendUpdate, broadcastEvt, roomVars, varsOwner, setOwnership)</p>
+ <p class="title">Description:</p>
+<p class="plain">Creates a new room. 
+<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>roomObj</strong></td>
+     <td>&nbsp;</td>
+     <td><p>an object describing the room properties. The following is a list
+         of available properties: </p>
+
+         <table  border="0" cellspacing="0" cellpadding="3">
+           <tr>
+             <td nowrap="nowrap"><em><strong>name</strong></em></td>
+             <td>&nbsp;</td>
+             <td>the room name</td>
+           </tr>
+           <tr>
+             <td nowrap="nowrap"><em><strong>pwd</strong></em></td>
+             <td>&nbsp;</td>
+             <td>the room password (optional) </td>
+           </tr>
+           <tr>
+             <td nowrap="nowrap"><em><strong>maxU</strong></em></td>
+             <td>&nbsp;</td>
+             <td>max number of users </td>
+           </tr>
+           <tr>
+             <td nowrap="nowrap"><em><strong>maxS</strong></em></td>
+             <td>&nbsp;</td>
+             <td>max number of spectators (optional for game rooms) </td>
+           </tr>
+           <tr>
+             <td nowrap="nowrap"><em><strong>isGame</strong></em></td>
+             <td>&nbsp;</td>
+             <td>a boolean flag. If true the room is a game room </td>
+           </tr>
+           <tr>
+             <td nowrap="nowrap"><strong><em>isLimbo</em></strong></td>
+             <td>&nbsp;</td>
+             <td>a boolean flag. If true the game will be of type Limbo  </td>
+           </tr>
+           <tr>
+             <td nowrap="nowrap"><em><strong>uCount</strong></em></td>
+             <td>&nbsp;</td>
+             <td>a boolean flag. If true the room will receive the uCount update
+               messages. </td>
+           </tr>
+           <tr>
+             <td nowrap="nowrap"><em><strong>xtName</strong></em></td>
+             <td>&nbsp;</td>
+             <td>The name that will be used to reference the extension once attached to the room </td>
+           </tr>
+           <tr>
+             <td valign="top" nowrap="nowrap"><em><strong>xtClass</strong></em></td>
+             <td>&nbsp;</td>
+             <td>The name of the class (Java) or script (Actionscript)
+               to load as extension. <br />
+               The file extension should only be specified for Actionscript files
+               (.as) <br />
+               If you are loading a java class, use the class name without the &quot;.class&quot; extension. </td>
+           </tr>
+         </table>
+         <br />
+         For more info on the room configuration, please check this <a href="../../config/basics.htm#roomConfig" target="_top">page</a> </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>user</strong></td>
+     <td>&nbsp;</td>
+     <td>the User object of the client who is creating the room.<br />
+       If user is null the room will be &quot;owned&quot; by the Server and it will persist
+         during all the server activity </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>sendUpdate</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) a boolean flag. By default it is set to true.<br />
+       If false the server won't send an update to the clients notifying the
+         creation of the new room </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>broadcastEvt</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) a boolean flag. By default set to true. Used for broadcasting the server internal event that notifies the creation of a new room </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>roomVars</strong></td>
+     <td>&nbsp;</td>
+     <td><p>a list of objects representing each variable. Each object has the following
+       properties:<br />
+       </p>
+       <table  border="0" cellspacing="0" cellpadding="3">
+         <tr>
+           <td nowrap="nowrap"><em><strong>name</strong></em></td>
+           <td>&nbsp;</td>
+           <td> the variable name</td>
+         </tr>
+         <tr>
+           <td nowrap="nowrap"><em><strong>val</strong></em></td>
+           <td>&nbsp;</td>
+           <td>variable value (null to delete an existing variable) </td>
+         </tr>
+         <tr>
+           <td nowrap="nowrap"><em><strong>priv</strong></em></td>
+           <td>&nbsp;</td>
+           <td>true if the variable is private </td>
+         </tr>
+         <tr>
+           <td valign="top" nowrap="nowrap"><em><strong>persistent</strong></em></td>
+           <td>&nbsp;</td>
+           <td>true if the variable is persistent (will continue to exist when
+             the user goes to another room. It is destroyed when the user closes
+             the connection) </td>
+         </tr>
+       </table>
+     <br /></td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>varsOwner</strong></td>
+     <td>&nbsp;</td>
+     <td>the User who owns the variables (null for Server owned variables) </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>setOwnership</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) a boolean flag. By deafult is set to true. Set it to false
+     to avoid to change the ownership of the variable(s) </td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">the new Room object. If null is returned an error occured. </p>
+ <p class="title">Example #1:</p>
+ <p>Create a room with a max of 25 users</p>
+ <pre class="code">
+/*
+* Create a new room owned by the server itself
+*/
+
+var roomObj = {}
+roomObj.name = "A new Room"
+roomObj.maxU = 25
+
+var newRoom = _server.createRoom(roomObj, null)
+
+if (newRoom != null)
+	trace("Great the room was created")
+else
+	trace("A problem occurred, better check the server logs")
+
+</pre>
+<br /> 
+<p class="title">Example #2:</p>
+ <p>Create a game room with many different variables </p>
+ <pre class="code">
+/*
+* Create a new game room owned by the server
+*/
+
+// --- Room params -------------------------
+var roomObj = {}
+roomObj.name = "TheGameRoom"
+roomObj.maxU = 10
+roomObj.isGame = true
+
+// --- Vars --------------------------------
+roomVars = 	[
+				{name:"Manufacturer", val:"Commodore", priv:true, persistent:true},
+				{name:"Model", val:"C64", priv:true, persistent:false},
+				{name:"CPU", val:"Motorola 6502", priv:true, persistent:true},
+				{name:"RAM", val:64, priv:true, persistent:true},
+				{name:"8-Bit", val:true, priv:false, persistent:true},
+			]
+
+theRoom = _server.createRoom(roomObj, null, true, true, roomVars)
+
+if (theRoom != null)
+	trace("Room Created Successfully")
+else
+	trace("OUCH! Room was not created!!!")
+
+</pre>
+<p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

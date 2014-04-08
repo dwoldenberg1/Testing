@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.7 Tutorials: using Java classes in Actionscript </p>
+ <p class="subTitle">&raquo; Introduction</p>
+<p>The Server Side Framework is not only limited to the provided API but it can
+  easily access the entire Java2 Framework and any other Java classes, providing
+  an unlimited amount of possibilities for developers. In this tutorial we'll
+  see how to parse an XML file using external java classes belonging to the <a href="http://nanoxml.cyberelf.be/" target="_blank">NanoXML
+  package</a>. NanoXML is an efficient and easy-to-use XML parser developed by
+  <strong>CyberELF</strong>. <br> 
+  <br> 
+  You can find the source code of this extension in the <strong>sfsExtensions/</strong> folder.
+  The file is called<strong> xmlReader.as</strong><br>
+  <br> 
+  <span class="subTitle">&raquo; The book collection </span><br>
+  <br>
+  Our example will read an XML file containing a list of developers book that
+  looks like this:  
+<pre class="code">&lt;bookCollection&gt;
+&lt;!-- Title and collection name --&gt;
+	&lt;collectionName&gt;My Tech Book Collection&lt;/collectionName&gt;
+	&lt;collectionOwner&gt;Lapo&lt;/collectionOwner&gt;
+	  <br>
+	&lt;!-- The list of books goes here --&gt;
+	&lt;bookList&gt;
+	&lt;book title=&quot;Head First Design Patterns&quot;
+	  author=&quot;Freeman, Freeman&quot;
+	  year=&quot;2004&quot;
+	  publisher=&quot;O'Reilly&quot;
+	  /&gt;
+	  <br>
+	&lt;book title=&quot;Thinking in Java&quot;
+	  author=&quot;B.Eckel&quot;
+	  year=&quot;2003&quot;
+	  publisher=&quot;Prentice Hall&quot;
+	  /&gt;
+	  <br>
+	&lt;book title=&quot;C++ From ground up&quot;
+	  author=&quot;H.Schildt&quot;
+	  year=&quot;2004&quot;
+	  publisher=&quot;McGraw-Hill Osborne Media&quot;
+	  /&gt;
+	  <br>
+	&lt;book title=&quot;Python in a Nutshell&quot;
+	  author=&quot;A.Martelli&quot;
+	  year=&quot;2003&quot;
+	  publisher=&quot;O'Reilly&quot;
+	  /&gt;
+	  <br>
+	&lt;book title=&quot;C# Cookbook&quot;
+	  author=&quot;Teilhet, Hilyard&quot;
+	  year=&quot;2003&quot;
+	  publisher=&quot;O'Reilly&quot;
+	  /&gt;
+	&lt;/bookList&gt;
+	  <br>
+&lt;/bookCollection&gt;</p>
+
+
+</pre>
+</p>
+<br>
+<span class="subTitle">&raquo; The Java code</span><br>
+<br>
+Before we see the actual code of the extension it would be better to quickly
+see how the NanoXML classes are used in a simple Java application.<br>
+Here it is the code for reading the above XML file:<br>
+<br> 
+<pre class="code">
+import java.util.Enumeration;
+import java.util.LinkedList;
+
+import net.n3.nanoxml.IXMLElement;
+import net.n3.nanoxml.IXMLParser;
+import net.n3.nanoxml.IXMLReader;
+import net.n3.nanoxml.StdXMLReader;
+import net.n3.nanoxml.XMLParserFactory;
+
+public class XmlReaderExample
+{
+	IXMLParser xmlParser; 	
+	IXMLReader xmlReader;
+    
+	public XmlReaderExample()
+	{
+		IXMLElement book;
+		
+		try
+		{
+			// Create the XML parser
+			xmlParser = XMLParserFactory.createDefaultXMLParser();
+			xmlReader = StdXMLReader.fileReader("books.xml");
+			xmlParser.setReader(xmlReader);
+			
+			// Read file and parse it!
+			IXMLElement xmlDoc = (IXMLElement) xmlParser.parse();
+			
+			// Get the tag called <collectionName></collectionName>
+			IXMLElement node = xmlDoc.getFirstChildNamed("collectionName");
+			System.out.println("Collection Name: " + node.getContent());
+			
+			// Get the tag called <collectionOwner></collectionOwner>
+			node = xmlDoc.getFirstChildNamed("collectionOwner");
+			System.out.println("Collection Owner: " + node.getContent());
+			System.out.println("");
+			
+			// Get the tag called <collectionOwner></collectionOwner>
+			node = xmlDoc.getFirstChildNamed("bookList");
+			
+			Enumeration books = node.enumerateChildren();       
+	
+			LinkedList tempWordList = new LinkedList();
+	
+			while (books.hasMoreElements())
+			{
+			    book = (IXMLElement) books.nextElement();
+	
+			    System.out.println("---------------------------------------------------");
+			    System.out.println("Title    : " + book.getAttribute("title", ""));
+			    System.out.println("Author   : " + book.getAttribute("author", "unknown"));
+			    System.out.println("Year     : " + book.getAttribute("year", "unknown"));
+			    System.out.println("Publisher: " + book.getAttribute("publisher", "unknown"));
+			    System.out.println("---------------------------------------------------");
+			    System.out.println("");
+			}
+            
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void main (String[] args)
+	{
+		new XmlReaderExample();
+	}
+}	
+</pre>
+<br> 
+The first part of the code sets up the
+necessary objects for parsing the our data file. We create the <strong>XmlParser</strong> and
+the <strong>XmlFileReader</strong> and finally parse the document. The result
+of this operation is an <strong>IXMLElement</strong> which represents the root
+node of our XML data. <br>
+From there we can start descending in the node structure and reading tag values
+and attributes. For a complete description of all methods and classes of the
+NanoXML package you should check their <a href="http://nanoxml.cyberelf.be/documentation.html" target="_blank">online
+documentation</a>.<br>
+<br>
+<span class="subTitle">&raquo; The Actionscript extension </span><br>
+<br>
+Now that you have an idea of how NanoXML classes are used we can see how we can
+use those same classes inside our Actionscript extension.<br>
+<br>
+<pre class="serverCode"><font color="#993300">function</font> init()
+{
+        <font color='#878787'>// Create a reference to the Java package
+</font>        <font color='#878787'>// This help us building new objects from the nanoxml package.
+</font>        <font color='#878787'>// Instead of typing the fully qualified Class name we'll just use:
+</font>        <font color='#878787'>//
+</font>        <font color='#878787'>// var obj = new nanoxml.SomeObject()
+</font>        nanoxml = Packages.net.n3.nanoxml
+        
+        readTheXmlFile()
+}
+
+<font color='#878787'>/*
+* Read and parse the XML file
+*/</font>
+<font color="#993300">function</font> readTheXmlFile()
+{
+        <font color='#878787'>// Setup the xml parser object
+</font>        <font color="#993300">var</font> xmlParser = nanoxml.XMLParserFactory.createDefaultXMLParser()
+        
+        <font color='#878787'>// This is the XML Reader:
+</font>        <font color='#878787'>// You can use a fileReader, to read the XML from a file
+</font>        <font color='#878787'>// or the StringReader, to read the XML from a string
+</font>        <font color="#993300">var</font> xmlReader = nanoxml.StdXMLReader.fileReader("<font color='blue'>sfsExtensions/data/books.xml</font>")
+        
+        <font color='#878787'>// Assign the reader to the parser
+</font>        xmlParser.setReader(xmlReader)
+        
+        <font color='#878787'>// Finally parse the XML
+</font>        <font color="#993300">var</font> xmlDoc = xmlParser.parse()
+        
+        <font color='#878787'>// Get the tag called &lt;collectionName&gt;&lt;/collectionName&gt;
+</font>        <font color="#993300">var</font> node = xmlDoc.getFirstChildNamed("<font color='blue'>collectionName</font>")
+        <font color="#993300">trace</font>("<font color='blue'>Collection Name: </font>" + node.<font color="#000087">getContent</font>())
+        
+        <font color='#878787'>// Get the tag called &lt;collectionOwner&gt;&lt;/collectionOwner&gt;
+</font>        <font color="#993300">var</font> node = xmlDoc.getFirstChildNamed("<font color='blue'>collectionOwner</font>")
+        <font color="#993300">trace</font>("<font color='blue'>Collection Owner: </font>" + node.<font color="#000087">getContent</font>() + <font color="#993300">newline</font>)
+        
+        <font color='#878787'>// Get the tag called &lt;collectionOwner&gt;&lt;/collectionOwner&gt;
+</font>        <font color="#993300">var</font> node = xmlDoc.getFirstChildNamed("<font color='blue'>bookList</font>")
+        
+        <font color='#878787'>// book is a java.util.Enumeration object
+</font>        <font color="#993300">var</font> books = node.enumerateChildren()
+        
+        <font color='#878787'>// Cycle through each element in the Enumeration
+</font>        <font color='#878787'>//
+</font>        <font color="#993300">while</font> (books.hasMoreElements())
+        {
+                <font color="#993300">var</font> book = books.nextElement()
+                
+                <font color="#993300">trace</font>("<font color='blue'>Title    : </font>" + book.getAttribute("<font color='blue'>title</font>", "<font color='blue'></font>"))
+                <font color="#993300">trace</font>("<font color='blue'>Author   : </font>" + book.getAttribute("<font color='blue'>author</font>", "<font color='blue'>unknown</font>"))
+                <font color="#993300">trace</font>("<font color='blue'>Year     : </font>" + book.getAttribute("<font color='blue'>year</font>", "<font color='blue'>unknown</font>"))
+                <font color="#993300">trace</font>("<font color='blue'>Publisher: </font>" + book.getAttribute("<font color='blue'>publisher</font>", "<font color='blue'>unknown</font>"))
+                <font color="#993300">trace</font>("<font color='blue'>-------------------------------------</font>")
+        }
+}
+
+<font color="#993300">function</font> destroy()
+{
+        <font color='#878787'>//
+</font>}
+
+<font color="#993300">function</font> handleRequest(cmd, params, user, fromRoom)
+{
+        
+        <font color='#878787'>//
+</font>}
+
+<font color="#993300">function</font> handleInternalEvent(evt)
+{
+        <font color='#878787'>//
+</font>}
+
+
+
+</pre>
+<br> 
+The <strong>init()</strong> function introduces a new object called <strong>Packages</strong>,
+which allows us to access any external java class included in the current classpath.
+In this case the NanoXML classes are found in the net.n3.nanoxml package, so
+we assign the fully qualified name to a variable to reduce the amount of typing.<br>
+<br>
+If you need to create instances of any class inside the Java2 framework it will
+not be necessary to use the Packages object, just use the fully qualified class
+name. For example an ArrayList can be created like this: <br>
+<br>
+<pre class="code">
+var list = new java.util.ArrayList()
+</pre>
+<br>
+The <strong>readXml()</strong> method contains the same code we've seen in the previous Java example,
+translated in Actionscript.<br>
+In the first three lines we setup the <strong>XmlParser</strong> and <strong>XmlReader</strong> object and
+parse the document. After this section we finally obtain the object representing
+the root node of our data structure.<br>
+<br>
+On each node you can call one of these methods:<br>
+<br>
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>getFirstChildNamed(nodeName)</strong></td>
+    <td>&nbsp;</td>
+    <td>searches the first occurrence of a sub-node with the same name of the
+    passed argument</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>enumerateChildren()</strong></td>
+    <td>&nbsp;</td>
+    <td>return a list of child nodes </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>getAttribute(name, defValue)</strong></td>
+    <td>&nbsp;</td>
+    <td>return the value of an attribute, defValue is the default value that
+    should be returned in case the attribute is not set </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>getValue()</strong></td>
+    <td>&nbsp;</td>
+    <td>return the node value </td>
+  </tr>
+</table>
+<br>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../06_realtimeMaze/part2.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../08_sfsTrisPro/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">1.2 Features </p>
+ <p><strong>&raquo; Client API for Actionscript 1.0, 2.0 and 3.0 </strong>: <br>
+   we support all Flash Players starting from version 6 up to the latest Flash Player 9.<br>
+   Flash MX was supported up to version 1.4 of the server. The latest version targets Flash MX2004, Flash 8 and Flex Builder 2 <br> 
+   <br>
+   <strong>&raquo; Public and Private chat messaging: </strong><br>
+   send public messages to
+   all users in a room or a private message to a single user. You can also send
+   private messages to user in other rooms.<br> 
+   <strong><br>
+   &raquo; Server side variables (User variables / Room variables): </strong><br>
+   allow to
+   save variables on the server side and share them across the users. Room variables
+   can hold the status of the current game/application while User variables can
+   be used to store user properties/settings.<br>
+   <br>
+   <strong>&raquo; Send and receive complex Actionscript data objects: </strong><br>
+   you'll
+   be able to send simple to complex data objects to other clients in a snap!
+   Objects received by the clients are immediately usable like any other object
+   in the code.<br> 
+   <br>
+   <strong>&raquo; Auto kick idle users and &quot;garbage connections&quot;: </strong><br>
+   you can automatically disconnect idle
+   users after a certain amount of time. The server also monitors socket connections
+   and automatically closes all those that don't use the SmartFoxServer protocol,
+   avoiding that precious network resources are wasted.<br> 
+   <strong><br>
+   &raquo; Dynamically created rooms: </strong><br>
+   rooms can be defined in the main config.xml
+   file but also created at runtime with many different options (game rooms,
+   private rooms, max # of users, max # of spectators, variables etc...)<br> 
+   <br>
+   <strong>&raquo; Support for foreign languages / charsets</strong>: <br>
+   allow developers
+   to use foreign charachter sets in user names, room names, public/private messages
+   etc....<br> 
+   <br>
+   <strong>&raquo; Configurable Logging capabilities</strong>: <br>
+   you can customize how
+   many log files to use, their maximum size, the level of importance of messages
+   being logged etc... It is also a great tool for debugging your applications
+   on the server side.<br> 
+   <br>
+   <strong>&raquo; Moderator and Administrator messages:</strong> <br>
+   allow to send special &quot;Administrator&quot;
+and &quot;Moderator&quot;  messages and notifications<br> 
+   <br>
+   <strong>&raquo; Moderator support (kick / ban commands): </strong><br>
+   Users recognized
+   by the server as &quot;moderators&quot; can use special commands to kick and banish
+   other users. <br>
+   <strong><br>
+   &raquo; Flooding filter with autokick/autoban functions: </strong><br>
+   the filter can be
+   configured to avoid message flooding. It will automatically warn users that
+   were caught flooding and in case they continue it will first kick them, then
+ banish them if they don't stop.</p>
+ <p><strong>&raquo; Bad words filter with autokick/autoban functions: </strong><br>
+the tool can be configured in different ways to filter bad words in the chat.
+  You can also filter bad words in room names and user names.<br>
+  It can automatically warn users to stop swearing and in case they continue
+  it will first kick them, then banish them if they don't stop.<br> 
+   <strong><br>
+   &raquo; IP Filter:<br>
+   </strong>allow to set the maximum number of connections from the same IP address,
+   in order to avoid hacking attempts, flooding etc... <strong> 
+   <br>
+   <br>
+   &raquo; Persistent banned user list: </strong><br>
+   The banned users is saved locally by
+   the server and loaded at boot time. <br>
+   <br>
+   <strong>&raquo; Persistent Buddy Lists</strong>: <br>
+   buddy lists allow users to keep a
+   list of friends and be notified in realtime about their online status, also
+   you can send messages to the buddies and instantly join the room where your
+   friend is currently in.<br> 
+   <br>
+   <strong>&raquo; Game spectators: </strong><br>
+   game rooms support spectators, a particular
+   type of user that does not interact with the game.<br>
+   When a player leaves the game room one of the spectators can get in the
+   game and become a player.<br> 
+   <br>
+   <strong>&raquo; Administrator web-based control panel: </strong><br>
+   the Admin tool allows to
+   monitor the server in realtime and manage it. You will be able to: <br>
+   <br>
+   - Load/Edit/Save server config file remotely. <br>
+   - Restart/Stop server.<br>
+   - Manage banned user list<br>
+   - Inspect rooms and user properties (useful also for debugging)<br>
+   - Kick / Ban users<br>
+   - Add new applications to the server on the fly, without restarting. <br>
+   - Start/Stop applications without restarting.<br>
+   - Remotely monitor and debug your custom extensions.<br>
+   - Remotely edit Actionscript extensions. <br>
+   - Add/Start/Stop extension without restarting the server. <br>
+   - See the last server log messages <br>
+   - Send administrator messages to single users / rooms / all the users connected <br>
+   <br>
+   <strong>&raquo; Server side Extensions (Actionscript / Javascript / Python / Java )</strong> (SFS
+     PRO)<br>
+   Extensions allow developers to create and unlimited number of new features
+   on the server side, from a simple database-driven login procedure to a sophisticated
+   game logic and even interface the server with other applications. <br>
+   Extensions can be developed using Java, Actionscript, Python... and you can even
+   use all your Java classes in your Actionscript code, as if they where normal
+   Actionscript objects!<br>
+   <br>
+   <strong>&raquo; DatabaseManager</strong> (SFS
+     PRO)<br>
+   allows connection and interaction with  all major RDBMS like MySQL, MS SQL,
+   Access, Oracle, DB2 etc...<br>
+   <br>
+   <strong>&raquo; Raw data protocols for better data compression in real time games</strong> (SFS
+     PRO)<br>
+   allows to send raw string-based data enabling the developer to format the
+   server messages the way he wants.<br>
+   Realtime games network performance can be dramatically improved using this
+   technique.<br>
+   <br>
+   <strong>&raquo; Easily send emails </strong>(SFS
+     PRO)<br>
+   Your can easily send any text or html-formatted email without the need to
+   use external software or application server. It can be useful to confirm a
+   registration procedure, to send a lost password and even news or updates about
+   your application. </p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" align="center" cellpadding="4" cellspacing="0">
+  <tr>
+    <td width="33%"><a href="overview.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="installation.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

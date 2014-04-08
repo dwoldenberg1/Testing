@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--config file for TheoWorlds Avatar-->
+<!--http://www.TheoWorlds.com-->
+<config>
+	<name>Theo Avatar</name>
+
+	<!-- SocketServer settings -->
+	<!--
+	"SF", "SmartFox" for SmartFox
+	"ES", "ElectroServer" for ElectroServer
+	-->
+	<SocketServer>SF</SocketServer> 
+
+	<!-- SmartFox settings -->
+	<ip>127.0.0.1</ip>
+	<port>9339</port>
+	
+	<!-- ES settings 
+	<ip>127.0.0.1</ip> 
+	<port>9875</port> 
+	-->
+	
+	<!-- Dead Reckoning settings -->
+	<AvoidCollision>false</AvoidCollision>
+	<Realistic>true</Realistic>
+	<Smoothing>true</Smoothing>
+	
+	<!-- debuging -->
+	<EmulateLatency>false</EmulateLatency>
+	<EmulatedLatency>10</EmulatedLatency>
+</config>

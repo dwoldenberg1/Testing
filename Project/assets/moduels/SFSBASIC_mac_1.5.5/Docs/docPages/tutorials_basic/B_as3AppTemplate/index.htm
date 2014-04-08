@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.b Appendix: Flex 2.0 Application code template </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source </strong> of
+       this example is available in the <strong>Examples/AS3/SFSTemplate</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>In this article we will take a look at a simple code template that can be
+   used as a starting point for almost any SmartFoxServer based multiuser application, using Flex Builder 2. <br>
+The template is made up of two parts, a simple MXML file called SFSTemplate.mxml and an Actionscript 3.0 file called main.as (the &quot;code behind&quot;) </p>
+ It is required that you're already familiar at least with the &quot;Connection&quot; (5.1)
+ and &quot;Simple Chat&quot; (5.2) tutorials before you proceed with this article. <br>
+ <p><span class="subTitle">&raquo; The basic steps </span></p>
+ <p>One of the problem that developers may find when taking their first steps
+   in multiuser applications, is to fully understand the basic operations that
+   are necessary to interact with the server. In fact there's a precise sequence
+   of commands that is used to establish the  connection with the server,
+   before you can fully interact with it.<br>
+   <br>
+The sequence is very simple, and looks like this:</p>
+ <p><strong>1) Establish a socket connection:  </strong>this is the very first
+   step. At this point it is just like if you were knocking at the server's
+   door. <br>
+ If the server is up and running it will immediately respond and activate a new
+ communication channel for your client application. </p>
+ <p><strong>2) Login:</strong> in this phase you should tell the server who you are and which
+   application you would like to interact with.<br>
+ If this operation is successfull you will receive the list of rooms available
+ in the current zone/application. </p>
+ <p><strong>3)  Join a room:</strong> this is the last step. Once a room is joined you can start
+   interacting with the other users and the application logic.</p>
+<p><span class="subTitle">&raquo; The code </span> <br>
+   <br>
+ Here's the code of the application-template. For brevity we have stripped the
+ comments that you will find them in the source files.<br>
+ <br>
+ <strong>SFSTemplate.mxml:</strong></p>
+ <pre class="code">
+ &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+   &lt;mx:Application xmlns:mx=&quot;http://www.adobe.com/2006/mxml&quot; 
+   layout=&quot;absolute&quot; 
+   creationComplete=&quot;main()&quot;&gt;
+
+  &lt;mx:Script source=&quot;main.as&quot; /&gt;
+  
+  &lt;mx:VBox top=&quot;20&quot; bottom=&quot;20&quot; left=&quot;20&quot; right=&quot;20&quot; width=&quot;100%&quot; height=&quot;100%&quot;&gt;
+  
+  &lt;mx:Label 	text=&quot;SmartFoxServer Actionscript 3.0 client side template&quot; 
+   fontWeight=&quot;bold&quot; 
+   fontSize=&quot;12&quot; 
+   color=&quot;#000000&quot; /&gt;
+  
+  &lt;mx:TextArea id=&quot;ta_debug&quot; width=&quot;100%&quot; height=&quot;100%&quot; /&gt;
+  
+  &lt;mx:Spacer height=&quot;10&quot; /&gt;
+  &lt;mx:HBox width=&quot;100%&quot; horizontalAlign=&quot;center&quot;&gt;
+  &lt;mx:Button 	id=&quot;bt_connect&quot; 
+   label=&quot;CONNECT&quot; 
+   width=&quot;200&quot; 
+   click=&quot;bt_connect_click(event)&quot; 
+   toolTip=&quot;Start the connection with the server&quot; /&gt;
+  &lt;/mx:HBox&gt;
+  
+  &lt;/mx:VBox&gt;
+ &lt;/mx:Application&gt;
+</pre>
+<p><strong>main.as:</strong></p>
+<pre class="code">
+import it.gotoandplay.smartfoxserver.SmartFoxClient;
+import it.gotoandplay.smartfoxserver.SFSEvent;
+import flash.events.Event;
+
+private const NEWLINE:String = "\n";
+private var sfs:SmartFoxClient;
+
+public function main():void
+{
+	sfs = new SmartFoxClient(true);
+	
+	// Register for SFS events
+	sfs.addEventListener(SFSEvent.onConnection, onConnection);
+	sfs.addEventListener(SFSEvent.onConnectionLost, onConnectionLost);
+	sfs.addEventListener(SFSEvent.onLogin, onLogin);
+	sfs.addEventListener(SFSEvent.onRoomListUpdate, onRoomListUpdate);
+	sfs.addEventListener(SFSEvent.onJoinRoom, onJoinRoom);
+	sfs.addEventListener(SFSEvent.onJoinRoomError, onJoinRoomError);
+	
+	// Register for generic errors
+	sfs.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError)
+	sfs.addEventListener(IOErrorEvent.IO_ERROR, onIOError)
+	
+	debugTrace("Click the CONNECT button to start");
+}
+
+public function bt_connect_click(evt:Event):void
+{
+	if (!sfs.isConnected)
+		sfs.connect("127.0.0.1");
+	else
+		debugTrace("You are already connected!");
+}
+
+public function onConnection(evt:SFSEvent):void
+{
+	var success:Boolean = evt.params.success;
+	
+	if (success)
+	{
+		debugTrace("Connection successfull!");
+		// Attempt to log in "simpleChat" Zone as a guest user
+		sfs.login("simpleChat", "", "");
+	}
+	else
+	{
+		debugTrace("Connection failed!");	
+	}
+}
+
+public function onConnectionLost(evt:SFSEvent):void
+{
+	debugTrace("Connection lost!");
+}
+
+public function onLogin(evt:SFSEvent):void
+{
+	if (evt.params.success)
+	{
+		debugTrace("Successfully logged in");
+	}
+	else
+	{
+		debugTrace("Login failed. Reason: " + evt.params.error);
+	}
+}
+
+public function onRoomListUpdate(evt:SFSEvent):void
+{
+	debugTrace("Room list received");
+	
+	// Tell the server to auto-join us in the default room for this Zone
+	sfs.autoJoin();
+}
+
+public function onJoinRoom(evt:SFSEvent):void
+{
+	debugTrace("Successfully joined room: " + evt.params.room.getName());
+}
+
+public function onJoinRoomError(evt:SFSEvent):void
+{
+	debugTrace("Problems joining default room. Reason: " + evt.params.error);	
+}
+
+public function onSecurityError(evt:SecurityErrorEvent):void
+{
+	debugTrace("Security error: " + evt.text);
+}
+
+public function onIOError(evt:IOErrorEvent):void
+{
+	debugTrace("I/O Error: " + evt.text);
+}
+
+public function debugTrace(msg:String):void
+{
+	ta_debug.text += "--> " + msg + NEWLINE;
+}
+
+
+</pre>
+<p>   The three steps that we have highlighted in the introduction are easily
+  recognizable:</p>
+<p><strong>1) Establish a socket connection: </strong>it is done by calling the
+<strong>connect()</strong> method and it is handled in the <strong>onConnection()</strong> function. </p>
+<p><strong>2) Login:</strong> the <strong>sendLogin()</strong> method sends the
+  zone name and an empty user-name. This the simplest form of login: the client
+  is treated as a &quot;guest&quot; and he will be assigned an automatically generated
+  nickname. The login response is received by the <strong>onLogin()</strong> handler <br>
+  <br>
+  <strong>NOTE:</strong> the login process is completely customizable using
+  server side extensions, we have chosen the &quot;guest login&quot; system for the sake
+  of simplicity. </p>
+<p><strong>3) Join a room:</strong> Finally a room is joined with the join()
+  or autoJoin() method and the result is handled in the <strong>onJoinRoom()</strong> / <strong>on
+  JoinRoomError() </strong>functions. </p>
+<p><span class="subTitle">&raquo; Handling errors </span></p>
+<p>As you may have noticed, we also registered for the <strong>IOErrorEvent</strong> and <strong>SecurityErrorEvent </strong>in order to trap possible I/O errors or Flash Player sandbox security exceptions.  </p>
+<p><span class="subTitle">&raquo; Importing the example in Flex Builder 2 </span></p>
+<p>Here's a step by step guide on how to import the template in your Flex Builder 2 and test it:</p>
+<p><strong>1- Choose File &gt; Import </strong></p>
+<p><img src="images/step01.gif" alt="step1" width="367" height="570" class="imgBorder">  </p>
+<p><strong>2- Import an existing project </strong></p>
+<p><img src="images/step02.gif" alt="step2" width="547" height="570" class="imgBorder"></p>
+<p><strong>3- Locate the example on your local disk and import it </strong></p>
+<p><img src="images/step03.gif" alt="step3" width="545" height="565" class="imgBorder"></p>
+<p><strong>4- Open the project properties panel </strong></p>
+<p><img src="images/step04.gif" alt="step4" width="351" height="503" class="imgBorder"></p>
+<p><strong>5- Add the SmartFoxClient library to the builder path<br>
+</strong>Choose<strong> &quot;Flex Build Path&quot;</strong>, click the<strong> &quot;Add SWC...&quot; </strong>button and point to the<strong> SmartFoxClient_AS3.swc </strong>file on your local disk. <br>
+Then click <strong>OK</strong> and you're ready to <strong>Debug</strong> or <strong>Run</strong> the template application. </p>
+<p><img src="images/step05.gif" alt="step5" width="727" height="626" class="imgBorder"><br>
+</p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../16_theoChat/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../02_simpleChat_p1/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

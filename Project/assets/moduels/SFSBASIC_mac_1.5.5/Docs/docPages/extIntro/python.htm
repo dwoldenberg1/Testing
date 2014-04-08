@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+.style3 {color: #FFFFFF; font-weight: bold; }
+-->
+</style>
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.8 Python Extension </p>
+ <p>Since<strong> SmartFoxServer 1.5.0</strong> we've added support for <strong><a href="http://www.python.org" target="_blank">Python</a></strong> as a scripting language for developing server side extensions.<br>
+ Python is a highly productive, fully object oriented language that allows rapid prototyping and development of server extension. Thanks to the Java implementation of Python (often referred to as <a href="http://www.jython.org" target="_blank">Jython</a>) it is also possible to access the entire Java framework, making it an extremely flexible tool. 
+ <p>The current Python implementation supports the <strong>Python 2.2 language specifications</strong>.  
+ <p>   <span class="subTitle">&raquo; Quickstart </span> 
+ <p>If you are familiar with 
+   server side Actionscript 
+   extensions you will have very little to learn: Python extensions use the same  logic and work in the same exact way of AS extensions. The following is the simplest Python extension possible:</p>
+ <pre class="serverCode">
+#
+# SmartFoxServer PRO
+# Pyhton Extension template
+# version 1.0.0
+#
+
+def init():
+	_server.trace("Python extension starting")
+
+def destroy():
+	_server.trace("Python extension stopping")
+
+def handleRequest(cmd, params, who, roomId, protocol):
+	pass
+
+def handleInternalEvent(evt):
+	pass
+
+ </pre>
+ <p>As you can see we have the usual 4 methods: <strong>init</strong>(), <strong>destroy</strong>(), <strong>handleRequest</strong>() and <strong>handleInternalEvent</strong>() <br>
+   The <strong>_server</strong> variable is a <strong>globally scoped object</strong> that allows to access the server side framework, just like in Actionscript and you will be able to invoke the same methods.<br>
+ In order to learn more about the <strong>_server</strong> object methods you can consult the <a href="../serverSideApi/index.htm" target="_blank">Actionscript server API</a> which contain several examples for each method. </p>
+ <p><span class="subTitle">&raquo; Differences between Python and Actionscript</span></p>
+ <p>The most significant difference between Python and Actionscript extensions is how internal server events are handled.<br>
+   While in Actionscript you receive a native object populated with the event properties, in Python you will 
+ receive the same object you would receive in a Java extension. In other words the event object is a java class, specifically the received object is an instance of <em><strong>it.gotoandplay.smartfoxserver.events.InternalEventObject</strong> </em></p>
+ <p>This class has 3  methods:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+
+   <tr>
+     <td valign="top" nowrap="nowrap" bgcolor="#FF6600"><span class="style3">name</span></td>
+     <td bgcolor="#FF6600">&nbsp;</td>
+     <td bgcolor="#FF6600"><span class="style3">returns</span></td>
+     <td bgcolor="#FF6600"><span class="style3">returned type </span></td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getEventName()</strong></td>
+     <td>&nbsp;</td>
+     <td>returns the event name  <strong></strong></td>
+     <td>string</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getParam(paramName)</strong></td>
+     <td>&nbsp;</td>
+     <td>gets a string parameter from the event object </td>
+     <td>string</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>getObject(paramName)</strong></td>
+     <td>&nbsp;</td>
+     <td>gets an object parameter from the event object </td>
+     <td>object</td>
+   </tr>
+ </table>
+ <p>Here's a list of the internal events dispatched by the Server and the parameters passed: </p>
+ <p>
+ <b>loginRequest</b>
+ <ul>
+ 	<li>zone (String)</li>
+ 	<li>nick (String)</li>
+ 	<li>pass (String)</li>
+ 	<li>chan (SocketChannel)</li>
+ </ul>
+ <p>
+ <b>userJoin</b>
+ <ul>
+ 	<li>zone (String)</li>
+ 	<li>user (User)</li>
+ 	<li>room (Room)</li>
+ </ul>
+ <p>
+ <b>userExit</b>
+ <ul>
+ 	<li>zone (String)</li>
+  <li>room (Room)</li>
+ 	<li>userId (String)</li>
+ 	<li>oldPlayerIndex (String)</li>
+ </ul>
+ <p>
+ <b>userExit</b>
+ <ul>
+ 	<li>zone (String)</li>
+  <li>room (Room)</li>
+ 	<li>userId (String)</li>
+ 	<li>oldPlayerIndex (String)</li>
+ </ul>
+ <p>
+ <b>userLost</b>
+ <ul>
+ 	<li>zone (String)</li>
+  <li>roomIds (int[])</li>
+ 	<li>uid (String)</li>
+ 	<li>playerIndexes (int[])</li>
+ </ul>
+ <p>
+ <b>newRoom</b>
+ <ul>
+ 	<li>room (Room)</li>
+ </ul>
+ <p>
+ <b>roomLost</b>
+ <ul>
+ 	<li>zone (String)</li>
+  <li>roomId (String)</li>
+ </ul>
+ <p>
+ <b>spectatorSwitched</b>
+ <ul>
+ 	<li>user (User)</li>
+ 	<li>playerIndex (String)</li>
+ </ul>
+ <p>
+ <b>pubMsg</b>
+ <ul>
+ 	<li>msg (String)</li>
+ 	<li>user (User)</li>
+ 	<li>room (Room)</li>
+ </ul>
+ <p>The following is an example of how you should handle a <strong>userJoin</strong> event:</p>
+<pre class="serverCode">
+def handleInternalEvent(evt):
+	evtName = evt.getEventName()
+	
+	if evtName == "userJoin":
+		zone = evt.getParam("zone")
+		room = evt.getObject("room")
+		user = evt.getObject("user")
+		
+		# Let's take advantage of python way of formatting strings
+		message = "User %s joined room %s in zone %s" % (user.getName(), room.getName(), zone)
+		
+		_server.trace(message)
+</pre>
+<p>Notice that we user <strong>getParam</strong>() to obtain string parameters and <strong>getObject</strong>() for any other parameters passed in the event object.</p>
+<p><span class="subTitle">&raquo; Python examples </span></p>
+<p>With <strong>SmartFoxServer 1.5</strong> we provide a few examples of Python extensions that you can inspect to learn more about its usage. You will find them in the <strong>Server/sfsExtensions/</strong> folder in your SmartFoxServer installation directory:</p>
+<table  border="0" cellpadding="3" cellspacing="0">
+  
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>ExtensionTemplate.py</strong></td>
+    <td>&nbsp;</td>
+    <td>A simple extension template <strong></strong></td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>dbExtension.py</strong></td>
+    <td>&nbsp;</td>
+    <td>The Python version of dbExtension.as (see tutorial 8.3) </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>mazeGame.py</strong></td>
+    <td>&nbsp;</td>
+    <td>The Python version of mazeGame.as (see tutorial 8.6) </td>
+  </tr>
+</table>
+<p><span class="subTitle">&raquo; Further help / documentation</span></p>
+<p>Since the Python framework is almost identical to the Actionscript one we recommend that you check  the AS server side documentation for usage examples.<br>
+  Also you can check the <strong>mainLib.py</strong> file located in the <strong>Server/lib/</strong> folder for further reference. </p>
+<p></p>
+<hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="mailer.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right">&nbsp;</td>
+  </tr>
+</table>
+
+</body>
+</html>

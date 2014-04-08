@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">playerId</p>
+ <p class="title">Availability:</p>
+<p class="plain">Flash Player 6.0<br />
+  SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.playerId</p>
+ <p class="title">Description:</p>
+ <p>A number representing the id of the client as a player. Available only after the client joined a game room.<br />
+   Once a client joins a game room he's automatically assigned a player slot or id, based on the player slots available in the room at the moment in which the<br />
+   user entered.<br />
+   <br />
+   <strong>Example #1: </strong>in a game room for 2 players the first user who
+   joins becomes player 1 (playerId = 1) and the second user who joins becomes
+   player two (player = 2)
+   <br />
+   <br />
+   <strong>Example #2: </strong>in a game room for 4 player where only player 3 is missing the next client who will join will be player 3 (playerId = 3) <br />
+   <br />
+   <strong>Example #3:</strong> if the user logged in the game room as a &quot;spectator&quot;
+   his playerId will be always set to -1<br /> 
+   <br />
+  The variable is available only after a successfull login in a game room. <br />
+ </p>
+ <p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td>none</td>
+	 <td>&nbsp;&nbsp;&nbsp;</td>
+     <td>&nbsp;</td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">Nothing.</p>
+ <p class="title">Example:</p>
+ <pre class="code">
+trace("I am player " + smartFox.playerId)
+</pre>
+ <p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong><strong>login()</strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

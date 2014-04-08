@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.joinRoom()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.4.0 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.joinRoom(user, currRoomId, leaveRoom, newRoom, pwd,
+   isSpec, sendUpdate)</p>
+ <p class="title">Description:</p>
+<p class="plain">Joins a user into a room from the server side. 
+<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>user</strong></td>
+     <td>&nbsp;</td>
+     <td>The user to join</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>currRoomId</strong></td>
+     <td>&nbsp;</td>
+     <td>the id of the current room where the user is already joined (-1 if he's
+     not already joined) </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>leaveRoom</strong></td>
+     <td>&nbsp;</td>
+     <td>a boolean flag. If true the user will leave the current room after
+     joining the new one </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>newRoom</strong></td>
+     <td>&nbsp;</td>
+     <td>the id of the new room to join </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>pwd</strong></td>
+     <td>&nbsp;</td>
+     <td>a password, if needed to join the room </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>isSpec</strong></td>
+     <td>&nbsp;</td>
+     <td>a boolean flag. If true the user will join in the new room as a spectator
+     (game rooms only) </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>sendUpdate</strong></td>
+     <td>&nbsp;</td>
+     <td>a boolean flag. Default = true. It will send the default update to all
+       the other clients (optional) </td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">A boolean. True if the join was successful </p>
+ <p class="title">Example:</p>
+<pre class="code">
+var ok = _server.joinRoom(userObj, currId, true, newId)
+if (ok)
+	trace("Success!")
+</pre>
+<br /> 
+<p class="plain"><span class="title">See also:</span></p>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">2.1 Configuration: the basics </p>
+<p>The server  configuration is saved in an  XML file called &quot;<strong>config.xml</strong>&quot;,
+   located in the <strong>Server/</strong> folder.<br>
+   <br>
+ By
+   opening the <strong>config.xml</strong> file you will notice that it is divided
+   into two main sections called <strong>&lt;ServerSetup&gt;</strong> and <strong>&lt;Zones&gt;</strong>: the first contains general settings for the server and the second defines
+ each application (zones) running in the server.</p>
+ <table border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td><strong>&raquo;</strong></td>
+     <td><a href="#server">Server configuration </a></td>
+   </tr>
+   <tr>
+     <td><strong>&raquo;</strong></td>
+     <td><a href="#zone">Zone configuration </a></td>
+   </tr>
+   <tr>
+     <td><strong>&raquo;</strong></td>
+     <td><a href="#roomConfig">Room configuration </a></td>
+   </tr>
+   <tr>
+     <td><strong>&raquo;</strong></td>
+     <td><a href="#extension">Extension configuration</a></td>
+   </tr>
+ </table>
+ <p><span class="subTitle"><a name="server"></a>&raquo; Server setup <br>
+  </span><br>
+   Below follows a description of
+   each XML tag in the &lt;ServerSetup&gt; section:</p>
+ <table width="100%"  border="0" cellspacing="1" cellpadding="4">
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;ServerIP&gt;</strong></td>
+     <td>it's the IP address used by the server. You can change to match your
+     server IP address</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;ServerPort&gt;</strong></td>
+     <td>By default SmartFoxServer listens on port 9339 for connections, but
+       you can change thisto any other value if your firewall is filtering this
+       particular port number. Please remember that port values below 1024 are
+       only allowed by the Flash Player version 7.0.19.0 or later</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;AutoSendPolicyFile&gt;</strong></td>
+     <td>If set to TRUE it allows SmartFoxServer to automatically generate a
+       cross-domain policy file to enable Flash player 7 (7.0.19.0 or later) <br>
+       to connect outside the current domain. Only needed if your SWF files and
+       the server are located in different domains. ( read more about it in <a href="../running/basics.htm">chapter
+       3.1 </a>) </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;PolicyAllowedDomains&gt;</strong></td>
+     <td>(Available from version <strong>1.4.0</strong>)<br>
+     You can specify a list of allowed domains for the cross-domain policy file.<br>
+     An example:<br>
+     <pre>
+&lt;PolicyAllowedDomains&gt;
+	&lt;AllowedDomain&gt;gotoandplay.it&lt;/AllowedDomain&gt;
+	&lt;AllowedDomain&gt;smartfoxserver.com&lt;/AllowedDomain&gt;
+&lt;/PolicyAllowedDomains&gt;</pre></td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;MaxUserIdleTime&gt;</strong></td>
+     <td>The time is expressed in seconds and it represents the maximum time
+       allowed for an idle client.<br>
+After that time, idle users are automatically disconnected by the server.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;MaxRoomVars&gt;</strong></td>
+     <td>The maximum number of room variables that can be created in a single room. -1 = unlimited </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;MaxUserVars&gt;</strong></td>
+     <td>The maximum number of user variables that can be created by a single user. -1 = unlimited </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;LogMaxSize&gt;</strong></td>
+     <td>The maximum size of each log file before a new log file is created.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;LogMaxFiles&gt;</strong></td>
+     <td>The maximum number of log files the server can create.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;FileLoggingLevel&gt;</strong></td>
+     <td>Defines the importance level of the Server messages outputted in the
+       log files.<br>
+There are 7 levels of logging depending on the importance of the log message,
+some of them are just internal notifications useful for debugging and others
+are very important messages that indicate application warnings and errors.<br>
+<br>
+The levels are: FINEST, FINER, FINE, CONFIG, INFO, WARNING, SEVERE<br>
+<br>
+By default the FileLoggingLevel is set to WARNING to help administrators find
+misbehaviours in the server, bad client requests etc...</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;ConsoleLoggingLevel&gt;</strong></td>
+     <td>Same as above but log messages are redirected to the operating system
+       console.<br>
+By default the console logger shows &quot;INFO&quot; or higher level messages.<br>
+By changing this value to a lower importance level like &quot;FINE&quot; you
+can debug your applications with more details for each server action.<br>
+<br>
+We reccomend to use &quot;INFO&quot; levels for production servers and lower
+values for local testing/debugging</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;BanDuration&gt;</strong></td>
+     <td>It specifies how much time a user will not be able to login once it
+       is banned. Expressed in seconds<br>
+       For example 60 = 1 minute, 3600 = 1 hour </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;BannedLoginMessage&gt;</strong></td>
+     <td>A custom message that is sent to a banned user that is trying to log
+       in </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;AdminLogin&gt;</strong></td>
+     <td>The server administrator login name</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;AdminPassword&gt;</strong></td>
+     <td>The server administrator password. The password must be at least 6 characters
+       long and we reccomend to use alphanumeric characters and numbers mixed
+       together for better security.<br>
+<br>
+NOTE: The password sent by the client Admin tool is always encrypted</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;AdminAllowedAddresses&gt;</strong></td>
+     <td>For higher admin security you can restrict the IP addresses allowed
+       to connect as administrators.<br>
+You can specify any number of allowed addresses.<br>
+If you wish to bypass this restriction just use &lt;AllowedAddress&gt;*.*.*.*&lt;/AllowedAddress&gt; to
+allow any IP address to log in as administrator.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;ExtensionRemoteDebug&gt;</strong></td>
+     <td>By default it is set to true. When turned on, this option will enable
+       the AdminTool to receive all trace messages coming from the server side
+       extensions (<strong>SmartFoxServer PRO only</strong>)</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;Mailer&gt;</strong></td>
+     <td>Configuration of the SMTP server used for sending emails from extensions. <a href="../extIntro/mailer.htm" target="_top">You can check all details in this tutorial</a> </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4">&lt;<strong>AutoReloadExtensions</strong>&gt;</td>
+     <td>(since version 1.5.0, PRO only)<br>
+       Globally enable/disable the auto-reload feature for extensions: the server will reload extensions as soon as they are modified.<br>
+     While this feature is useful for development it should be turned off in production environments. </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;EnableZoneInfo&gt;</strong></td>
+     <td>(since version 1.5.0)<br>
+       Enable / disable the ability to ask the server how many clients are currently connected in a Zone.<br>
+       The request can be done with any external application done in PHP / ASP / JSP or even Flash. No APIs or authentication is required.<br>
+       <a href="#">TODO: See this tutorial for more details</a> </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;DeadChannelsPolicy&gt;</strong></td>
+     <td>(since version 1.5.0)<br>
+       Specify the server policy for dead / closed socket channels. Two modes are available:<br>
+       <strong>normal</strong>: allows unexpectedly closed or stalled socket connections to live longer in memory.  <br>
+       <strong>strict</strong>: (recommended) uses a more efficient way to catch unexpected disconnections or closed channels. Immediately gets rid of closed channels, releasing their resources. </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;RawProtocolSeparator&gt;</strong></td>
+     <td>(Since version 1.5.5) <br>
+     Specify a the character used as a separator for the Raw/String protocol.<br>
+     By default the server uses the <strong>%</strong> character </td>
+   </tr>
+ </table>
+ <p class="subTitle"><a href="#top">^ top</a></p>
+ <p class="subTitle">&nbsp;</p>
+ <p class="subTitle"><a name="zone"></a>&raquo; Zone configuration</p>
+ <p>A Zone represents one application
+   (a chat, a game etc...) running in the server. SmartFoxServer can run many Zones simultaneously, each one independent from the others and with their own server side logic.
+   <br>
+   Usually each zone has at least
+   one room defined in its configuration that will allow users to connect and
+   see each others.<br>
+   Since rooms can also be created dynamically with a client or server request you need
+to define here only those that are needed by default in your application.</p>
+ <p>For example a simple chat could just start with one &quot;Main
+   Lobby&quot; room
+and then allow clients to create their own custom rooms.</p>
+ <p>If you look at the default settings in the <strong>&lt;Zones&gt;</strong> section
+   you will find that each zone is defined in a <strong>&lt;Zone&gt;</strong> block and rooms are nested inside of it.</p>
+ <p>Here follows a list of attributes for each <strong>&lt;Zone&gt;</strong> block</p>
+ <table width="100%"  border="0" cellspacing="1" cellpadding="4">
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>name</strong></td>
+     <td>It's the name of your application. The zone name must be unique and
+       you should also try to keep it short avoding long names since this attribute
+       is at times sent in the server messages.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>uCountUpdate</strong></td>
+     <td>Can be &quot;true&quot; or &quot;false&quot;. It toggles the &quot;User
+       Count&quot; messages sent by the server to all clients in the zone. <br>
+       These
+       messages contain updates about the number of users and/or spectators in
+       each room of the zone, allowing to monitor in realtime the capacity and
+       status of each room.<br>
+<br>
+If you don't need this
+feature you should turn it off to save bandwidth. Also if your application has
+a medium to high traffic (say at least concurrent 500 users) you may want to
+turn this option off to reduce the amount of messages sent to the clients.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>maxUsers</strong></td>
+     <td>You can limit the maximum number of concurrent users allowed in each
+       application. This way you can optimize the bandwidth available when more
+       than one applications (zones) are running the server.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>maxRooms</strong></td>
+     <td>It is possible to limit the amount of rooms for each zone. By default
+       this value is set to -1 which indicates that there's no limit to the number
+       of rooms.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>maxRoomsPerUser</strong></td>
+     <td>This value sets the maximum number of rooms that each user can create
+       at once. Default is 5 </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>buddyList</strong></td>
+     <td>Can be &quot;false&quot; or a positive number. In the second case you
+       can turn on the buddy list feature by specifying the maximum number of
+       buddies in each client list. The buddy lists are persistent and they are
+       saved on disk in the &quot;Sever/buddyLists/&quot; folder.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>emptyNames</strong></td>
+     <td>By default if the login name is empty an automatic username is created
+       by the server using the format &quot;Guest_&quot; + autoincrement number.
+       You can switch this option off by setting emptyNames = &quot;false&quot;</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>roomListVars</strong></td>
+     <td>By deafult is set to false. If you set it to &quot;true&quot; you will
+       receive all the room variables for each room in the zone when requesting
+       the room list.</td>
+   </tr>
+ </table>
+ <p><strong>-&gt; Moderators</strong> can be defined in each zone:</p>
+ <pre class="code">&lt;Moderators status=&quot;on&quot;&gt;
+	&lt;Mod name=&quot;simon&quot; pwd=&quot;simon&quot; /&gt;
+	&lt;Mod name=&quot;luke&quot; pwd=&quot;luke&quot; /&gt;
+&lt;/Moderators&gt;</pre>
+ <p>By using the the <strong><em>status</em></strong> attribute you can toggle the moderators
+   in each zone. Each &lt;Mod /&gt; tag defines the username and password for
+   each moderator. Moderators have special commands for kicking and banning other
+   users. (check the &quot;<a href="../tutorials_basic/13_customLogin/index.htm">Custom
+   Login</a>&quot; tutorial for more details)</p>
+ <p><strong>-&gt; Disabling System Events and System Actions</strong> (version 1.4.0 and higher)  <br>
+   <br>
+   It is possible
+ to disable certain specific server events or actions  by simply including them in the <strong>&lt;DisabledSysEvents&gt;</strong> and <strong>&lt;DisabledSysActions&gt;</strong> tags.</p>
+ <pre class="code">&lt;DisabledSysEvents&gt;
+  &lt;event&gt;onRoomDeleted&lt;/event&gt;
+  &lt;event&gt;onRoomAdded&lt;/event&gt;
+&lt;/DisabledSysEvents&gt;
+
+&lt;DisabledSysActions&gt;
+  &lt;action&gt;createRoom&lt;/action&gt;
+  &lt;action&gt;joinRoom&lt;/action&gt;
+&lt;/DisabledSysActions&gt; </pre>
+ <p><br>
+ These settings can be used to secure your application from unwanter requests and to optimize the bandwidth usage. An in-depth view of this feature can be found in  &quot;<a href="../extIntro/framework_1.4.0.htm" target="_top">The new SmartFoxServer 1.4 Framework</a>&quot; article.</p>
+ <p><strong>-&gt; Filtering user names and room names </strong> (version 1.4.0 and higher) </p>
+ <p> Each Zone can have different rules about user names and room names. They can be limited to a certain number of characters and they can be filtered to avoid unwanted characters. The following tags allow to control the names: </p>
+ <table width="100%"  border="0" cellspacing="1" cellpadding="4">
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;UserNameAvoidChars&gt;</strong></td>
+     <td width="100%">A sequence of characters that should be stripped from the user name. <br>
+       Example: &lt;UserNameAvoidChars&gt;&lt;![CDATA[,.:]]&gt;&lt;/UserNameAvoidChars&gt;<br>
+       This will strip all the . , : (period, comma, colon) from user names </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;RoomNameAvoidChars&gt;</strong></td>
+     <td>A sequence of characters that should be stripped from the room name. <br>
+Example: &lt;RoomNameAvoidChars&gt;&lt;![CDATA[,.:]]&gt;&lt;/RoomNameAvoidChars&gt;<br>
+This will strip all the . , : (period, comma, colon) from room names </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;MaxUserNamesLen&gt;</strong></td>
+     <td>The max number of allowed characters for a user name </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>&lt;MaxRoomNamesLen&gt;</strong></td>
+     <td>The max number of allowed characters for a room name </td>
+   </tr>
+ </table>
+ <p><strong>-&gt; Automatic reloading of extensions </strong> (version 1.4.5 and higher)</p>
+ <p>You can decide which Zones should have their extension(s) reloaded as soon as they get modified.<br>
+   This feature can be very useful during the development and testing phases however it is recommended to turn it off when in production.</p>
+ <pre class="code">&lt;AutoReloadExtensions&gt;true&lt;/AutoReloadExtensions&gt;</pre>
+ <p><a href="#top">^ top</a></p>
+ <p>&nbsp;</p>
+ <p><span class="subTitle"><a name="roomConfig"></a>&raquo; Room configuration</span></p>
+ <p>Each room is defined in a <strong>&lt;Room&gt;</strong> block and you can also
+   add a <strong>&lt;Vars&gt;</strong> section to declare room variables that should
+   be created when the room is initialized. <br>
+   Below you'll find the list of attributes for defining rooms:</p>
+ <table width="100%"  border="0" cellspacing="1" cellpadding="4">
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>name</strong></td>
+     <td>It's the room name. Duplicates are not allowed in the same zone.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>isPrivate</strong></td>
+     <td>Accepts a boolean value. If true a password will be needed to access
+     the room</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>password</strong></td>
+     <td>The room password. (Empty for no password) </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>isGame</strong></td>
+     <td>Can be &quot;true&quot; or &quot;false&quot;. If true the room has some
+       special features for games, like player indexes and support for spectators
+       (users that can see the game without interacting)</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>limbo</strong></td>
+     <td>Limbo rooms are special rooms that can contain hundreds or thousands of  clients that don't need to interact directly with each other. This type  of room can be useful when the client needs to interact with the  server, without the need to know the list of all the other users, their  variables, etc...<br>
+     When the <strong>limbo flag</strong> is turned on, the room suppresses  certain events (new user arrived, user left, user count changed, room  and user variables) and inhibits the ability to send public messages.  This way the room can handle thousands of clients without generating  too much traffic and saving bandwidth. If clients need to communicate  with each other they can use private messages, which don't need to be  broadcasted to all other users.<br>
+     You can check this <a href="../tutorials_pro/12_smartMessenger/index.htm" target="_top">tutorial</a> for in-depth look on this feature </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>maxUsers</strong></td>
+     <td>The maximum number of users that can join the room simultaneously. We
+       reccomend using any number between 2 and 50. Allowing more than 50 users
+       in a chat room can be a problem as many messages are received at once
+       and it becomes difficult to follow the discussions.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>maxSpectators</strong></td>
+     <td>The maximum amount of spectators for a game room.</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>autoJoin</strong></td>
+     <td>Can be true or false. By default it is set to false. It sets the current
+       room as the default for the <strong>autoJoin()</strong> command used on
+       the client side. </td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>uCountUpdate</strong></td>
+     <td>Specifies if you want to receive the uCount updates in this room. By
+       default it is TRUE for normal rooms and FALSE for game rooms. </td>
+   </tr>
+ </table>
+ <p>Room variables can be created as soon as the room is created. The following
+ example shows how to define two room variables:</p>
+ <pre class="code">&lt;Vars&gt;
+	&lt;Var name=&quot;name&quot; type=&quot;s&quot; private=&quot;false&quot;&gt;John&lt;/Var&gt;
+	&lt;Var name=&quot;score&quot; type=&quot;n&quot; private=&quot;true&quot;&gt;5500&lt;/Var&gt;
+&lt;/Vars&gt;
+</pre>
+ <p>Each variable has these three properties:</p>
+ <table width="100%"  border="0" cellspacing="1" cellpadding="4">
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>name</strong></td>
+     <td>the name of the variable</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>type</strong></td>
+     <td> the variable type ( s = string, n = number, b = boolean )</td>
+   </tr>
+   <tr>
+     <td valign="top" bgcolor="#f4f4f4"><strong>private</strong></td>
+     <td> if true the variable cannot be modified by other users</td>
+   </tr>
+ </table>
+ <p><a href="#top">^ top</a></p>
+ <p>&nbsp;</p>
+ <p><span class="subTitle"><a name="extensions"></a>&raquo; Extensions </span></p>
+ <p><strong> SmartFoxServer PRO</strong> enables you to write your own server
+   side logic and attach it to a <strong>Zone</strong> or <strong>Room</strong>.
+   <br>
+   Extensions can be simple .as Actionscript files or Java classes and you can
+   specify which extension(s) you'd like to use in your Zone or Room using the
+   following XML:
+
+<pre class="code">
+&lt;Extensions&gt;
+	&lt;extension name=&quot;dbTest&quot;  className=&quot;dbExtension.as&quot; type=&quot;script&quot; /&gt;
+	&lt;extension name=&quot;dbTestAdv&quot;  className=&quot;dbExtensionAdv.as&quot; type=&quot;script&quot; /&gt;
+&lt;/Extensions&gt;
+</pre>
+</p>
+<br>
+Each <strong>&lt;extension&gt;</strong> node has the following properties:<br>
+<br> 
+<table width="100%"  border="0" cellspacing="1" cellpadding="4">
+  <tr>
+    <td valign="top" bgcolor="#f4f4f4"><strong>name</strong></td>
+    <td>the name of the extension (it will be used by the client to refer to
+      this extension. We reccomend using short names) </td>
+  </tr>
+  <tr>
+    <td valign="top" bgcolor="#f4f4f4"><strong>className</strong></td>
+    <td> the file name of the extension (e.g. myExtension.as for Actionscript
+      or MyExtension.class for Java) </td>
+  </tr>
+  <tr>
+    <td valign="top" bgcolor="#f4f4f4"><strong>type</strong></td>
+    <td> &quot;script&quot; for Actionscript extensions, &quot;java&quot; for Java extensions </td>
+  </tr>
+</table>
+<br>
+
+The above  XML sample can be added to any <strong>Zone</strong> (&lt;Zone&gt;&lt;/Zone)
+or <strong>Room</strong> (&lt;Room&gt;&lt;/Room&gt;)
+definition, depending on the &quot;Level&quot; at which you'd like to attach your extensions
+to. (You can learn more about these topics by checking the &quot;<a href="../extIntro/whatIsAnExtension.htm">Introduction
+to Extensions</a>&quot; chapters) <br>
+<br>
+<a href="#top">^ top</a><br>
+<br>
+<br>
+<hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../intro/installation.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="advanced.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

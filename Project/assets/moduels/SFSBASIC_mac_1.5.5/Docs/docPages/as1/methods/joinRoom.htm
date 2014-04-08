@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">joinRoom()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.joinRoom(roomId, password, isSpectator, dontLeave,
+   oldRoom)</p>
+ <p class="title">Description:</p>
+<p class="plain">Join a user in a room.</p>
+ <p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="2">
+   <tr>
+     <td><strong>roomId</strong></td>
+     <td>&nbsp;</td>
+     <td>the id or the name of the room you want to join (you can both pass the
+       name of the room or it's numeric id) </td>
+   </tr>
+   <tr>
+     <td><strong>password</strong></td>
+     <td>&nbsp;</td>
+     <td>the password for the room (needed if the room is password protected) </td>
+   </tr>
+   <tr>
+     <td><strong>isSpectator</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional booelan flag) If true joins the user as a spectator in a
+       game room </td>
+   </tr>
+   <tr>
+     <td><strong>dontLeave</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional boolean flag) If true the user will not leave the room where
+       he/shw is currently in </td>
+   </tr>
+   <tr>
+     <td><strong>oldRoom</strong></td>
+     <td>&nbsp;</td>
+     <td>(optional) the roomId of the room to leave </td>
+   </tr>
+</table>
+    <br />
+    NOTE: The optional paramaters enable the developer to use the advanced multi-room
+    feature of SmartFoxServer which allows a user to be logged in two or more
+    rooms at the same time. If you don't need this feature just use the first
+    two arguments. (see the examples below) <br />
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong>onJoinRoom</strong> event </p>
+ <p class="title">Example:</p>
+ <p class="plain"><strong>Example #1</strong><br />
+   The user requests to join a number with id = 10 (by default SmartFoxServer
+     will disconnect him from the previous room) </p>
+ <pre class="code">
+smartFox.joinRoom(10)
+</pre>
+ <p class="plain"><strong>Example #2</strong><br />
+   The user requests to join a number with id = 12 and password = &quot;mypassword&quot; <br /> 
+   (by default SmartFoxServer
+     will disconnect him from the previous room) </p>
+ <pre class="code">
+smartFox.joinRoom(12, "mypassword")
+</pre>
+<p class="plain"><strong>Example #3</strong><br />
+   The user requests to join the room with id = 15 and passes the dontLeave flag
+     = true.<br />
+     This will join the user in the new room while keeping him in the old room
+     as well. </p>
+ <pre class="code">
+smartFox.joinRoom(15, "", false, true)
+</pre>
+ <p class="title">See also:</p>
+ <p class="plain"><strong>onJoinRoomError()</strong></p>
+ <p class="plain">&nbsp;</p>
+ <p class="plain">&nbsp;</p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

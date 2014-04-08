@@ -1,0 +1,342 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.6 Tutorials: Realtime maze (part 2) </p>
+ <p class="subTitle">&raquo; Player movements and updates </p>
+<p>The &quot;<strong>start</strong>&quot; event is sent from the server extensions
+  using this code:
+<pre class="serverCode">
+<font color="#993300">function</font> startGame()
+{
+        gameStarted = <font color="#000087">true</font>
+        
+        <font color="#993300">var</font> res = {}
+        res._cmd = "<font color='blue'>start</font>"
+        
+        res.p1 = {id:p1id, name:users[p1id].getName(), x:1, y:1}
+        res.p2 = {id:p2id, name:users[p2id].getName(), x:22, y:10}
+        
+        _server.sendResponse(res, currentRoomId, <font color="#993300">null</font>, users)
+}</pre>
+  <br>
+  The command is sent along with the informations about the two players: playerId,
+  name and the initial position on the game board. (Position is expressed in
+  tile coordinates, not pixels). <br> 
+<br>
+In the client code the &quot;<strong>start</strong>&quot; event is handled in the <strong>onExtensionResponse()</strong>  method:  <br>
+</p><br>
+<pre class="code"><font color="#993300">if</font> (protocol == "<font color='blue'>xml</font>")
+{
+        switch(cmd)
+        {
+                case "<font color='blue'>start</font>":
+                
+                player1Id = resObj.p1.id
+                player2Id = resObj.p2.id
+                player1Name = resObj.p1.name
+                player2Name = resObj.p2.name
+                
+                myX = resObj["<font color='blue'>p</font>" + <font color="#000087">_global</font>.myID].x
+                myY = resObj["<font color='blue'>p</font>" + <font color="#000087">_global</font>.myID].y
+                
+                <font color="#000087">_global</font>.opID = <font color="#000087">_global</font>.myID == 1 ? 2 : 1
+                
+                opX = resObj["<font color='blue'>p</font>" + <font color="#000087">_global</font>.opID].x
+                opY = resObj["<font color='blue'>p</font>" + <font color="#000087">_global</font>.opID].y
+                
+                startGame()
+                <font color="#993300">break</font>
+                
+                case "<font color='blue'>stop</font>":
+                	<font color="#000087">_global</font>.gameStarted = <font color="#000087">false</font>
+                <font color="#993300">	delete</font> <font color="#993300">this</font>.<font color="#000087">onEnterFrame</font>
+                	gamePaused(resObj.n + "<font color='blue'> left the game</font>" + <font color="#993300">newline</font>)
+                <font color="#993300">break</font>
+        }
+}
+</pre>
+
+<br>
+The &quot;<strong>start</strong>&quot; and &quot;<strong>stop</strong>&quot; commands
+are sent using the default XML protocol, so we check this before proceeding.
+In fact for the movement of the player we will use the string-based protocol
+and you will learn from the code that it is very simple to mix both of them in
+a transparent way.<br>
+<br> 
+Upon the reception of the &quot;<strong>start</strong>&quot; action we store the data
+received (player names, ids and x-y positions) in our global variables. You will
+notice that we used a little &quot;trick&quot; here
+to simplify the assignement of the variables: the <strong>resObj</strong> variable
+contains two objects called <strong>p1</strong> and <strong>p2</strong> with
+ the respective data for player1 and player2. We have used the <strong>_global.myID</strong> (player
+ID) and
+<strong>_global.opID </strong>(opponent ID) to dynamically read those properties
+and assign them to <strong>myX</strong>, <strong>myY</strong> and <strong>opX</strong>,
+<strong>opY</strong> which represent the positions of the client sprite and his
+opponent sprite.<br>
+<br>
+The <strong>startGame()</strong> function
+attaches the red and green balls, representing the two players,
+in the right positions and starts the main onEnterFrame that will take care of
+listening to the keyboard and animating the opponent:<br>
+<br>
+<pre class="code"><font color="#993300">function</font> mainThread()
+{
+        <font color="#993300">if</font> (<font color="#000087">_global</font>.gameStarted)
+        {
+                <font color="#993300">if</font>(!mySprite.moving)
+                {
+                        <font color="#993300">if</font>(<font color="#993300">Key</font>.<font color="#000087">isDown</font>(<font color="#993300">Key</font>.<font color="#000087">LEFT</font>) &amp;&amp; obstacles.indexOf(map[mySprite.py][mySprite.px - 1]) == -1)
+                        {
+                                sendMyMove(mySprite.px-1, mySprite.py)
+                                moveByTime(mySprite, mySprite.px-1, mySprite.py, playerSpeed)
+                        }
+                        <font color="#993300">else</font> <font color="#993300">if</font>(<font color="#993300">Key</font>.<font color="#000087">isDown</font>(<font color="#993300">Key</font>.<font color="#000087">RIGHT</font>) &amp;&amp; obstacles.indexOf(map[mySprite.py][mySprite.px + 1]) == -1)
+                        {
+                                sendMyMove(mySprite.px+1, mySprite.py)
+                                moveByTime(mySprite, mySprite.px+1, mySprite.py, playerSpeed)
+                        }
+                        <font color="#993300">else</font> <font color="#993300">if</font>(<font color="#993300">Key</font>.<font color="#000087">isDown</font>(<font color="#993300">Key</font>.<font color="#000087">UP</font>) &amp;&amp; obstacles.indexOf(map[mySprite.py - 1][mySprite.px]) == -1)
+                        {
+                                sendMyMove(mySprite.px, mySprite.py-1)
+                                moveByTime(mySprite, mySprite.px, mySprite.py-1, playerSpeed)
+                        }
+                        <font color="#993300">else</font> <font color="#993300">if</font>(<font color="#993300">Key</font>.<font color="#000087">isDown</font>(<font color="#993300">Key</font>.<font color="#000087">DOWN</font>) &amp;&amp; obstacles.indexOf(map[mySprite.py + 1][mySprite.px]) == -1)
+                        {
+                                sendMyMove(mySprite.px, mySprite.py+1)
+                                moveByTime(mySprite, mySprite.px, mySprite.py+1, playerSpeed)
+                        }
+                }
+                
+                <font color='#878787'>// If the moves queue of the opponent contains data and the opponent is not
+</font>                <font color='#878787'>// being animated we update its position
+</font>                <font color="#993300">if</font>(!opSprite.moving &amp;&amp; opSprite.moves.<font color="#000087">length</font> &gt; 0)
+                {
+                        moveByTime(opSprite, opSprite.moves[0].px, opSprite.moves[0].py, playerSpeed)
+                }
+        }
+}
+</pre>
+<br>
+The first line checks if the game is running, then we proceed by checking
+the four directional keys. If one of them is pressed and the player can move
+in that direction we send the move to the server and start the animation of the
+sprite. <br> 
+In order to check if the player move is valid we have used an interesting technique:
+at the top of the code we've declared a variable called <strong>obstacles</strong> which
+should contain all the characters that represent a non walkable tile in the map.
+In our simple map there's only one character, the &quot;X&quot;, however you
+could add more of them. When we check the new position where the player wants
+to move we just need to see if the character contained at that position in the
+map is found in the <strong>obstacles </strong>string,
+using the <strong>indexOf()</strong> method.<br>
+<strong><br>
+</strong>The last part of the function checks if we have new updates in the
+moves queue of the opponent. Each element in such queue is an object with x and
+y position.<br> 
+The 
+<strong>moveByTime() </strong>function will take care of animating the sprites
+and it will also skip some of those animations if it finds that they are out
+of synch.<br> 
+Here's the code:<br>
+<br>
+<pre class="code"><font color="#993300">function</font> moveByTime(who, px, py, <font color="#000087">duration</font>)
+{
+        who.moving = <font color="#000087">true</font>
+        
+        <font color="#993300">if</font>(who.moves.<font color="#000087">length</font> &gt; 1)
+        {
+                who.<font color="#000087">_x</font> = who.moves[who.moves.<font color="#000087">length</font> - 2].px *tileSize
+                who.<font color="#000087">_y</font> = who.moves[who.moves.<font color="#000087">length</font> - 2].py *tileSize
+                px = who.moves[who.moves.<font color="#000087">length</font> - 1].px
+                py = who.moves[who.moves.<font color="#000087">length</font> - 1].py
+        }
+        who.moves = []
+        
+        <font color="#993300">var</font> sx, sy, ex, ey
+        
+        sx = who.<font color="#000087">_x</font>
+        sy = who.<font color="#000087">_y</font>
+        
+        ex = px * tileSize
+        ey = py * tileSize
+        
+        who.ani_startTime = <font color="#993300">getTimer</font>()
+        who.ani_endTime = who.ani_startTime + <font color="#000087">duration</font>
+        who.<font color="#000087">duration</font> = <font color="#000087">duration</font>
+        
+        who.sx = sx
+        who.sy = sy
+        who.dx = ex - sx
+        who.dy = ey - sy
+        
+        who.<font color="#000087">onEnterFrame</font> = animateByTime
+}
+</pre>
+<strong><br>
+</strong>The paramater called <strong>who</strong> is the sprite to move. Each
+sprite has a <strong>moving</strong> flag that tells us if it is already performing
+an animation, and it is usually tested before calling this function, as you don't
+want to start a new animation when the old one is still running.<br>
+<br> 
+The next lines take care of that synching function we were talking about. If
+we find more than one element in the moves queue of this object, we are already
+out of synch with the game and we need to skip to the second-last item and perform
+the animation from there to the last one. The effect on screen will be of an
+immediate jump of the sprite from one position to the other and it could be more
+noticeable when many moves are skipped. <br>
+<br>
+Finally we can take a look at how our move is sent to the server:<br>
+<br>
+<pre class="code"><font color="#993300">function</font> sendMyMove(px:<font color="#993300">Number</font>, py:<font color="#993300">Number</font>)
+{
+        <font color="#993300">var</font> o = []
+        o.<font color="#000087">push</font>(px)
+        o.<font color="#000087">push</font>(py)
+        
+        smartfox.sendXtMessage(extensionName, "<font color='blue'>mv</font>", o, "<font color='blue'>str</font>")
+}
+</pre>
+<br>
+The only big difference to note when sending raw messages, is that the object
+containing the data to send is an <strong>Array</strong> instead of an object.
+Another important things is that all parameters are treated as strings, so you
+may need to cast them back to numbers, booleans etc... depending on the data
+type you're using.<br>
+As you can see from the code we simply add our <strong>px</strong> and <strong>py</strong> variables
+to the array and send it to the server  using the raw format (4th param
+= &quot;str&quot;).<br> 
+<br>
+The action name we use here is &quot;<strong>mv</strong>&quot;, as a general rule:
+the shorter the name, the better, as you use less bytes in your message.<br>
+<br>
+Now let's see how this data is handled on the server side:<br>
+<br>
+<pre class="serverCode"><font color="#993300">function</font> handleRequest(cmd, params, user, fromRoom, protocol)
+{
+        <font color="#993300">if</font> (protocol == "<font color='blue'>str</font>")
+        {
+                switch(cmd)
+                {
+                        case "<font color='blue'>mv</font>":
+                        handleMove(params, user)
+                        <font color="#993300">break</font>
+                        
+                }
+        }
+}
+</pre>
+<br>
+the parameters received are passed to the <strong>handleMove()</strong> function: <br>
+<br>
+<pre class="serverCode"><font color="#993300">function</font> handleMove(params, user)
+{
+        <font color="#993300">if</font> (gameStarted)
+        {
+                <font color="#993300">var</font> res = []		<font color='#878787'>// The list of params
+</font>                res[0] = "<font color='blue'>mv</font>"		<font color='#878787'>// at index = 0, we store the command name
+</font>                res.push(params[0])	<font color='#878787'>// this is the X pos of the player
+</font>                res.push(params[1])	<font color='#878787'>// this is the Y pos of the player
+</font>                
+                <font color='#878787'>// Chose the recipient
+</font>                <font color='#878787'>// We send this message only to the other client
+</font>                <font color="#993300">var</font> uid = user.getUserId()
+                <font color="#993300">var</font> recipient = (uid == p1id) ? users[p2id]:users[p1id]
+                
+                _server.sendResponse(res, currentRoomId, user, [recipient], "<font color='blue'>str</font>")
+        }
+}
+</pre>
+<br>
+First we validate the move by checking the <strong>gameStarted</strong> flag<strong>:</strong> it's
+always a good idea to add some server-side validation in order to avoid hacking
+attempts.<br>
+In the next lines we prepare the message to send to the opponent with the x and
+y positions of the client. A new array is created where the name of the action
+is at index = 0 and the other parameters follow. <br>
+We choose the user that will receive the message by comparing the userId
+of the sender,
+and finally send the message to the other client using the raw protocol. <br>
+<br>
+Now we can move back to the client code, in the <strong>onExtensionResponse()</strong> event handler
+and see how we receive this data:<br>
+<br>
+<pre class="code">smartfox.onExtensionResponse = <font color="#993300">function</font>(resObj:<font color="#993300">Object</font>, protocol:<font color="#993300">String</font>)
+{
+        <font color="#993300">var</font> cmd:<font color="#993300">String</font> = resObj._cmd
+        
+        <font color="#993300">if</font> (protocol == "<font color='blue'>xml</font>")
+        {
+                <font color='#878787'>// ...
+</font>        }
+        <font color="#993300">else</font> <font color="#993300">if</font> (protocol == "<font color='blue'>str</font>")
+        {
+                
+                <font color="#993300">var</font> cmd = resObj[0] <font color='#878787'>// command name
+</font>                <font color="#993300">var</font> rid = <font color="#993300">Number</font>(resObj[1]) <font color='#878787'>// roomId
+</font>                
+                switch(cmd)
+                {
+                        case "<font color='blue'>mv</font>":
+                        handleOpponentMove(<font color="#993300">Number</font>(resObj[2]), <font color="#993300">Number</font>(resObj[3]))
+                        <font color="#993300">break</font>
+                }
+        }
+}
+</pre> 
+<br>
+For the sake of simplicity we have reported only the code relative to the raw-protocol,
+since the other messages (&quot;start&quot;, &quot;stop&quot;) have been already covered.<br>
+<br>
+The  first two lines inside the <strong>else</strong> block are very important:
+as you can see we obtain the <strong>command name</strong> and the <strong>roomId</strong> from
+the first two positions in the array that was received. This is a convention
+that you will always use: each time you receive a raw-protocol based message,
+the first two indexes (0, 1) of the array will contain those informations. <strong>All
+the custom parameters sent from the server will always start at index = 2.<br>
+<br>
+</strong>As you can see we pass <strong>resObj[2]</strong> (which expect to be the <strong>x</strong> position)
+and <strong>resObj[3]</strong> (which we expect to be the <strong>y</strong> position) to the <strong>handleOpponentMove()</strong> function
+casting them to numbers. (Rember that raw-protocol uses strings only)<br>
+<br>
+<pre class="code"><font color="#993300">function</font> handleOpponentMove(x:<font color="#993300">Number</font>, y:<font color="#993300">Number</font>)
+{
+        <font color="#993300">if</font> (opSprite.moves == <font color="#000087">undefined</font>)
+        	opSprite.moves = []
+        
+        opSprite.moves.<font color="#000087">push</font>({px:x, py:y})
+}
+</pre>
+<br>
+The code will just add the new move received in the opponent moves queue, and
+the onEnterFrame we have talked about before will do the rest.<br>
+<br> 
+<span class="subTitle">&raquo; Conclusions<br></span>
+<br> 
+We have covered a lot of different topics in this tutorial, so we reccomend to
+take your time with it and to experiment on your own with the source code
+provided. <br> 
+Also you can consult the <a href="../../serverSideApi/index.htm">Server Side
+Actionscript framework docs</a> for more detailed informations about the server
+side methods used in this example. <br>
+<br>
+<br>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="index.htm" class="navLinks">&laquo; previous</a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../07_javaInActionscript/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

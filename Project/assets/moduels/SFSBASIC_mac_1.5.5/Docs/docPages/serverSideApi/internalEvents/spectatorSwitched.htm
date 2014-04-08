@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">Internal Event :: spectatorSwitched</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Event name:</p>
+ <p class="plain"><strong>spectatorSwitched</strong></p>
+ <p class="title">Description:</p>
+<p class="plain">This event is fired when a user set as spectator in a game room
+  is turned into a player. The event is available only for both <strong>Zone
+  Level</strong> and <strong>Room Level</strong> extensions. The switch is usually
+  requested from the client side using the switchSpectator() request. When the
+  user is finally transformed from spectator into a player the event is fired,
+  so that any extension can handle it accordingly.
+<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr class="tHead">
+     <td valign="top" nowrap="nowrap">name</td>
+     <td>&nbsp;</td>
+     <td>description</td>
+     <td>type</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>user</strong></td>
+     <td>&nbsp;</td>
+     <td>The User (object) that was turned into a player <strong></strong></td>
+     <td>object</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>playerIndex</strong></td>
+     <td>&nbsp;</td>
+     <td>The new player index assigned by the server </td>
+     <td>java.lang.String (*) </td>
+   </tr>
+</table>
+ <p><strong>(*) A note on data types:</strong> the parameters passed by the server events to the running extensions are all Java types.<br />
+You can use them transparently in Actionscript or cast them to AS native data types. <br />
+<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/String.html" target="_blank">&raquo; javadoc for -&gt; java.lang.String</a></p>
+ <p class="title">Example:</p>
+<pre class="code">
+function handleInternalEvent(evtObj)
+{
+	if (evt.name == "spectatorSwitched")
+	{
+		var newId = evt.playerIndex
+		var user = evt.user
+		
+		// add the user to the local list of players
+		players[user.getUserId()] = user
+
+	}
+}
+</pre>
+<br /> 
+<p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

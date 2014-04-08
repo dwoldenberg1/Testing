@@ -1,0 +1,49 @@
++-----------------------------------------------------------------------
++ SmartFoxServer 
++ (c) 2004 - 2007 gotoAndPlay()
++
++ www.smartfoxserver.com
++ www.gotoandplay.it
++
++  All rights reserved.
+-----------------------------------------------------------------------
+[ SmartFoxServer Licence ]
+
+
++-----------------------------------------------------------------------
++ Your Agreement to this Licence
++-----------------------------------------------------------------------
+Please carefully read the following terms and conditions before installing or using this software.  
+Your installation or use of "SmartFoxServer" indicates your acceptance of this agreement ("Licence").
+
+
++-----------------------------------------------------------------------
++ Scope of Licence
++-----------------------------------------------------------------------
+With the exception of the "Demo" Licence, each licensed copy of SmartFoxServer must only be run on a single IP address at a time. If you need to run SmartFoxServer on more IP addresses concurrently you should buy one licence for each IP.
+
+
++-----------------------------------------------------------------------
++ Intellectual property rights
++-----------------------------------------------------------------------
+You acknowledge that no title to the intellectual property in the software product is transferred to you. You further acknowledge that title and full ownership rights to the software will remain the exclusive property of gotoAndPlay(). You may not rent, lease, modify, reverse engineer, decompile, disassemble, or create derivative works based on SmartFoxServer.
+
+
++-----------------------------------------------------------------------
++ Warranties
++-----------------------------------------------------------------------
+SmartFoxServer, and any and all accompanying software, files, data and materials, are distributed and provided "AS IS" and with no warranties of any kind, whether express or implied.
+IN NO EVENT WILL THE AUTHORS BE HELD LIABLE FOR ANY CONSEQUENTIAL, SPECIAL, INCIDENTAL, OR INDIRECT DAMAGES OF ANY KIND ARISING OUT OF THE DELIVERY, PERFORMANCE, OR USE OF THE SOFTWARE, EVEN IF THE POSSIBILITY OF SUCH DAMAGES ARE KNOWN.
+
+SmartFoxServer PRO uses code from:
+
+Apache Software Foundation
+http://www.apache.org
+
+Mozilla Foundation
+http://www.mozilla.org
+
+You can find the related licenses for Apache Software Foundation and Mozilla Foundation in the licences/ folder inside your installation directory.
+
+For any questions regarding SmartFoxServer and this licence you can contact info@smartfoxserver.com
+

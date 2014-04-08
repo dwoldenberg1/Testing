@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">2.3 Configuration: the http server </p>
+ <p>From  version 1.5.0 <strong>SmartFoxServer</strong> embeds a powerful and efficient web server (based on <a href="http://www.mortbay.org/" target="_blank">Jetty</a>) that can be used for serving static and dynamic web pages. The http server is also tightly integrated with <strong>SmartFoxServer</strong> so that you can easily handle file uploads in server side extensions and even create web pages that talk to the server and a lot more... </p>
+ <p>Additionally the webserver is also integrated with a <a href="http://www.python.org" target="_blank">Python</a>   engine (based on <a href="http://www.jython.org" target="_blank">Jython</a>) that allows to quickly develop  dynamic web pages using the popular scripting language (of course you can user regular Java servlets if you prefer) </p>
+ <p><span class="subTitle">&raquo; Web server setup <br>
+  </span><br>
+ The web server can be easily configured from the main config.xml file:</p>
+ <pre class="code">
+&lt;WebServer active=&quot;true&quot;&gt;
+	&lt;CfgFile&gt;webserver/cfg/jetty.xml&lt;/CfgFile&gt;
+&lt;/WebServer&gt;
+</pre>
+ <p>The <strong>active</strong> attribute turns on/off the webserver.<br>
+   The 
+ <strong>&lt;CfgFile&gt;</strong> tag specifies where the http server config file is located. We don't recommend to change this unless you really know what you're doing. </p>
+ <p class="subTitle">&raquo; Web server configuration </p>
+ <p>By default the web server will run on the same IP address used by SmartFoxServer on port <strong>8080</strong>. <br>
+   You can change the port number and many other settings by editing its configuration file called <strong>jetty.xml</strong> inside the the <strong>Server/webserver/cfg/</strong> folder.<br>
+   To test if the server is running just open a web browser and try loading the following url: http://127.0.0.1:8080, you should see a simple welcome page. <br>
+     <br>
+     <strong>Due to the large amount of configuration parameters that are available in Jetty, we recommend to visit its <a href="http://jetty.mortbay.org/" target="_blank">official website</a> and check their online documentation for a better insight of all the available settings. </strong>(In particular <a href="http://docs.codehaus.org/display/JETTY/Jetty+Documentation">this section</a>)<strong> <br>
+         </strong><br>
+         <span class="subTitle">&raquo; Web applications folder layout</span></p>
+ <p>Inside the <strong>webserver/ </strong> folder you will find a <strong>webapps/</strong> directory which contains different sub-folders.</p>
+ <ul>
+   <li><strong>root</strong>/<br>
+   it is the &quot;root folder&quot; of the webserver. This is where the welcome page is located. <br>
+     You can freely use this folder to serve any static content. <br>
+     <br>
+   </li>
+   <li><strong>default</strong>/  <br>
+   contains the default servlets used by SmartFoxServer. The files inside this directory should not be modified unless it is really needed.<br>
+     <br>
+   </li>
+   <li><strong>examples</strong>/<br>
+   contains a few dynamic examples of how to build simple pyhton servlets. <br>
+   You can check them by pointing the browser to one of the following urls:<br>
+     <br>
+     -&gt; http://127.0.0.1:8080/examples/SimpleCounter.py
+       <br>
+   -&gt; http://127.0.0.1:8080/examples/ServerInfo.py </li>
+ </ul>
+ <p>You can also add your own servlets by adding a new folder and its <strong>WEB-INF/</strong> subfolder that describes the servlet mapping configuration. <br>
+ Here are a few resources that can help you getting started: </p>
+ <p>Introduction to Java Servlets -&gt; <a href="http://www.informit.com/articles/article.asp?p=29817&rl=1" target="_blank">http://www.informit.com/articles/article.asp?p=29817&amp;rl=1</a><br>
+ Python / Jython servlets -&gt; <a href="http://www.samspublishing.com/articles/article.asp?p=26865&rl=1" target="_blank">http://www.samspublishing.com/articles/article.asp?p=26865&amp;rl=1<br>
+ </a>Python quick tutorial -&gt; <a href="http://hetland.org/python/instant-python.php" target="_blank">http://hetland.org/python/instant-python.php</a><br>
+   More Python tutorials -&gt; <a href="http://heather.cs.ucdavis.edu/~matloff/python.html" target="_blank">http://heather.cs.ucdavis.edu/~matloff/python.html</a><br>
+ The official Python tutorials -&gt; <a href="http://www.python.org/doc/tut/" target="_blank">http://www.python.org/doc/tut/</a></p>
+ <p>&nbsp;</p>
+ <hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../intro/installation.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="advanced.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

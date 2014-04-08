@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.dispatchPublicMessage()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.5.0 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.dispatchPublicMessage(message, room, user)</p>
+ <p class="title">Description:</p>
+ <p class="plain">Dispatches a public message that was handled in the &quot;pubMsg&quot; internal event 
+ <p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>message</strong></td>
+     <td>&nbsp;</td>
+     <td>the message </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>room</strong></td>
+     <td>&nbsp;</td>
+     <td>the target room </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>user</strong></td>
+     <td>&nbsp;</td>
+     <td>the sender user </td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="title">Example:</p>
+<pre class="code">
+/**
+* Extension intialization
+* This example can be used as Zone level extension
+*/
+function init()
+{
+	/*
+		enable "pubMsg" internal events
+		by default this event is turned off
+	*/
+	var zone = _server.getCurrentZone()
+	zone.setPubMsgInternalEvent(true)
+}
+
+/**
+* Handle internal events
+* 
+* @param	e	the event object
+*/
+function handleInternalEvent(e)
+{
+	evtName = e.name
+	
+	if (evtName == "pubMsg")
+	{
+		sourceRoom = e.room		// the room object
+		senderUser = e.user		// the sender user
+		message = e.msg			// the public message
+		
+		// If the message contains the word "SmartFoxServer" filter it!
+		if (message.indexOf("SmartFoxServer") > -1)
+			trace("Message was filtered")
+		else
+			_server.dispatchPublicMessage(message, sourceRoom, senderUser)	
+	}
+}
+</pre><br />
+ <p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong>pubMsg</strong> internal event</p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

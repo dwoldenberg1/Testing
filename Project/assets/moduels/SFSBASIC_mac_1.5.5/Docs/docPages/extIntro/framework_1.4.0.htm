@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title"><a name="main"></a>7.3 Introducing the SmartFoxServer server-side framework </p>
+ <p>With the release of the <strong>SmartFoxServer 1.4</strong> we have introduced
+   new important features for advanced server side development, security and
+   tuning of your multiplayer applications. <br>
+   <br>
+   In this document we present a quick overview of the functionalities introduced
+in the new version.</p>
+ <table border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td>&raquo;</td>
+     <td><a href="#serverside">New server side methods </a></td>
+   </tr>
+   <tr>
+     <td>&raquo;</td>
+     <td><a href="#zoneconf">Advanced Zones configuration </a></td>
+   </tr>
+   <tr>
+     <td>&raquo;</td>
+     <td><a href="#javaext">Java Extensions </a></td>
+   </tr>
+ </table>
+ <p> <span class="subTitle"><a name="serverside"></a>&raquo; New Server side methods </span></p>
+ <p>The new <strong>1.4 server side framework </strong>introduces 10 new methods
+   that allow to create rooms, join rooms, access server side variables and a
+   lot more. The purpose of these new commands is to give developers better control
+   over the server engine, allowing to create advanced server behaviours, custom
+   room management, challenge systems etc...<br>
+   <br>
+ Below follows a quick tour of the new methods available:</p>
+ <table border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td><strong>createRoom()</strong></td>
+     <td>creates a new room </td>
+   </tr>
+   <tr>
+     <td><strong>destroyRoom()</strong></td>
+     <td>destroys an empty room </td>
+   </tr>
+   <tr>
+     <td><strong>disconnectUser()</strong></td>
+     <td>immediately disconnect a client (kick) </td>
+   </tr>
+   <tr>
+     <td><strong>getUserByChannel()</strong></td>
+     <td>return the user from its SocketChannel </td>
+   </tr>
+   <tr>
+     <td><strong>joinRoom()</strong></td>
+     <td>join a room </td>
+   </tr>
+   <tr>
+     <td><strong>leaveRoom()</strong></td>
+     <td>leave a room (when in &quot;multi-room&quot; mode)</td>
+   </tr>
+   <tr>
+     <td><strong>sendGenericMessage()</strong></td>
+     <td>send a generic / custom xml message </td>
+   </tr>
+   <tr>
+     <td><strong>sendRoomList()</strong></td>
+     <td>send the room list </td>
+   </tr>
+   <tr>
+     <td><strong>setRoomVariables()</strong></td>
+     <td>create / update / delete one ore more room variables </td>
+   </tr>
+   <tr>
+     <td><strong>setUserVariables()</strong></td>
+     <td>create / update / delete one ore more user variables</td>
+   </tr>
+   <tr>
+     <td><strong>switchSpectator()</strong></td>
+     <td>switch a spectator into a player (in game rooms) </td>
+   </tr>
+ </table>
+ <p>All the above methods stay consistent with their counterpart on the client
+   side, so they should all look familiar.<br>
+ The advantage of using them on the server side is the increased control you
+ can obtain and the baility to add your own application logic, data validation,
+ database integration etc... </p>
+ <p><a href="#main">^top</a></p>
+ <p><span class="subTitle"><a name="zoneconf"></a>&raquo; Advanced Zones configuration </span></p>
+ <p>As you may  already know, Zones are the heart of SmartFoxServer
+   development. Each Zone describes a single multiplayer application running
+   in the server, it can set up its own database connection, its own extensions
+   and  define the application configuration.</p>
+ <p>We have added two new important configuration items called <strong>&lt;DisabledSysEvents&gt;</strong> and <strong>&lt;DisabledSysActions&gt;</strong>:
+   the first allow to suppress the notification of certain default events and
+   the latter can be used to disable certain user requests from the client side.</p>
+ <p>Their usage is straightforward:</p>
+ <pre class="code">&lt;DisabledSysEvents&gt;
+  &lt;event&gt;onRoomDeleted&lt;/event&gt;
+  &lt;event&gt;onRoomAdded&lt;/event&gt;
+&lt;/DisabledSysEvents&gt;
+
+&lt;DisabledSysActions&gt;
+  &lt;action&gt;createRoom&lt;/action&gt;
+  &lt;action&gt;joinRoom&lt;/action&gt;
+&lt;/DisabledSysActions&gt; </pre>
+<p>By adding these tags in your Zone configuration you will stop the <strong>onRoomDeleted</strong>  and <strong>onRoomAdded</strong> events
+  from being fired. Additionally the <strong>createRoom()</strong> and <strong>joinRoom() </strong>requests from
+  the client side will be disabled. </p>
+<p>Why would you need this? <br>
+  When developing advanced server extensions you may need to override the default
+  server events with your own  events, or just suppress unwanted notifications.
+    This can be quickly done by providing a list of event names to be disabled
+    in the current Zone.<br>
+    <br>
+    Disabling client side requests is even more important for optimal application
+    security. In order to describe the advantages introduced by this option we
+    need a short digression.<br>
+As you already know the server can respond to a number of publicly available
+commands, that are listed in the client side API. <br> 
+These methods require a valid  connected user to be executed, and they
+always validate the incoming data. However they are called from the client side
+which is always the most vulnerable part of a multiplayer application. The simple
+diagram in <em>figure 1</em> shows how the client communicates with the server
+through the publicly available methods. <br>
+</p>
+<p align="center"><img src="images/fw_1.4_pic01.gif" alt="pic_01" width="400" height="360" class="imgBorder"><br>
+(figure 1) </p>
+<p><br>
+  For example a malicious user may try to decompile your SWF game file, understand
+  the game logic and try to re-create a modified version of the client in order
+  to cheat in the game.</p>
+<p>The best solution for securing the server and your application 
+  from cheating/hacking attempts, is to implement all the game logic on the server
+  side, plus setting the <strong>&lt;DisabledSysActions&gt;</strong> in
+  your Zone so that all unused public commands are disabled. </p>
+<p>An example: if your game handles all the <strong>joinRoom</strong> and <strong>createRoom</strong> actions
+  from an Extension, you could safely add these commands to the <strong>&lt;DisabledSysActions&gt;</strong> list.
+  Also if you don't make use of UserVariables and RoomVariables you should disable
+  them as well, to prevent unwanted client requests to the server.</p>
+<p align="center"><img src="images/fw_1.4_pic02.gif" alt="pic02" width="460" height="370" class="imgBorder"><br>
+(figure 2) </p>
+<p>The diagram in <em>figure 2</em> shows how the green client dialogues with the server
+  side extension while the malicious client (violet) tries to send unwanted client-side
+  requests. The latter will fail in his attempt if the <strong>&lt;DisabledSysActions&gt;</strong> is
+  correctly configured.</p>
+<p><strong>- User names and Room names filtering: </strong></p>
+<p>We also added a simple filtering system to disallow the usage of certain characters
+  in room names or user names. For example you may want to avoid characters that
+  don't work well in UI components or that may give problems in SQL strings (usernames)
+  etc...<br>
+  <br>
+  You can set these filters very easily in each zone:
+</p>
+<pre class="code">&lt;UserNameAvoidChars&gt;&lt;![CDATA[abc]]&gt;&lt;/UserNameAvoidChars&gt;<br>&lt;RoomNameAvoidChars&gt;&lt;![CDATA[aABbCc_+-]]&gt;&lt;/RoomNameAvoidChars&gt;</pre>
+<p>You simply need to specify the list of characters that are not allowed in
+  user names or room names. These characters will be automatically stripped by
+  the server.</p>
+<p>By default the characters that are filtered are: &lt; &gt; ' &quot; &amp; \  / ^ </p>
+<p><a href="#main">^top</a></p>
+<p><span class="subTitle"><a name="javaext"></a>&raquo; Java Extension </span></p>
+<p>From version 1.4 SmartFoxServer PRO officially supports server side extensions
+  written in Java.<br>
+  The default folder for java extensions is called <strong>javaExtensions/</strong> and
+  it is found  under the <strong>Server/</strong> directory. We reccomend that
+you put all your files in this folder, organizing them into packages.</p>
+<p>Java extensions follow the same architecture of those based on Actionscript:
+  you will need to implement a basic interface that handles the initialization,
+  destruction, internal server events, and client requests. </p>
+<p>In order to compile your extensions you will need to point your classpath
+  to the <strong>smartfoxserver.jar</strong> file (for SFS 1.4), which contains all the java
+  classes that your code will use. Here's a simple example:</p>
+<pre class="code">javac -cp /path/to/smartfoxserver.jar ClassName.java  </pre>
+<p>In order to compile your source file called  &quot;ClassName.java&quot; just make sure
+to provide the correct path to your smartfoxserver.jar file. </p>
+<p>Similarly, if you use a Java IDE like Eclipse or Netbeans for your source
+  files, you should  add the smartfoxserver.jar file to your project classpath
+  in order to successfully compile it. </p>
+<p>For a complete overview of how to develop Java extensions <a href="javaExtensions.htm" target="_top">check this detailed article. </a></p>
+<p><strong>- Java vs Actionscript:</strong></p>
+<p>Apart from personal preferences, the main advantage of using Java instead
+  of Actionscript is performance.<br>
+  While Actionscript can be great for most common server side tasks, some
+  extensions would definetely 
+  benefit from the extra performance that can be achieved by compiled java classes. <br>
+  For example math-intensive simulations, pathfinders, complex AI game logic
+etc... would perform better if written in pure Java.<br>
+<br>
+Another interesting option provided by SmartFoxServer is the ability to <strong>use
+java classes inside your Actionscript</strong> Extensions. To learn more about
+this feature you can read the article at <strong>Chapter 6.5</strong> </p>
+<p>&nbsp;</p>
+<hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%">&nbsp;</td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="extArchitecture.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

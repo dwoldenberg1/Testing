@@ -1,0 +1,307 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.6 Tutorials: Avatar Chat</p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available  under the <strong>Examples/(Actionscript version)/avatarChat</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>In this tutorial you will learn how to build a simple, multi-room avatar chat application using the concepts <br>
+ explained so far and introducing a new  server-side feature: <strong>User Variables</strong>. </p>
+ <p><img src="images/layout.gif" width="383" height="259" class="imgBorder"></p>
+ <p>These are the main features we're going to implement:</p>
+ <p>&raquo; when a user logs in he will be displayed with a randomly chosen avatar;<br>
+&raquo; the user will be able to move his avatar around in the chat area;<br>
+&raquo; all the users will see the other avatars moving and interacting in real time;<br>
+&raquo; when a user sends a public message a small bubble will appear above it, showing the message.</p>
+ <p><span class="subTitle">&raquo; Variables everywhere</span></p>
+ <p>One interesting aspect of creating multiuser applications is that sometimes the client application must be able to play different roles at one time. For example in a multiplayer turn-based game the same client application handles the game turns, playing the role of both the idle player and the active player depending on which user is currently interacting with it.</p>
+ <p>In this sample application we will start learning how it is possible to create such a flexible behaviour.</p>
+ <p>One important tool to achieve this results is &quot;<strong>server variables</strong>&quot;. What's the difference between a server variable and a regular one? The main difference is that the first one (as the word says) is stored in the server and then broadcasted to all other clients in the room. This means that one change in a user variable will be reflected to all other users within the same room so that they can update the scene accordingly.</p>
+ <p>In our <strong>&quot;Avatar Chat</strong>&quot; we will have many users in one room all represented by one icon or graphic item and each of them will be<br>
+  able to move around a certain area of the screen, so we will need to get constant updates from all the clients to keep the scene in sync.</p>
+ <p>In our specific case we need two variables, <strong>x</strong> and <strong>y</strong>, that represent the position of our avatar on the screen. When we create or update this variables all the other clients in the room will be notified and they will be able to put our icon in the right place, keeping the interaction in sync.</p>
+ <p>SmartFoxServer supports two different types of server variables called &quot;<strong>User Variables</strong>&quot; and &quot;<strong>Room Variables</strong>&quot;.</p>
+ <p>We will concentrate on the first ones for now and we'll encounter the &quot;Room Variables&quot; in the next tutorials, when dealing with a turn-based board game.</p>
+ <p><span class="subTitle">&raquo; Preparing the environment </span></p>
+ <p>   You can now open the source .FLA file and inspect it. You will notice
+   that the code under the &quot;<strong>connect</strong>&quot; label is the same that we used
+   in the previous examples, so you can move in the next label called &quot;chat&quot;.</p>
+ <p>The only thing that changes in this section is this:</p>
+ <pre class="code"><font color="#993300">#include</font> "<font color='blue'>lib/[flashAPI].as</font>"
+<font color="#993300">#include</font> "<font color='blue'>lib/easingEquations.as</font>"
+<font color="#993300">#include</font> "<font color='blue'>lib/easing.as</font>"</pre>
+ <p>These include commands import some extra usefull actionscript code that we will use later for the avatar movement.</p>
+ <p>Now open the library (F11) and find the movieclip called &quot;avatar&quot; in the &quot;_Avatars&quot; folder. This is the main movieclip used to represent one user on the screen and it's made up of basically 3 parts:</p>
+ <p>1) the &quot;<strong>disc</strong>&quot; movieclip, which in turn contains eight differently colored circles, one per frame<br>
+  2) the &quot;<strong>bubble</strong>&quot; symbol that we'll use to show public messages<br>
+  3) the &quot;<strong>name</strong>&quot; text field that will show the user name</p>
+ <p>We will instantiate on screen one of these symbols for each client, generating an initial random position on screen and a random color. Also we will keep your avatar on top of the others in order to make it easier to move around.</p>
+ <p>In the actionscript layer of the &quot;<strong>avatar</strong>&quot; symbol you'll find this code:</p>
+ <pre class="code"><font color="#993300">this</font>.bubble.<font color="#000087">_visible</font> = <font color="#000087">false</font>
+timer = <font color="#993300">null</font>
+
+<font color="#993300">function</font> deactivate()
+{
+        timer = <font color="#993300">setInterval</font>(closeBubble, 3000)
+}
+
+<font color="#993300">function</font> closeBubble()
+{
+        bubble.<font color="#000087">_visible</font> = <font color="#000087">false</font>
+        <font color="#993300">clearInterval</font>(timer)
+}</pre>
+ <p>First of all the bubble is hidden as soon as the avatar is instantiated.<br>
+The next two functions are used to close the message bubble after 3 seconds: the <strong>setInterval()</strong> function allows to repeatedly call a method at a certain time rate, expressed in milliseconds. In order to do this operation once we will use the <strong>clearInterval</strong> command as soon as the <strong>closeBubble()</strong> method is invoked the first time.</p>
+ <p>This way we can show the message bubble when a message arrives and automatically close it after three seconds. If you wish to change this amount of time adjust the second argument in the <strong>setInterval</strong> function.</p>
+ <p>Now you can return to the main scene, positioning the playhead on the &quot;<strong>chat</strong>&quot; label.<br>
+  First we setup some global scope variables:</p>
+ <pre class="code">areaW = 600
+areaH = 335
+avatarW = 40
+avatarH = 40</pre>
+ <p>These variables represent the width and height of the avatar area as well as the avatar size.</p>
+ <p>Then we setup the mouse listener to capture the user mouse clicks:</p>
+ <pre class="code">myMouse = {}
+
+myMouse.<font color="#000087">onMouseDown</font> = <font color="#993300">function</font>()
+{
+        <font color="#993300">if</font> (inited)
+        {
+                <font color="#993300">if</font> (!<font color="#000087">_global</font>.isBusy)
+                {
+                        <font color="#993300">var</font> px = <font color="#993300">int</font>(avatarMC.<font color="#000087">_xmouse</font>)
+                        <font color="#993300">var</font> py = <font color="#993300">int</font>(avatarMC.<font color="#000087">_ymouse</font>)
+                        
+                        <font color="#993300">if</font> ((px &gt; avatarW/2) &amp;&amp; (px &lt; areaW - avatarW/2)
+						    &amp;&amp; (py &gt; avatarH/2) &amp;&amp; (py &lt; areaH - avatarH/2))
+                        {
+                                <font color='#878787'>// save new variables
+</font>                                <font color='#878787'>// Please note that init is set to false:
+</font>                                <font color='#878787'>// this means that we're only moving somewhere
+                                // and we don't need to init tha avatar
+</font>                                smartfox.setUserVariables({px:px, py:py, init:<font color="#000087">false</font>})
+                                
+                                <font color='#878787'>// method derived from the [flashAPI].as
+</font>                                <font color='#878787'>// moves the mc using the "Quint" equation, with "InOut" easying
+</font>                                <font color='#878787'>// to the new px,py position in 100 milliseconds.
+</font>                                myAvatar.easingTo("<font color='blue'>Quint</font>", "<font color='blue'>InOut</font>", px, py, 100)
+                        }
+                }
+        }
+}</pre>
+<p><strong>myMouse</strong> is the object that handles onMouseDown events fired by the built-in Mouse object;              <strong>inited</strong> is a boolean flag that is set to true once a user has successfully joined a room;              <strong>_global.isBusy</strong> is an already known variable and we've already discussed it in a previous tutorial. <a href="../../tutorials/06_avatarChat/simpleChat_part2.php" target="_blank"></a></p>
+ <p>Once we have checked that the mouse click occured within the boundaries of the &quot;<strong>avatar area</strong>&quot; we can set the user variables and move the avatar. Essentially we're saving as &quot;User Variable&quot; the new avatar position and this information will be sent also to all the other users.<br>
+  Setting user variables is straightforward: you create an object with variables in it and pass it to the API <strong>setUserVariables()</strong> method.</p>
+ <p>In the above example we have used a more compressed syntax with literals but we could have written the same thing like this:</p>
+ <pre class="code">vars = <font color="#993300">new</font> <font color="#993300">Object</font>()
+vars.px = px
+vars.py = py
+vars.init = <font color="#000087">false</font>
+smartfox.setUserVariables(vars)</pre>
+ <p>Basically all variables contained in the object will be saved on the server and transmitted to all other users in the room.<br>
+ Both &quot;User Vars&quot; and &quot;Room Vars&quot; (which we'll encounter in the next tutorials) accept simple types or primitives: </p>
+ <p>&raquo; <em>Number</em><br>
+&raquo; <em>String</em><br>
+&raquo; <em>Boolean</em><br>
+&raquo; <em>null</em></p>
+ <p>It's not possible to save objects, arrays, etc.; however SmartFoxServer has a function called sendObject() which enables you to send all kind of complex objects to the server
+  and have the other clients receive it transparently. We'll concentrate on that feature in a specific tutorial.</p>
+ <p>One  thing that the setUserVariables allows to do is to set/update many variables all in one shot, just like we did in the<br>
+above example.</p>
+ <p>The next line of code is:</p>
+ <pre class="code">myAvatar.easingTo("<font color='blue'>Quint</font>", "<font color='blue'>InOut</font>", px, py, 100)</pre>
+ <p>myAvatar is the name of our avatar (more about it in a moment) and the <strong>easingTo()</strong> method
+   is part of the great <a href="http://www.yestoall.com/flashAPI/index.html" target="_blank">[flashAPI]
+   project</a>, which allows us to have a smooth animation with easing just using
+   actionscript.</p>
+ <p><span class="subTitle">&raquo; Creating the Avatar</span></p>
+ <p>In the main timeline you will find an empty movieclip called &quot;<strong>avatarMC</strong>&quot; (avatarMC layer). This is the clip were we're going to attach all the user icons.</p>
+ <p>Now let's see what is going on in the <strong>onJoinRoom</strong> event handler:</p>
+ <pre class="code">smartfox.onJoinRoom = <font color="#993300">function</font>(roomObj)
+{
+        cleanAvatars()
+        
+        <font color="#993300">var</font> roomId	= roomObj.getId()
+        <font color="#993300">var</font> userList	= roomObj.getUserList()
+        resetRoomSelected(roomId)
+        <font color="#000087">_global</font>.currentRoom = roomObj
+        
+        <font color='#878787'>// Update Room Name in the avatar area
+</font>        currentRoom.<font color="#000087">htmlText</font> = "<font color='blue'>Current room: &lt;b&gt;</font>" + roomObj.getName() + "<font color='blue'>&lt;/b&gt;</font>"
+        
+        <font color='#878787'>// Clear current list
+</font>        userList_lb.<font color="#000087">removeAll</font>()
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> userList)
+        {
+                <font color="#993300">var</font> user = userList[i]
+                <font color="#993300">var</font> uName = user.getName()
+                <font color="#993300">var</font> uId	= user.getId()
+                userList_lb.<font color="#000087">addItem</font>(uName, uId)
+                
+                <font color="#993300">if</font> (uName != <font color="#000087">_global</font>.myName)
+                {
+                        <font color="#993300">var</font> uVars = user.variables
+                        <font color="#993300">var</font> mc = avatarMC.<font color="#000087">attachMovie</font>("<font color='blue'>avatar</font>", "<font color='blue'>avatar_</font>" + uId, <font color="#993300">Number</font>(uId))
+                        mc.<font color="#000087">_x</font> = uVars.px
+                        mc.<font color="#000087">_y</font> = uVars.py
+                        mc.disc.<font color="#000087">gotoAndStop</font>(uVars.col)
+                        mc.name.<font color="#000087">text</font> = uName
+                }
+        }
+        <font color='#878787'>// Sort names
+</font>        userList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+        
+        setupMyAvatar()
+}</pre>
+ <p>The first part of the code is familiar as its almost the same as we used before except for the first line: the method <strong>cleanAvatars()</strong> will clean the avatarMC, removing all attached movieclips.</p>
+ <p>The most important part of the code is in the userList loop: this time not only we add the user names in the right list box component, but we also create all the other user avatars and put them on screen.</p>
+ <p>The &quot;<strong>variables</strong>&quot; property of the API User object is an <strong>associative array</strong> and you can retrive any user variable by simply using its name as a key or with the dot syntax. Example: if you want to retrieve the &quot;<strong>speed</strong>&quot; variable from the user you can write:</p>
+ <pre class="code"><font color="#993300">var</font> speed = user.variables["<font color='blue'>speed</font>"]</pre>
+ <p>or:</p>
+ <pre class="code"><font color="#993300">var</font> speed = user.variables.speed</pre>
+ <p>In the user list loop we read three variables for each client: px, py and col, where &quot;col&quot; represents the frame number corresponding to the color of the disc inside the avatar symbol.<br>
+The code instantiates a new avatar clip and then initializes it. Please note how the client Id was used to create both an unique Id for the movieclip and it's level number.</p>
+ <p>The last line of the function invokes the <strong>setupMyAvatar()</strong> method:</p>
+ <pre class="code"><font color="#993300">function</font> setupMyAvatar()
+{
+        <font color="#993300">if</font> (!inited)
+        {
+                <font color="#993300">var</font> col = <font color="#993300">int</font>(<font color="#993300">Math</font>.<font color="#000087">random</font>() * 8) + 1
+                myAvatar = avatarMC.<font color="#000087">attachMovie</font>("<font color='blue'>avatar</font>", "<font color='blue'>avatar_</font>" + smartfox.myUserId, 99999)
+                myAvatar.disc.<font color="#000087">gotoAndStop</font>(col)
+                myAvatar.name.<font color="#000087">text</font> = <font color="#000087">_global</font>.myName
+                <font color="#993300">var</font> px = <font color="#993300">int</font>(<font color="#993300">Math</font>.<font color="#000087">random</font>() * (areaW - myAvatar.<font color="#000087">_width</font> / 2))
+                <font color="#993300">var</font> py = <font color="#993300">int</font>(<font color="#993300">Math</font>.<font color="#000087">random</font>() * (areaH - myAvatar.<font color="#000087">_height</font> / 2))
+                myAvatar.<font color="#000087">_x</font> = px
+                myAvatar.<font color="#000087">_y</font> = py
+                
+                <font color='#878787'>// Store the avatar position on the server
+</font>                smartfox.setUserVariables({px:px, py:py, col:col, init:<font color="#000087">true</font>})
+                
+                inited = <font color="#000087">true</font>
+                <font color="#993300">Mouse</font>.<font color="#000087">addListener</font>(myMouse)
+        }
+}</pre>
+ <p>At this point of the execution flow the <strong>inited</strong> variable is set to false, so the code in this function is executed.<br>
+What do we use this boolean flag for? Basically we want to setup our avatar symbol once, and if we will change room later we want this portion of code to be skipped. Infact you can see that in the end we set the flag to &quot;true&quot; so that the next time this function is called it will do nothing.
+Alternatively we could have moved this check in the caller function.</p>
+ <p>Our avatar color is created randomly choosing a integer number between 1 and 8, then we will use this value to gotoAndStop()<br>
+  the <strong>disc</strong> movieclip inside the avatar.</p>
+ <p>Once the symbol has been set up we save our user variables. Please note that we're saving an extra flag (<strong>init</strong>, set to &quot;true&quot;) together with the other variables that we have already talked about. The flag is used to tell the <strong>onUserVariablesUpdate</strong> event handler (more on this in a moment) if we're initializing the avatar clip for the first time or if we're just moving it around the screen.</p>
+ <p>The &quot;<strong>onUserVariablesUpdate</strong>&quot; event is fired everytime another users has initialized or updated his/her user variables.</p>
+ <pre class="code">smartfox.onUserVariablesUpdate = <font color="#993300">function</font>(user)
+{
+        <font color="#993300">var</font> currRoom = <font color="#993300">this</font>.getActiveRoom()
+        <font color="#993300">var</font> id = user.getId()
+        <font color="#993300">var</font> uVars = user.variables
+        
+        <font color="#993300">if</font> (uVars.init)
+        {
+                <font color="#993300">var</font> mc = avatarMC.<font color="#000087">attachMovie</font>("<font color='blue'>avatar</font>", "<font color='blue'>avatar_</font>" + id, <font color="#993300">Number</font>(id))
+                mc.<font color="#000087">_x</font> = uVars.px
+                mc.<font color="#000087">_y</font> = uVars.py
+                mc.disc.<font color="#000087">gotoAndStop</font>(uVars.col)
+                mc.name.<font color="#000087">text</font> = user.getName()
+        }
+        <font color="#993300">else</font>
+        {
+                <font color="#993300">var</font> mc = avatarMC["<font color='blue'>avatar_</font>" + id]
+                mc.easingTo("<font color='blue'>Quint</font>", "<font color='blue'>InOut</font>", uVars.px, uVars.py, 100)
+        }
+}</pre>
+ <p>The user object is passed as an argument so you can easily retrieve it's new variables values and update the on-screen status.<br>
+If the <strong>init</strong> flag is set to &quot;true&quot; then a new user has just entered the room and we need to initialize its avatar, otherwise we receive a position update and we need to activate a new animation.<br>
+Since we call every user icon like <strong>&quot;avatar&quot; + userid</strong>, we can easily find the right movieclip to move, by using the client id (last two lines of the function).</p>
+ <p><span class="subTitle">&raquo; Handling Room changes </span></p>
+ <p>Another important aspect of our application is handling the room changes correctly. In the previous chat examples everytime a new user entered or left a room the userlist component was updated. This time we will also need to take care of the avatar movieclips.</p>
+ <p>Here's the code for the <strong>onUserEnterRoom</strong> handler:</p>
+ <pre class="code">smartfox.onUserEnterRoom = <font color="#993300">function</font>(fromRoom, user)
+{
+        userId = user.getId()
+        userName = user.getName()
+        
+        <font color='#878787'>// Add user to the userList listbox
+</font>        userList_lb.<font color="#000087">addItem</font>(userName, userId)
+        
+        <font color='#878787'>// Sort names
+</font>        userList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+        
+        updateRoomStatus(fromRoom)
+        
+        <font color='#878787'>// Show the user avatar
+</font>        <font color="#993300">var</font> mc = avatarMC.<font color="#000087">attachMovie</font>("<font color='blue'>avatar</font>", "<font color='blue'>avatar_</font>" + userId, userId)
+        mc.<font color="#000087">_x</font> = user.variables["<font color='blue'>px</font>"]
+        mc.<font color="#000087">_y</font> = user.variables["<font color='blue'>py</font>"]
+        mc.name.<font color="#000087">text</font> = userName
+        mc.disc.<font color="#000087">gotoAndStop</font>(user.variables["<font color='blue'>col</font>"])
+}</pre>
+ <p>The code remains almost the same of the previous examples as we've only added a few line at the end to properly display the symbol of the user that has just joined.</p>
+ <p>Same thing for the <strong>onUserLeaveRoom</strong> event:</p>
+ <pre class="code">smartfox.onUserLeaveRoom = <font color="#993300">function</font>(fromRoom, usrId)
+{
+        <font color="#993300">for</font> (<font color="#993300">var</font> i=0; i&lt;userList_lb.<font color="#000087">getLength</font>(); i++)
+        {
+                <font color="#993300">var</font> item = userList_lb.<font color="#000087">getItemAt</font>(i)
+                
+                <font color="#993300">if</font> (item.data == usrId)
+                {
+                        <font color="#993300">var</font> usrName = item.label
+                        userList_lb.<font color="#000087">removeItemAt</font>(i)
+                        <font color="#993300">break</font>
+                }
+        }
+        
+        <font color='#878787'>// Destroy avatar from screen
+</font>        avatarMC["<font color='blue'>avatar_</font>" + usrId].<font color="#000087">removeMovieClip</font>()
+        
+        <font color='#878787'>// Sort names
+</font>        userList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+        
+        updateRoomStatus(fromRoom)
+        
+}</pre>
+ <p>Here too the code is the same we've used before, plus one line that removes the moviclip of the user that left the room.</p>
+ <p><strong><span class="subTitle">&raquo; Public messages </span></strong></p>
+ <p><strong>    </strong>The last part that we need to cover is sending public messages. As we said at the start of the article we would like to have each message appear inside a bubble above the avatar.</p>
+ <p>Here's the slightly modified <strong>onPublicMessage</strong> event handler:</p>
+ <pre class="code">smartfox.onPublicMessage = <font color="#993300">function</font>(msg, user)
+{
+        <font color="#993300">var</font> mc = avatarMC["<font color='blue'>avatar_</font>" + user.getId()]
+        
+        <font color="#993300">if</font> (msg.<font color="#000087">length</font> &gt; 50)
+                msg = msg.<font color="#000087">substring</font>(0,48) + "<font color='blue'>...</font>"
+        
+        mc.bubble.<font color="#000087">_visible</font> = <font color="#000087">true</font>
+        mc.bubble.message.<font color="#000087">text</font> = msg
+        mc.deactivate()
+}</pre>
+ <p>First we get a reference to the right avatar clip, then we set the bubble textfield and finally show the bubble.<br>
+The last line of code calls the <strong>deactivate()</strong> method that we've already talked about.</p>
+ <p>Since our textfield is pretty small it allows only two lines of text, so we cut the string down to 50 characters which indeed is not very much space.</p>
+<p><strong><span class="subTitle">&raquo; Possible enhancements </span></strong></p>
+ <p>As you may have noticed, this simple &quot;<strong>Avatar Chat</strong>&quot; application could be enhanced by adding a &quot;message history&quot; that could keep track of the messages sent by the users, and those bubbles could stretch dynamically based on the amount of text.<br>
+                Also it would be possible to use an isometric tile engine to create a multiplayers 3D interactive environment with different characters ala &quot;Habbo Hotel&quot;.</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../05_advChat_p2/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../07_sendingObjects/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

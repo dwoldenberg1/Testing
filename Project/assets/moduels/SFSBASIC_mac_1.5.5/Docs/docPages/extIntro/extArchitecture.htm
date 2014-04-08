@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.2 Introduction: Extensions architecture </p>
+ <p>Before we start seeing how extensions plug into the <strong>SmartFoxServer PRO</strong>   architecture have a look at this diagram:</p>
+ <p align="center"><img src="images/extDiagram.gif" width="490" height="503"></p>
+ <p>Even if it may look complicated at a first glance, the way extensions are
+   connected to the server is very simple.<br>
+   Let's start by examining the diagram from the very top of it:<br>
+   <br>
+   The red rectangle represents the server itself. As you may remember <strong>SmartFoxServer</strong> can
+   run many applications at once using &quot;Zones&quot; (the green rectangles). Essentially each <strong>Zone</strong> is
+ a container of <strong>Rooms</strong>, where users can interact with each others, chat, play games, exchange data etc...<br>
+ The Zone contains also other two other important objects: the extension and the database manager: the former is custom code that can be plugged in the Zone to handle your custom logic and the latter allows the developer to connect to an external db.</p>
+ <p><span class="subTitle">&raquo; Extension Level </span><br>
+   <br>
+   As shown in the above diagram, Extensions can be plugged at <strong>Zone
+     Level</strong> or
+   at <strong>Room Level. </strong>The only big difference between the two
+   types is the amount of control they can have over the server objects. In
+   other words an extension plugged at <strong>Zone Level</strong> will be
+   able to see all the rooms inside that Zone and all the clients connected
+   in each room, while extensions plugged at <strong>Room Level</strong> will only be able to
+   control the users and the other objects available in that specific Room.<br>
+   <br>
+   Let's suppose we're creating a chess game, where each game-room will hold
+   a game for 2 clients. <br>
+   In this case we could write our chess game logic and
+   plug it at <strong>Room Level</strong>, then each game room will load a
+   copy of that extension and run it. This way you only have to write the code
+   necessary to handle one game, and then the server will dynamically attach
+   your game logic to each game room.<br>
+   <br>
+   An example for a <strong>Zone Level</strong> extension would be creating
+   a mailer extension that can be called from any room within the Zone. The
+   mailer would allow to exchange emails between chat users without leaving
+   the Fash multi player application, and it would allow users to compose the
+   messages inside the client application. In this case the <strong>Zone
+     Level</strong> would be the better choice as we need one instance only of
+   our extension, available for all rooms. <br>
+   <br>
+   <span class="subTitle">&raquo; Performance considerations </span></p>
+ <p>When planning the development of a server side Extension it is also important
+   to consider the amount of performance needed by<strong> Zone Level Extensions</strong> and <strong>Room
+   Level Extensions</strong>.
+   The latter are instantiated each time a game room is created and attached
+   to it.<br>
+   If you're planning to develop complex server side logic or if you are going
+   to handle many thousands games simultaneously you should always consider the
+   pros and cons of using one approach or the other. <br>
+   <br>
+   If your server is running 2000 games simultaneously and you're using extensions
+   at <strong>Room Level</strong>, you're going to have 2000 instances of your
+   extension running concurrently in the server, requiring more CPU time and
+   memory than the <strong>Zone Level</strong> approach, where only one extensions
+   is responsible of handling all the game rooms. <br>
+   <br>
+   More in general when your server side logic becomes complex and you can foresee
+   a high number of concurrent clients, it is reccomendable to choose <strong>Zone
+   Level Extensions</strong> in order to save server resources.<br>
+   <br>
+   On the other hand simpler extensions (for example a turn-based game) can be
+   conveniently developed at <strong>Room
+   Level</strong>.</p>
+ <hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="whatIsAnExtension.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="databaseConnection.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

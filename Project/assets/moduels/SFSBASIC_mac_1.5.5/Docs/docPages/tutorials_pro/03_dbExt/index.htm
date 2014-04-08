@@ -1,0 +1,308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.3 Tutorials: Simple Database Extension </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is found under the <strong>Examples/AS2/pro_dbExtension</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+<p>This tutorial will show you how to connect to an existing database, retrieve
+   data from it and finally show it on the client side using a DataGrid component.
+  In order to keep things simple we have included a .mdb Access database file,
+  that you will find in the example folder: the database is a simple contact
+  list with the name, location and email address of friends and co-workers.<br>
+   <br>
+   The example connects to the Zone called &quot;<strong>dbZone</strong>&quot; and
+   it will call methods on the extension called <strong>dbExtension.as</strong>,
+   that you can find in the main <strong>sfsExtensions/</strong> folder.<br> 
+<br>
+<span class="subTitle">&raquo; Setting up a database connection<br>
+</span> <br>
+<strong>SmartFoxServer PRO</strong> can talk to almost all database engines out there.<br>
+Connections can be done through native JDBC database drivers (available from
+all major DB producers) or using the <strong>JDBC-ODBC bridge driver</strong> provided by Sun
+in the Java Runtime.<br>
+<br>
+Each Zone can specify a different database configuration. Here's an example:</p>
+ <pre class="code">
+&lt;DatabaseManager active=&quot;true&quot;&gt;<br>
+	&lt;Driver&gt;sun.jdbc.odbc.JdbcOdbcDriver&lt;/Driver&gt;
+	&lt;ConnectionString&gt;jdbc:odbc:sfsTest&lt;/ConnectionString&gt;
+
+	&lt;!-- If you use MySQL, the connections string becomes...<br>	&lt;Driver&gt;org.gjt.mm.mysql.Driver&lt;/Driver&gt;<br>	&lt;ConnectionString&gt;jdbc:mysql://192.168.0.15:3306/sfsTest&lt;/ConnectionString&gt;<br>	--&gt;
+<br>	&lt;UserName&gt;username&lt;/UserName&gt;
+	&lt;Password&gt;password&lt;/Password&gt;
+<br>
+	&lt;TestSQL&gt;&lt;![CDATA[SELECT COUNT(*) FROM contacts]]&gt;&lt;/TestSQL&gt;
+<br>
+	&lt;MaxActive&gt;10&lt;/MaxActive&gt;
+	&lt;MaxIdle&gt;10&lt;/MaxIdle&gt;
+<br>
+	&lt;OnExhaustedPool&gt;fail&lt;/OnExhaustedPool&gt;
+	&lt;BlockTime&gt;5000&lt;/BlockTime&gt; <br>
+&lt;/DatabaseManager&gt;<br>
+ </pre>
+ <br>
+Some of the last parameters (maxActive, maxIdle, OnExhaustedPool and BlockTime)
+are pretty advanced settings and we can skip them for now. Let's concentrate
+on the configuration basics:<br>
+<br>
+<table width="100%"  border="0" cellspacing="1" cellpadding="4">
+  <tr>
+    <td valign="top" bgcolor="#f4f4f4"><strong>Driver</strong></td>
+    <td>The name of the driver that should be loaded by SmartFoxServer in order
+      to talk to the database.<br>
+      In the examples provided we will use the JDBC-ODBC driver provided by Sun.
+      It's fully qualified name is: <strong>sun.jdbc.odbc.JdbcOdbcDriver</strong><br>
+      In the above example there's also an example (between comment signs) on
+      how to use the MySql driver. (not provided by Sun JRE, must be downloaded
+      from www.mysql.com) </td>
+  </tr>
+  <tr>
+    <td valign="top" bgcolor="#f4f4f4"><strong>ConnectionString</strong></td>
+    <td>The database connections string. Using the JDBC-ODBC you only have to
+      change the last name, which is the name of the database you want to use. </td>
+  </tr>
+  <tr>
+    <td valign="top" bgcolor="#f4f4f4"><strong>UserName</strong></td>
+    <td><p>A username for the database (optional) </p></td>
+  </tr>
+  <tr>
+    <td valign="top" bgcolor="#f4f4f4"><strong>Password</strong></td>
+    <td>A passord for the database (optional)</td>
+  </tr>
+  <tr>
+    <td valign="top" bgcolor="#f4f4f4"><strong>TestSQL</strong></td>
+    <td>A simple SQL statement that will be executed by SFS to test the connection. </td>
+  </tr>
+</table>
+<p>For a more in-depth view of the Database Manager please check also <a href="../../extIntro/databaseConnection.htm">chapter
+    6.3</a>  of the documentation.<br>
+  <span class="subTitle"><br>
+&raquo; Setting up the example database</span> (Windows NT-2000-XP only) <br>
+<br> 
+<strong></strong>In order to make the database file available through ODBC you
+must create a new ODBC data source name (DSN) under Windows.<br>
+<br>
+&raquo; Open the <strong>Control Panel</strong>, click on <strong>Administrative
+Tools</strong> &gt; <strong>Data sources (ODBC)<br>
+</strong>&raquo; In the User DSN tab, click Add<br>
+&raquo; Choose Microsoft Access driver (*.mdb)<br>
+&raquo; In the <strong>data source name</strong> field write <strong>sfsTest</strong><br>
+&raquo; Under the database label, click on Choose... navigate to the SFS folder
+and select the provided .mdb file (it is located in the example folder) <br>
+<br>
+The database should be now accessibile through ODBC.
+<br>
+<br>
+<span class="subTitle">&raquo; The client side </span></p>
+<p>You can now open the source .FLA file, skip directly to the &quot;chat&quot; label
+  in the main timeline, and open your code view.
+<pre class="code"><font color="#993300">function</font> setupDataGrid()
+{
+        <font color="#993300">var</font> col_nick:DataGridColumn 	 = <font color="#993300">new</font> DataGridColumn("<font color='blue'>name</font>")
+        <font color="#993300">var</font> col_location:DataGridColumn  = <font color="#993300">new</font> DataGridColumn("<font color='blue'>location</font>")
+        <font color="#993300">var</font> col_email:DataGridColumn 	 = <font color="#993300">new</font> DataGridColumn("<font color='blue'>email</font>")
+        
+        
+        col_nick.<font color="#000087">width</font> = 200
+        col_location.<font color="#000087">width</font> = 100
+        col_email.<font color="#000087">width</font> = 100
+        
+        
+        grid_dg.addColumn(col_nick)
+        grid_dg.addColumn(col_location)
+        grid_dg.addColumn(col_email)
+}
+</pre> 
+  </p>
+  <br>
+  The first function we encounter sets up the datagrid component that will show
+  the contact list. The code is very simple: we just create the three columns
+  we need (name, location and email) and add them to the component, setting also
+  each column width.<br>
+  <br>
+  A few lines below in the source code, we have the main button  listener
+  which delegates the click handling to the <strong>getData()</strong> function.
+  Also we set a variable called extension name to &quot;dbTest&quot;. This is
+  the name of the extension that we will use in this example (check the config.xml
+  for the &quot;dbTest&quot;
+  Zone) <br>
+  <br>
+<pre class="code"><font color="#993300">var</font> extensionName:<font color="#993300">String</font> = "<font color='blue'>dbTest</font>"
+butt_load.addEventListener("<font color='blue'>click</font>", <font color="#000087">getData</font>)
+</pre>
+  <br>
+  The function is made of one line only:<br>
+  <br> 
+<pre class="code"><font color="#993300">function</font> <font color="#000087">getData</font>()
+{
+        smartfox.sendXtMessage(extensionName, "<font color='blue'>getData</font>", {}, "<font color='blue'>xml</font>")
+}
+</pre>
+  <br>
+  The code calls the &quot;getData&quot; action of our server side extension, passing an
+  empty object as third parameter (no arguments passed to the extension)<br>
+  <br> 
+  <span class="subTitle">&raquo; The server side </span><br>
+  <br>
+  You can now check what happens in the extension (sfsExtensions/dbExtension.as):<br>
+  <br>
+<pre class="serverCode">
+<font color="#993300">var</font> dbase
+
+<font color="#993300">function</font> init()
+{
+        <font color="#993300">trace</font>("<font color='blue'>Initing dbExtension</font>")
+        
+        <font color='#878787'>// get a reference to the database manager object
+</font>        <font color='#878787'>// This will let you interact the database configure for this zone
+</font>        dbase = _server.getDatabaseManager()
+}
+
+
+<font color="#993300">function</font> destroy()
+{
+        <font color='#878787'>// Release the reference to the dbase manager
+</font>        <font color="#993300">delete</font> dbase
+}
+
+
+<font color="#993300">function</font> handleRequest(cmd, params, user, fromRoom)
+{
+        <font color="#993300">if</font> (cmd == "<font color='blue'>getData</font>")
+        {
+				<font color='#878787'>// create a SQL statement
+</font>                <font color="#993300">var</font> sql = "<font color='blue'>SELECT * FROM contacts ORDER BY name</font>"
+                
+                <font color='#878787'>// execute query on DB
+</font>                <font color='#878787'>// queryRes is a ResultSet object
+</font>                <font color="#993300">var</font> queryRes = dbase.executeQuery(sql)
+
+				<font color='#878787'>// prepare the response object
+</font>                <font color="#993300">var</font> response = {}
+                
+                response._cmd = "<font color='blue'>getData</font>"
+                
+                <font color='#878787'>// Here we create an array for storing the database data
+</font>                response.db = []
+                
+                <font color="#993300">if</font> (queryRes != <font color="#993300">null</font>)
+                {
+                        <font color='#878787'>// Cycle through all records in the ResultSet
+</font>                        <font color="#993300">for</font> (<font color="#993300">var</font> i = 0; i &lt; queryRes.<font color="#000087">size</font>(); i++)
+                        {
+                                <font color='#878787'>// Get a record
+</font>                                <font color="#993300">var</font> tempRow = queryRes.<font color="#000087">get</font>(i)
+                                
+                                <font color='#878787'>// This object will hold the record data that we'll send to the client
+</font>                                <font color="#993300">var</font> item = {}
+                                
+                                <font color='#878787'>// From the record object we can get each field value
+</font>                                item.name 		= tempRow.getItem("<font color='blue'>name</font>")
+                                item.location 	= tempRow.getItem("<font color='blue'>location</font>")
+                                item.email 		= tempRow.getItem("<font color='blue'>email</font>")
+                                
+                                response.db.<font color="#000087">push</font>( item )
+                        }
+                }
+                <font color="#993300">else</font>
+                	<font color="#993300">trace</font>("<font color='blue'>DB Query failed</font>")
+                
+                _server.sendResponse(response, -1, <font color="#993300">null</font>, [user])
+                
+                
+        }
+}
+
+
+<font color="#993300">function</font> handleInternalEvent(evt)
+{
+        <font color='#878787'>// Simply print the name of the event that was received
+</font>        <font color="#993300">trace</font>("<font color='blue'>Event received: </font>" + evt.name)
+}
+
+
+
+</pre>
+  <br>
+  In the first line we declare a global variable called &quot;<strong>dbase</strong>&quot; which is immediately
+  initialized as a reference to the <strong>Database Manager</strong>, in the <strong>init()</strong> method. <br>
+  In the the <strong>destroy()</strong> method the same variable is deleted 
+  to release the reference to the <strong>Database Manager</strong> object. <br>
+  ( You can read more about this object in the <a href="../../serverSideApi/index.htm">Server
+  Side Actionscript framework docs</a> ) <br>
+  <strong><br>
+  </strong>Now we
+  can inspect the<strong> handleRequest()</strong> function: as you can see from the code it handles
+  our &quot;getData&quot; command we've sent from the client. <br>
+  <br>
+  The <strong>executeQuery()</strong> method of the <strong>Database
+  Manager</strong> object runs
+  the passed SQL statement and returns a collection of records (RecordSet). If
+   the returned value is null some error occurred while querying the database
+  and you should check your server console or logs to check what happened.<br>
+  <br>
+  The returned RecordSet has a <strong>size()</strong> method that tells us how
+  many records are there in the collection, so that we can cycle through it.<br>
+  <br>
+  In order to send the records back to the client we create the <strong>response</strong> object
+  and we setup an array property called <strong>db,</strong> that will contain
+  objects. Each object will represent one of the record,s and it will have 
+  three properties corresponding to the database fields: name, location, email.<br>
+  <br>
+  Inside the for loop we use the <strong>get()</strong> method of the RecordSet to
+  get a Record object and store it temporarily in a local variable called <strong>tempRow.</strong> Finally
+  we can get the values of each field by calling the <strong>getItem() </strong>method
+  of the Record object and send the data back to client.<br>
+  <br>
+  <span class="subTitle">&raquo; Back to client</span><br>
+  <br>
+  Handling the server response is really very simple:<br>
+  <br> 
+<pre class="code">smartfox.onExtensionResponse = <font color="#993300">function</font>(resObj:<font color="#993300">Object</font>, <font color="#000087">type</font>:<font color="#993300">String</font>)
+{
+        <font color='#878787'>// We expect the response to be xml formatted
+</font>        <font color="#993300">if</font> (<font color="#000087">type</font> == "<font color='blue'>xml</font>")
+        {
+                <font color='#878787'>// Let's check if it's a "getData" message
+</font>                <font color="#993300">if</font> (resObj._cmd == "<font color='blue'>getData</font>")
+                {
+						<font color='#878787'>// Cycle through the "db" object sent by
+</font>                        <font color='#878787'>// the server and add it to the datagrid for visualization
+</font>                        <font color="#993300">for</font> (<font color="#993300">var</font> i = 0; i &lt; resObj.db.<font color="#000087">length</font>; i++)
+                        {
+                                grid_dg.<font color="#000087">addItem</font>(resObj.db[i])
+                        }
+                }
+        }
+}
+</pre>
+  <br>
+  Once we've checked the response format (xml) and command name (&quot;getData&quot;) we
+  can finally loop through the array of object and add each item to the DataGrid
+  component.<br>
+  <br>
+  <br>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../02_simpleExtension/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../04_advDbExt/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

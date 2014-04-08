@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.getUserByChannel()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.4.0 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.getUserByChannel(socketChannel)</p>
+ <p class="title">Description:</p>
+<p class="plain">Finds the User object from its socket channel. 
+<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>none</strong></td>
+     <td>&nbsp;</td>
+     <td>&nbsp;
+     </td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">the User object </p>
+ <p class="title">Example:</p>
+<pre class="code">
+var usr = _server.getUserByChannel(channelObj)
+trace("User name: " + usr.getName())
+</pre>
+<br /> 
+<p class="plain"><span class="title">Notes:</span></p>
+<p class="plain">This command is useful when handling a custom login
+  event. When the event is fired the socket channel of the client is passed.<br />
+  After you've successfully logged in the client you can get its User object
+  using this method.
+</p>
+<p class="plain"><span class="title">See also:</span></p>
+</body>
+</html>

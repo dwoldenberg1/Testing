@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.2 Tutorials: Simple Extension </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is found under the <strong>Examples/AS2/pro_SimpleExtension</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>
+ </p>
+ In this  tutorial we will write a very simple extension that will show
+ you all the basics of  the server side extensions programming with <strong>SmartFoxServer PRO.<br>
+ </strong><br>
+ The extensions will take an array of numbers and it will return the same array
+ with the values multiplied by 2.<br>
+ <br> 
+ Before we dive into the code it's good to take a look at how the extension is
+ loaded. First of all the Actionscript file is saved in the <strong>sfsExtensions/</strong> folder,
+ which is the root of all extensions in <strong>SmartFoxServer PRO</strong>.<br>
+ If you take a look at the settings in the <strong>config.xml</strong> file you
+ will find that the extensions is loaded at <strong>Zone Level</strong> in the
+ Zone called &quot;dbTest&quot;.
+ This means that our extension can be called from any room within that Zone. It is also assigned a name (&quot;simpleExt&quot; in this case) that is going to be used in order to invoke methods on that extension. <br>
+<br>
+ <span class="subTitle">&raquo; The client side </span><br>
+ <br>
+ Now it's time to open the source .FLA file and have a look at the very simple
+ code inside it. If you quickly inspect the code in the &quot;connect&quot; and
+ &quot;chat&quot; labels it should look familiar as it is very similar to what we have
+ done in all the previous tutorials.<br>
+ <br>
+ You can now position the playhead in the &quot;chat&quot; label and look at the code that
+ handles the button click:<br>
+ <br>
+<pre class="code"><font color="#993300">function</font> sendValues()
+{
+        <font color="#993300">var</font> obj:<font color="#993300">Object</font> = {}
+        obj.values = [100, 200, 300, 400, 500]
+        
+        smartfox.sendXtMessage(extensionName, "<font color='blue'>double</font>", obj, "<font color='blue'>xml</font>")
+        
+        output_txt.<font color="#000087">text</font> += "<font color='blue'>Sent: </font>" + obj.values + <font color="#993300">newline</font>
+}
+</pre>
+<br>
+In the first two lines an array containing five numbers is created: these are
+the values that we will send to the server side extension and we expect to receive
+an array with those five numbers multiplied by 2.<br>
+<br>
+The next line is very important because it shows  how we can call our custom
+code on the server. The <strong>sendXtMessage() </strong>is used to call
+our extensions and the following list shows the parameters needed: <br>
+<br>
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>extName</strong></td>
+    <td>&nbsp;</td>
+    <td>The name of the extension to call. It must be the same as declared in
+      the config.xml</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>cmd</strong></td>
+    <td>&nbsp;</td>
+    <td>The name of the command that should be executed by the server side extension </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>params</strong></td>
+    <td>&nbsp;</td>
+    <td>An object containing data to pass to the server code. (It can contain
+    strings, numbers, booleans, arrays, objects)</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>type</strong></td>
+    <td>&nbsp;</td>
+    <td>It can be &quot;xml&quot; or &quot;str&quot;. It represents the type of protocol being used
+      to send the request. By default &quot;xml&quot; is used and your request is sent
+      in XML format. <br>
+      If you use &quot;str&quot; you will send the request in a raw, string-based format
+      that can save a lot of bandwidth. You can learn more about how to use this
+      format by following the tutorial in chapter 8.6 </td>
+  </tr>
+</table>
+<br>
+Back to our code, at line 10, we defined a global variable called &quot;extensionName&quot;:<br>
+<br> 
+<pre class="code">
+var extensionName:String = "simpleExt"
+</pre>
+<br> 
+this is the name of the extension that we will call. The second argument passed
+to <strong>sendXtMessage()</strong> is &quot;double&quot;, which is the name
+of the command that will multiply the values by 2. Then we passed the object
+containing the numbers array and finally we chose to use the <strong>XML</strong> format for this
+request.<br>
+<br> 
+Since <strong>XML</strong> is used by default we could have omitted the last paramater.<br>
+<br> 
+<strong>PLEASE NOTE:</strong> SmartFoxServer uses XML format for all its messages.
+Even if XML can lead to larger messages when compared to pure string-based format,
+it allows  easy debugging of the server messages and complex data serialization.
+Also the XML code has been optimized to reduce overhead.<br>
+
+The string-based format can be great for real-time action games and in all those
+cases where continuous and fast client updates are required. String-based (raw)
+format does not allow to serialize complex objects and you will be able to send
+simple data such as numbers, strings etc... <br>
+ 
+More in general when sending non time-critical messages such as room updates,
+user updates etc... or when dealing with turn-based games XML is preferrable
+as it allows more flexibility. On the other hand when fast updates are needed
+you can use the raw format. Both approaches can be mixed transparently. You will
+learn more about this topic in the next tutorials. <br> 
+<br>
+<br>
+<span class="subTitle">&raquo; The server side </span><br>
+<br> 
+Now that we've sent the request from the client, it's time to see how it is handled
+in our server code:<br>
+<br>
+<pre class="serverCode"><font color="#993300">function</font> init()
+{
+        <font color='#878787'>// Using trace will send data to the server console
+</font>        <font color="#993300">trace</font>("<font color='blue'>Hello from the Simple Extension Example!</font>")
+}
+
+<font color="#993300">function</font> destroy()
+{
+        <font color="#993300">trace</font>("<font color='blue'>Bye bye!</font>")
+}
+
+<font color="#993300">function</font> handleRequest(cmd, params, user, fromRoom)
+{
+        
+        <font color="#993300">if</font> (cmd == "<font color='blue'>double</font>")
+        {
+                <font color="#993300">var</font> response = {}
+                
+                response._cmd = "<font color='blue'>double</font>"
+                response.values = []
+                
+                <font color="#993300">for</font> (<font color="#993300">var</font> i = 0; i &lt; params.values.<font color="#000087">length</font>; i++)
+                {
+                        <font color="#993300">var</font> n = params.values[i]
+                        response.values[i] = n * 2
+                }
+                
+                _server.sendResponse(response, -1, <font color="#993300">null</font>, [user])
+        }
+}
+
+<font color="#993300">function</font> handleInternalEvent(evt)
+{
+        <font color='#878787'>// Simply print the name of the event that was received
+</font>        <font color="#993300">trace</font>("<font color='blue'>Event received: </font>" + evt.name)
+}
+</pre>
+<br>
+You can see that both the <strong>init() </strong>and <strong>destroy()</strong> method
+just trace a message to the console. <strong>The trace()</strong> command, 
+like in the Flash IDE, prints your text and variables to the server console and
+also to the <strong>Administrator Tool</strong> trace window.<br>
+If you keep your AdminTool connected to SmartFoxServer while testing your extensions,
+you will receive all the trace output and you will be able to remotely debug
+your server code.<br>
+<br>
+The important code is contained in <strong>the handleRequest() </strong>function: first we check
+if the command name is the one we expected, then we prepare an  object
+called &quot;response&quot; with an empty array for ther server reply.<br>
+<br>
+Also we add a property called &quot;_cmd&quot; with the name of the command. This is a
+convention that we will use through all the examples in this section. (<em>Even if
+it's not mandatory to call that variable &quot;_cmd&quot;, you will anyway need to pass
+a property with the command name or you will not be able to detect which command
+is replying on the client side.</em>)<br> 
+<br>
+In the next lines we  cycle through the array sent from the client (params.values)
+and fill the response array with the doubled values.<br>
+<br>
+Finally we send the result back to the client by using the <strong>_server.sendResponse()</strong>method which takes 5 parameters:<br>
+<br>
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>response</strong></td>
+    <td>&nbsp;</td>
+    <td>an object with the _cmd property specifying the name of the response
+    command</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>fromRoom</strong></td>
+    <td>&nbsp;</td>
+    <td>the id of the room where the response comes from (-1 if not needed)</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>sender</strong></td>
+    <td>&nbsp;</td>
+    <td>the User object of the client sending the response (null if not needed)</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>recipients</strong></td>
+    <td>&nbsp;</td>
+    <td>a list of User objects that should receive the reponse</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>type</strong></td>
+    <td>&nbsp;</td>
+    <td>can be &quot;xml&quot; or &quot;str&quot;. It represent the message format.
+    By default &quot;xml&quot; is used </td>
+  </tr>
+</table>
+<br>
+<br>
+<span class="subTitle">&raquo; Back to the client<br></span>
+<br>
+Now it's time to get back to the client side of the application and see how the
+server response is received.<br> 
+We will use the <strong>onExtensionsResponse</strong> event handler: <br>
+<br>
+<pre class="code">
+smartfox.onExtensionResponse = <font color="#993300">function</font>(resObj:<font color="#993300">Object</font>, <font color="#000087">type</font>:<font color="#993300">String</font>)
+{
+        <font color="#993300">trace</font>("<font color='blue'>cmd: </font>" + resObj._cmd)
+        <font color="#993300">trace</font>("<font color='blue'>type: </font>" + <font color="#000087">type</font>)
+        
+        <font color='#878787'>// We expect the response to be xml formatted
+</font>        <font color="#993300">if</font> (<font color="#000087">type</font> == "<font color='blue'>xml</font>")
+        {
+                <font color='#878787'>// Let's check if it's a "getData" message
+</font>                <font color="#993300">if</font> (resObj._cmd == "<font color='blue'>double</font>")
+                {
+                        <font color="#993300">trace</font>("<font color='blue'>res: </font>" + resObj.values)
+                        output_txt.<font color="#000087">text</font> += "<font color='blue'>Received: </font>" + resObj.values + <font color="#993300">newline</font>
+                }
+        }
+}
+</pre>
+<br>
+The <strong>resObj</strong> object contains the data sent by the server and &quot;type&quot;
+tells us what protocol was used for the current message. In this case we expected
+an &quot;xml&quot; formatted message and we also expected a response from the &quot;double&quot;
+command. <br>
+If these conditions are satisfied we can finally output the result in the text
+area.<br>
+<br>
+<span class="subTitle">&raquo; Summing up</span><br>
+<br> 
+We've seen that writing server side extensions is very simple and it takes basically three steps: <br>
+<br> 
+&raquo; send the request object from the client<br>
+&raquo; handle the request on the server side and reply to the client<br>
+&raquo; handle the server response back to the client<br>
+<br>
+In the next chapters we will see how to add database connections, handle server events, create custom login procedures, use optimized protocols and more...<br> 
+<br> 
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../01_introduction/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../03_dbExt/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

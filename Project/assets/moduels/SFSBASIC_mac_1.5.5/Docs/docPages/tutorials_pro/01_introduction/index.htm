@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.1 Tutorials: introduction </p>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>n this first tutorial we will analyze
+ the most important aspects of the server side programming using Actionscript
+ with <strong>SmartFoxServer PRO.<br>
+ </strong>It is required that you are already familiar with the basic client-side
+ concepts found in the previous chapters, so if you think something is not clear
+ yet, we reccomend to review those topics before proceeding.<br>
+ <br>
+ <span class="subTitle">&raquo; Extensions in a nuthshell</span> <br>
+ <br>
+ Basically an extension has four different tasks to accomplish:<br>
+ <br>
+ <strong>1) Initialize </strong><br>
+ <strong>2) Handle client requests</strong><br>
+ <strong>3) Handle internal server events</strong><br>
+ <strong>4) Destroy <br>
+ <br>
+ </strong>These four tasks are handled respectively by four Actionscript functions
+ called:
+ <strong>init()</strong>, <strong>handleRequest()</strong>, <strong>handleInternalEvent()</strong>, <strong>destroy()</strong><br>
+ </p>
+ <p>These four functions <strong>should always be declared</strong> in your
+   extensions, even if they don't contain code. If only one of them is missing,
+   <strong>SmartFoxServer PRO</strong> will throw an error and it will refuse to load that extension.<br>
+   <br>
+   With that said the simplest  extension possible would look like this:
+ <pre class="code"><font color='#878787'>// The simplest extension possible
+</font>
+<font color="#993300">function</font> init()
+{
+        <font color='#878787'>// Initialization code goes here
+</font>}
+
+<font color="#993300">function</font> destroy()
+{
+        <font color='#878787'>// Here we release resources before the extension is destroyed
+</font>}
+
+<font color="#993300">function</font> handleRequest(cmd, params, user, fromRoom)
+{
+        <font color='#878787'>// Here we handle client requests
+</font>}
+
+<font color="#993300">function</font> handleInternalEvent(evtObj)
+{
+        <font color='#878787'>// Code for handling server events goes here
+</font>}
+</pre>
+   </p>
+   <br>
+
+
+&raquo; The <strong>init()</strong> method is called as soon as the extension
+   is loaded, so you can put all your initialization code there. <br>
+   <br>
+   &raquo; 
+The <strong>destroy()</strong> function is called when an extension is going
+to be destroyed by the server: for example if you are reloading it from the <strong>Administrator
+Tool</strong> or
+if the server is being restarted. It's very important to
+use this method to clear the setInterval(s) you have created previously. <br>
+<br>
+&raquo; The <strong>handleRequest()</strong> function takes four parmaters: <br>
+<br>
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>cmd</strong></td>
+    <td>&nbsp;</td>
+    <td>This is the name of the request (or command) sent by the client.
+      Command names are strings and they identify the different actions that
+      an extension can perform. Always try to keept these names as short as possibile to avoid wasting bandwidth.<br>
+      Example: instead of calling your command &quot;updatePlayers&quot; try using something shorter like &quot;upd&quot;, &quot;updPl&quot; etc... </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>params</strong></td>
+    <td>&nbsp;</td>
+    <td>This is an object containing data sent by the client. The object can
+      contain numbers, strings, booleans, arrays and objects.</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>user</strong></td>
+    <td>&nbsp;</td>
+    <td>This is the User object representing the client that sent the request </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>fromRoom</strong></td>
+    <td>&nbsp;</td>
+    <td>The numeric id of the room where the request is coming from </td>
+  </tr>
+</table>
+<br>
+&raquo; The <strong>handleInternalEvent()</strong> is responsible for taking
+care of server events (user join, user exit, login etc...)<br>
+The server calls this method in your extension by passing an object with a <strong>name</strong> property that
+identifies the type of event being sent. You can learn more about the types of
+event in the Server-side Actionscript API section of the docs.<br> 
+<br>
+This is the list of the server events:<br>
+<br>
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>userJoin</strong></td>
+    <td>&nbsp;</td>
+    <td>a user has joined the room / zone</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>userExit</strong></td>
+    <td>&nbsp;</td>
+    <td>a user has left the room</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>userLost</strong></td>
+    <td>&nbsp;</td>
+    <td>a user was disconnected</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>newRoom</strong></td>
+    <td>&nbsp;</td>
+    <td>a new room was created in the zone</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>roomLost</strong></td>
+    <td>&nbsp;</td>
+    <td>a room was destroyed in the zone</td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>loginRequest</strong></td>
+    <td>&nbsp;</td>
+    <td>a user is sending a login request </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>spectatorSwitched</strong></td>
+    <td>&nbsp;</td>
+    <td>a spectator in a game room was turned into a player</td>
+  </tr>
+</table>
+<br> 
+Now that you have seen the basic architecture of an extension you're ready to
+dive in the code of the provided examples. The next chapters will guide you through
+the many possibilities of the server side extensions. <br>
+<br> 
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%">&nbsp;</td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../02_simpleExtension/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+.style3 {color: #FFFFFF; font-weight: bold; }
+.style4 {
+	color: #000000;
+	font-weight: bold;
+}
+.style5 {color: #000000}
+-->
+</style>
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.9 Java Extension </p>
+<p>This article will guide you through the process of writing and compiling your own<strong> Java server side extensions</strong> for SmartFoxServer 1.4 or higher. All you need to start developing Java extensions is the<a href="http://java.sun.com/javase/downloads/index.jsp" target="_blank"> Sun JDK</a>, your favourite text editor and, of course, SmartFoxsServer installed on your machine. In this tutorial we will also see how to setup the <a href="http://www.eclipse.org/" target="_blank">Eclipse IDE</a> to work with SmartFoxServer classes to boost your productivity.  
+
+<p>   <span class="subTitle">&raquo; Extension template and provided examples </span> 
+<p>A server side extension is essentially a Java class that extends the <strong>AbstractExtension</strong> base class found in the it.gotoandplay.smartfoxserver.extensions package. <br>
+  <br>
+The following are the methods that your class should implement:</p>
+ <table  border="0" cellspacing="3" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap" bgcolor="#FF6600"><span class="style3">method signature </span></td>
+     <td bgcolor="#FF6600"><span class="style3">description</span></td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap" bgcolor="#f0f0f0"><span class="style4">init()</span></td>
+     <td bgcolor="#f0f0f0"><span class="style5">called as soon as the extension is activated  </span></td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap" bgcolor="#FFFFE6"><strong>destroy()</strong></td>
+     <td bgcolor="#FFFFE6">called when shutting down the extensions </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap" bgcolor="#f0f0f0"><strong>handleRequest(String cmd, ActionscriptObject ao, User u, int fromRoom)</strong></td>
+     <td bgcolor="#f0f0f0">handles a request in XML format </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap" bgcolor="#FFFFE6"><strong>handleRequest(String cmd, String params[], User u, int fromRoom)</strong></td>
+     <td bgcolor="#FFFFE6">handles a request in Raw format </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap" bgcolor="#f0f0f0"><strong>handleRequest(String cmd, JSONObject jso, User u, int fromRoom)</strong></td>
+     <td bgcolor="#f0f0f0">handles a request in JSON format (only for SmartFoxServer 1.5.0 or higher) </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap" bgcolor="#FFFFE6"><strong>handleInternalEvent(InternalEventObject ieo)</strong></td>
+     <td bgcolor="#FFFFE6">handles an internal server event </td>
+   </tr>
+ </table>
+ <p>All methods should be declared as <strong>public void</strong>.<br>
+ For further reference you can check introductory articles, the <a href="../tutorials_pro/Appendix/javaTemplate.htm">extension template</a> provided with the documentation and the examples found in the Server/javaExtensions/ folder in your SmartFoxServer installation directory. </p>
+ <p><span class="subTitle">&raquo; Compiling the extension using javac </span></p>
+ <p>In order to successfully compile your Java extensions you will need to include a few libraries to the classpath of the java compiler (&quot;javac&quot;).<br>
+   <br>
+Depending on your server version these are the libraries to inlcude:</p>
+ <p><strong>version 1.4.x: </strong>Server/smartfoxserver.jar<br>
+ <strong>version 1.5.x:</strong> Server/lib/jysfs.jar and Server/lib/json.jar</p>
+ <p><strong>Example:</strong> supposing that your extension source is located in the Server/javaExtensions/ folder and you're using version 1.5, this is  what you should type in your shell/terminal window:</p>
+ <pre class="code">javac -classpath &quot;../lib/jysfs.jar:../lib/json.jar&quot; MyJavaExtension.java  </pre>
+ <p><strong>NB:</strong> the classpath separator &quot;:&quot; (colon) is valid for all Linux/Unix (including MacOS X) operating systems.<br>
+   Under windows you should use &quot;;&quot; (semicolon) </p>
+ <p><span class="subTitle">&raquo; Using Eclipse </span></p>
+ <p>Using a Jave IDE like <a href="http://www.eclipse.org/" target="_blank">Eclipse</a> can boost your productivity thanks to code completion, code templates, automated project building etc...<br>
+   The following is a visual walkthrough that will guide you in the creation of a SmartFoxServer extension.</p>
+ <p>Assuming you already have installed Eclipse, let's go ahead and launche the IDE.<br>
+   Click on <strong>File</strong> &gt; <strong>New</strong> &gt; <strong>Project</strong> in order to create a new Java project: </p>
+ <p><img src="eclipse_walkthrough/step01.gif" alt="step01" width="454" height="484" class="imgBorder"></p>
+ <p>Select <strong>Java Project</strong> and click <strong>Next</strong> </p>
+ <p><img src="eclipse_walkthrough/step02.gif" alt="step20" width="500" height="500" class="imgBorder"></p>
+ <p>Give a name to the project (e.g. &quot;MyExtension&quot;) and in the &quot;Project layout&quot; make sure to select &quot;<strong>Create separate source and output folder</strong>&quot;.<br>
+   This will create two different directories for your source  and compiled files.<br>
+ Let's go ahead by clicking &quot;<strong>Next</strong>&quot; </p>
+ <p><img src="eclipse_walkthrough/step03.gif" alt="step03" width="500" height="599" class="imgBorder"></p>
+ <p>The <strong>Java Settings</strong> window contains a set of sub panels where you can configure all the details of your project. Click on the &quot;<strong>Libraries</strong>&quot; tab and on the &quot;<strong>Add External JARs...</strong>&quot; button. This will open a dialogue box where you can add additional libraries for your project.</p>
+ <p><img src="eclipse_walkthrough/step04.gif" alt="step4" width="500" height="599" class="imgBorder"></p>
+ <p>Navigate your file system and reach the SmartFoxServer installation folder. From there move to the <strong>Server/lib/</strong> directory and select both jysfs.jar and json.jar by holding the CTRL key (Windows/Linux) or Command key (Mac) .<br>
+   <br>
+   <em>(NB: if you're using SmartFoxServer prior to version 1.5 you only need to select Server/lib/smartfoxserver.jar)</em></p>
+ <p><img src="eclipse_walkthrough/step05.gif" alt="step5" width="563" height="419" class="imgBorder"></p>
+ <p>Click Finish to create the project and make sure your Package Explorer is open.<br>
+   (You can toggle it from <strong>Window</strong> &gt;<strong> Open perspective</strong> &gt; <strong>Java</strong>)<br>
+ We can now create our first class in the project which will be the main extension class:  right click the &quot;<strong>src</strong>&quot; folder and select <strong>New</strong> &gt; <strong>Class</strong> </p>
+ <p><img src="eclipse_walkthrough/step06.gif" alt="step6" width="514" height="613" class="imgBorder"></p>
+ <p>In the &quot;<strong>New Java Class</strong>&quot; dialogue box we specify the package name (&quot;<strong>test</strong>&quot;) and the class name (&quot;<strong>MyExtension</strong>&quot;) <br>
+ Go ahead and click &quot;<strong>Finish</strong>&quot; </p>
+ <p><img src="eclipse_walkthrough/step07.gif" alt="step7" width="495" height="599" class="imgBorder"></p>
+ <p>The class is now ready. You can write your code and take advantage of the powerful features of Eclipse.<br>
+   By default your class will be auto-compiled in the bin/ folder of your project each time you save the source. </p>
+ <p><img src="eclipse_walkthrough/step08.gif" alt="step8" class="imgBorder"></p>
+ 
+ <p><span class="subTitle">&raquo; Deploying the extension</span></p>
+ <p>
+ There are a few options that you can choose for deploying your Java extension:<br>
+	<blockquote>
+	<p>
+	<strong>&raquo; SIMPLE: use the javaExtensions/ folder:</strong><br>
+	You can simply copy your classes (including the packages folder structure) to the <strong>javaExtensions/</strong> folder. This folder is already added to the standard server classpath so you don't need to add it yourself.<br> 
+	Your classes will be immediately available to the server, you just need to add an <strong>&lt;extension/&gt;</strong> definition to your Zone in the config.xml file.
+	</p>
+	
+	<p>
+	<strong>&raquo; ADVANCED: Point the server classpath to your class/jar files:</strong><br>
+	Another option is to create a .jar archive of your class files and copy it in one of the server folders.<br>
+	We suggest to always use the <strong>Server/javaExtensions/</strong> folder for your custom Java extensions and the <strong>Server/lib/</strong> folder for additional libraries.	
+	</p>
+	<p>
+	Adding your .jar files to the classpath can be done in two different ways, depending on the way you're running the server:<br>
+		<blockquote>
+		<p>
+		<strong>Standalone:</strong><br>
+		just edit your start.bat (Windows) or start.sh (Linux / Unix / MacOS X)
+		</p>
+		<p>
+		<strong>Service / Deamon:</strong><br>
+		Open the <strong>wrapper.conf</strong> file inside the <strong>Server/conf/</strong> folder and add a new classpath entry. (Windows / Linux / Unix)<br>
+		<em>(This doesn't apply to MacOS X. Just use the "standalone" method.)</em>
+		</p>
+		</blockquote>
+	</p>
+	</blockquote>
+ </p>
+ 
+ <hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="mailer.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right">&nbsp;</td>
+  </tr>
+</table>
+
+</body>
+</html>

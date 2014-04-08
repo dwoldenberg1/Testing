@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">onBuddyListUpdate()</p>
+ <p class="title">Availability:</p>
+<p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer  Basic / Pro</p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.onBuddyListUpdate(buddy) </p>
+ <p class="title">Description:</p>
+<p class="plain">The event is fired when the status of one buddy in the buddy
+  list changes. (For example the buddy was previously offline and now is online) </p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>buddy</strong></td>
+     <td>&nbsp;</td>
+     <td>An  object representing the buddy that has changed status </td>
+   </tr>
+ </table>
+
+    <br />
+    The object  has the following properties:
+    <br />
+    <br />
+    <table  border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><strong>id</strong></td>
+        <td>&nbsp;</td>
+        <td>buddy id </td>
+      </tr>
+      <tr>
+        <td><strong>name</strong></td>
+        <td>&nbsp;</td>
+        <td>buddy name </td>
+      </tr>
+      <tr>
+        <td><strong>isOnline</strong></td>
+        <td>&nbsp;</td>
+        <td>a boolean value. True if the buddy is currently online </td>
+      </tr>
+      <tr>
+        <td><strong>variables</strong></td>
+        <td>&nbsp;</td>
+        <td>an object with extra properties of the buddy </td>
+      </tr>
+    </table>
+    <br />
+    <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="plain"><span class="title">Example:</span> <br />
+In the example we show the status of the buddy that has been updated and we cycle through all its Buddy Variables 
+ <pre class="code">
+smartFox.onBuddyListUpdate = function(buddy:Object)
+{
+	var name:String = buddy.name
+	var status:String = &quot;offline&quot;
+		
+	if (buddy.isOnline)
+		status = &quot;online&quot;
+		
+	trace(&quot;Buddy &quot; + name + &quot; is currently &quot; + status)
+	
+	// trace all buddy variables
+	for (var i:String in buddy.variables)
+		trace(&quot;Property: &quot; + i + &quot; =&gt; &quot; + buddy.variables[i]
+
+}
+ </pre>
+ </p>
+ <strong class="plain"></strong>
+ <p class="title">See also:</p>
+ <p class="plain"><strong>onBuddyList(), onBuddyListError(), onBuddyRoom() </strong></p>
+</body>
+</html>

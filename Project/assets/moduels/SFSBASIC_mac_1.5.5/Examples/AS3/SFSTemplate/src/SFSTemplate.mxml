@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+				layout="absolute" 
+				creationComplete="main()">
+	
+	<!--
+		SmartFoxClient Actionscript 3.0 MXML template
+		version 1.0.0
+		
+		(c) 2004-2007 gotoAndPlay()
+		www.smartfoxserver.com
+		www.gotoandplay.it
+	-->
+	
+	<!-- import main script file -->
+	<mx:Script source="main.as" />
+	
+	<mx:VBox top="20" bottom="20" left="20" right="20" width="100%" height="100%">
+		
+		<mx:Label 	text="SmartFoxServer Actionscript 3.0 client side template" 
+					fontWeight="bold" 
+					fontSize="12" 
+					color="#000000" />
+		
+		<!-- This is the main debug text area -->
+		<mx:TextArea id="ta_debug" width="100%" height="100%" />
+		
+		<!-- This button will start the connection -->
+		<mx:Spacer height="10" />
+		<mx:HBox width="100%" horizontalAlign="center">
+
+			<mx:Button 	id="bt_connect" 
+						label="CONNECT" 
+						width="200" 
+						click="bt_connect_click(event)" 
+						toolTip="Start the connection with the server" />
+		</mx:HBox>
+		
+	</mx:VBox>
+
+</mx:Application>

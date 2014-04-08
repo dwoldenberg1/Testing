@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.loginUser()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.loginUser(nick, pass, channel)</p>
+ <p class="title">Description:</p>
+ <p class="plain">Logs a user in, creating a <strong>User</strong> object (it.gotoandplay.smartfoxserver.data.User)
+   for the client.<br />
+   Each client connected with SmartFoxServer has its own <strong>Chanel</strong> object
+   representing the socket connection. After successfully logging in, the client
+   becomes a &quot;real&quot; user and its <strong>User</strong> object is created.<br />
+   <br />
+   This method is usually used when you receive an event of type &quot;loginRequest&quot;
+ <p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>nick</strong></td>
+     <td>&nbsp;</td>
+     <td>the user nickname </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>pass</strong></td>
+     <td>&nbsp;</td>
+     <td>the user password </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>channel</strong></td>
+     <td>&nbsp;</td>
+     <td>the Channel object </td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">An object with two properties: </p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>success</strong></td>
+     <td>&nbsp;</td>
+     <td>True, if login was successfull </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>error</strong></td>
+     <td>&nbsp;</td>
+     <td>The error message of the server if login failed </td>
+   </tr>
+ </table>
+ <p class="title">Example:</p>
+<pre class="code">
+/*
+* This method handles internal events
+* Internal events are dispactched by the Zone or Room where the extension is attached to
+* 
+* the (evt) object
+*/
+function handleInternalEvent(evt)
+{	
+	if (evt.name == "loginRequest")
+	{
+		var error = ""
+		
+		var nick = evt["nick"]
+		var pass = evt["pass"]
+		var chan = evt["chan"]
+		
+		if (pass != "The Password")
+		{
+			error = "Authentication failed"
+		}
+		else
+		{
+			var obj = _server.loginUser(nick, pass, chan)
+			
+			if (obj.success == false)
+				error = obj.error
+			else
+			{
+				var u = _server.instance.getUserByChannel(chan)
+				trace("User " + u.getName() + " logged in")
+			}
+		}
+		
+		// Send response to client
+		var response = new Object()
+		
+		if (error == "")
+		{
+			response._cmd = "logOK"
+		}
+		else
+		{
+			response._cmd = "logKO"
+			response.err = error
+		}
+		
+		/*
+		* NOTE:
+		* usually the 4th parameter of the sendResponse is a list of users object that will
+		* receive this message.
+		* 
+		* Only when handling a login request you can pass a channel instead of a list of Users
+		*/
+		
+		_server.sendResponse(response, -1, null, chan)
+
+	}
+}
+</pre>
+<br /> 
+In this case the user password is hardcoded in the Actionscript which is usually
+the worst way to handle this. We've used it in this example for the sake of simplicity.
+You may usually want to test the client's credentials against a database before
+logging the user in.<br />
+ <p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

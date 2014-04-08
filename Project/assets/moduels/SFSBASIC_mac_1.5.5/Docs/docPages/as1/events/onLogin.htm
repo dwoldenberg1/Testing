@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">onLogin()</p>
+ <p class="title">Availability:</p>
+<p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer  Lite / Basic / Pro</p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.onLogin(response) </p>
+ <p class="title">Description:</p>
+<p class="plain">The event is fired in response to a <strong>login() </strong>request.</p>
+<p class="title">Parameters:</p>
+ The <strong>response</strong> object contains the following properties:<br /> 
+<br />
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td valign="top"><strong>success</strong></td>
+     <td>&nbsp;</td>
+     <td>True if the login was successfull, False if login failed. The reason
+       for failure is explained in the <strong>error</strong> parameter </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>name</strong></td>
+     <td>&nbsp;</td>
+     <td>Your current nickname </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>error</strong></td>
+     <td>&nbsp;</td>
+     <td>This parameter is passed only if login fails. It contains a server error
+       message. </td>
+   </tr>
+</table>
+                <br />
+                <strong>NOTE</strong>: The server sends the nickname back to the client because
+                not all nicknames are possibile. For example those containing
+                bad words or illegal characters might be filtered. <br />
+                <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="plain"><span class="title">Example:</span>
+<pre class="code">
+smartFox.onLogin = function(response)
+{
+	if (response.success)
+	{
+		trace("Logged in as " + response.name)
+	}
+	else
+	{
+		trace("Could not login: " + response.error)
+	}
+}
+</pre> 
+ </p>
+<strong class="plain"></strong>
+<p class="title">See also:</p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

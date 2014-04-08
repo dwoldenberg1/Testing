@@ -1,0 +1,181 @@
+*************************************
+*  SmartFoxServer version 1.5.5     *
+*                                   *
+*  (c) gotoAndPlay() 2004 - 2007    *
+*  all rights reserved.             *
+*                                   *
+*  www.gotoandplay.it               *
+*  www.smartfoxserver.com           *
+*************************************
+
+Version 1.5.5 changes:
+---------------------------------------------------------------------------------------------------------------
+» New and free client side GUI components for speeding up application development (SmartFoxBits)
+» New Actionscript 3.0 API, final release (1.4) 
+» New and improved AS 3.0 documentation
+» 3 new Actionscript 3.0 examples based Flex 2 SDK (available as Flex Builder 2 projects): SmartMessenger, SmartFoxTris, SFSTemplate
+» Updated Actionscript 2.0 API (1.4)
+» New sample Java extensions with sources (SFSTris2.java)
+» Fixed bug with user queues management with larger settings (100 and above)
+» Minor bug fixes in client side API (switchSpectator, user variables)
+» Fixed a minor bug in the SmartMessenger example. New sources available in the Examples/AS2/ folder
+» New logout() method in client side API (AS2 / AS3)
+» New onLogout event in client side API (AS2 / AS3)
+» New logout() method available in server side framework (AS / Python / Java)
+» New rawProtocolSeparator setting allows to set the separator character used by the raw protocol
+» New server side event "privMsg" allows to catch private messages in a server extension and add your logic before it gets dispatched. (just like the "pubMsg" event)
+» Added setTimeout() method to Actionscript server side framework
+» Added getGuestName() method to Java server side framework
+» New Mailer parameter "port", allow to specify the SMTP port
+» New ability to use multiple server configuration files (See chapther 2.4 in the docs)
+» New parameter <StripCharacters> for the Bad-Words-Filter, allows to specify which characters are stripped 
+» Improved Mailer authentication with smtp servers
+» Improved auto-reloading of Java extensions
+» Updated documentation
+
+
+Version 1.5.0 changes:
+---------------------------------------------------------------------------------------------------------------
+» Embedded Webserver, runs by default on port 8080
+» File upload integration with webserver: easily upload files to the server and handle file uploads events from the server side.
+» New example FLA showing file uploads (Flash 8)
+» Added beta support for server side extensions in Python
+» Added JSON support for server side extensions: JSON can reduce traffic by a factor of 2 to 5 times when compared to XML, while maintaining the ability to send and receive complex data objects.
+» Added client side Actionscript 3.0 API support for Flex 2 and Flash 9 alpha
+» Updated client side API for Actionscript 2.0 now support the MTASC compiler
+» Updated Mozilla Rhino Javascript engine to version 1.6.4 (supports javascript 1.7)
+» Added support for E4X (Ecma for Xml) in Actionscript server side extensions
+» Added a tutorial showing E4X usage
+» Enhanced server engine, allows to better trap and get rid of "stalled" connections, sloppy client disconnections etc...
+» New ZoneCount feature: allows anonymous external clients to read the number of users connected to a certain Zone. It can be used to show the realtime number of users connected in a website page.
+» Added a tutorial on how to use the ZoneCount feature using Flash or PHP as a client.
+» Enhanced mailer now handles queued tasks with a pool of threads. Allows better handling of massive emailing.
+» Enhanced "pubMsg" internal event. Now allows to process and filter public messages in extensions.
+» Added new _server.dispatchPublicMessage() in server side framework
+» Added a new getConnection() method to the DatabaseManager object. Allow advanced interaction with databases through JDBC API.
+» Added a new client side method: sendModeratorMessage () which allows to send moderator messages to a single User, a Room or the entire Zone
+» Added new client side method: connected(). Returns the status of the connection
+» Refactored userlist message format
+» Autoreload extension feature: allows to reload any extension as soon as it is modfied. (Should be turned off when in production)
+» Added new Zone parameter <MaxBuddyVariables>, allows to limit the number of buddy variables 
+» Refactored the server side createRoom() method. Added the ability to create room variables upon room creation.
+» Added getPlayerId() method to User object in client side APIs
+» Added two new parameters to the client side onPrivateMessage() handler: userId and roomId of the sender
+» Finalized support for LoadVars in server side framework
+» Finalized support for #include directive in server side Actionscript extensions
+» New advanced example with source code: ISO Bomberman
+» Updated Tanuki Wrapper to version 3.2.3
+
+
+Version 1.4.0 changes:
+---------------------------------------------------------------------------------------------------------------
+» Java based extensions, documentation and examples
+» Added a new javadoc section to the documentation
+» New pixel game tutorial, shows usage of some of the new server side methods
+» New SmartMessenger example: shows how to implement and instant messenger application with SFS.
+» New setBuddyVariables and enhanced buddy list
+» New <PolicyAllowedDomains> in config.xml
+» Updated Flash API, version 1.0.2
+» Added a new filtering option for room names <RoomNameAvoidChars>
+» Added a new filtering option for user names <UserNameAvoidChars>
+» Added a new tag for limiting the max length of room names <MaxRoomNamesLen>
+» Added a new tag for limiting the max length of user names <MaxUserNamesLen>
+» Added a new Zone tag for disabling default events <DisabledSysEvents>
+» Added a new Zone tag for disabling default requests <DisabledSysActions>
+» New "limbo" attribute for rooms
+» Added new templates for extensions in AS and Java
+» New server side command: _server.getGuestName()
+» New server side command: _server.disconnectUser()
+» New server side command: _server.leaveRoom()
+» New server side command: _server.sendGenericMessage()
+» New server side command: _server.sendRoomList()
+» New server side command: _server.getGuestName()
+» New server side command: _server.joinRoom()
+» New server side command: _server.leaveRoom()
+» New server side command: _server.setRoomVariables()
+» New server side command: _server.setUserVariables()
+» New server side command: _server.switchSpectator()
+» Better exception reporting in SystemHandler class
+» Admin Tool: added new Extension quick editor
+» Added Tool: longer log tail, up to 200 lines
+» Admin Tool: added "force login" in the login screen
+» Admin Tool: fixed a bug with stage resize in browsers
+» Refactored documentation
+» New documentation topic navigation
+» New search function in online documentation
+» Various minor bug fixes and core server engine enhacements
+» Fixed an animation issue in the Realtime maze example
+» Fixed a bug with reporting connection failed
+» Fixed a bug with the count of the total amount of users connected (admin tool)
+» Fixed bug with Ban List
+» Fixed a bug with leaveRoom command
+
+
+
+Version 1.3.0 changes:
+---------------------------------------------------------------------------------------------------------------
+» New tools for installing the server as a system service for Windows/Linux/MacOS X
+» Added a simple installer for Linux
+» AdminTool: fixed a bug with the textArea initialization
+» AdminTool: added an update control. If the network is available it will tell you if new updates are available
+» AdminTool: better security for administator login
+» Updated client API, version 0.9.7
+» Flash 8 support: we've checked that the API and examples for Flash MX 2004 also work for flash player 8
+» Client API: fixed a bug with roomId in sendObjectToGroup() method
+» Fixed a bug with the properties object of the Room class
+» Fixed a bug with the banned users list that allowed duplicate objects.
+» Added a third parameter to the server side setInterval(). It now allows to pass arguments to the function called.
+» Added new tutorial that shows how implement a secure login with the CHAP technique. Source code available for MX2004
+» Added a simple code template with a tutorial that shows the skeleton of a SmartFoxServer application.
+» Added new config parameter called <MaxIncomingQueue> to limit the max. number of requests enqueued by the server
+» Added two new config parameter called <MaxRoomVars> and <MaxUserVars> to limit the max number of server side variables that can be created
+» Updated online and offline documentation
+
+
+
+Version 1.2.5 changes:
+---------------------------------------------------------------------------------------------------------------
+» fixed a bug with the moderator commands
+» updated documentation
+ 
+
+
+Version 1.2.4 core changes:
+---------------------------------------------------------------------------------------------------------------
+This update addresses a couple of bugs and adds a new minor feature and a new example with source:
+
+» furtherly optimized SendObject serialization
+» added new client API command: sendObjectToGroup()
+	Allows to send an object to one or more users, even if they are located in different rooms
+	
+» fixed a bug with leaveRoom() command when used with users in multiple rooms.
+	Game rooms where not destroyed. Now it's fixed.
+	
+» added the API sources inside the Flash API/sourcs/ folder
+	If you prefer to use the source API files you can just copy them into your local project
+	folder and include them in your Actionscript (Flash MX) or import (Flash MX 2004) 
+
+» For a detailed list of all new features coming with SFS PRO, please refer to the online documentation.
+	http://www.smartfoxserver.com/docs/
+
+
+
+Version 1.1.0 changes:
+---------------------------------------------------------------------------------------------------------------
+» New Zone Manager in the AdminTool: 
+	- allows to inspect the zone settings
+	- activate / deactivate zone on the fly without the need of restarting the server
+	- reload zones definition from config.xml: activates new zones and apply changes to the old ones without restarting the server
+
+» New IP Filter: limits the number of users than can log in the server from the same IP address. Deafult = 10, set it to zero to disable the filter.
+
+» Licence limits based on real users not connections: the user limit for a licence was based on socket connections in version 1.0.0
+  From 1.1.0 the limit is based on real users. (avoids that idle connections waste user slots)
+
+» uCountUpdate parameter added to the <Room> definition. You can now specify if you want to receive "uCount" updates for each room.
+You can also set the attribute programmatically using the client API. Check the createRoom() method documentation and section 2.1
+  
+» Enhanced "Connection Cleaner": it destroys not only idle users but also idle socket connections.
+  
+» Fixed a bug in the removal of Room Variables from multiple rooms
+	

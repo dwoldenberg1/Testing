@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.15 Example: Dynamite Demolition </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source</strong> of 
+       this example is found under the <strong>Examples/AS2/23_pro_dynamiteDemolition </strong> folder. <br>
+       The server side extension is found in <strong>sfsExtensions/dynamiteFinalUpdate.as</strong> </td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>Dynamite Demolition is a realtime multiplayer action game prototype based on a bomberman-like gameplay and set in a 3D isometric world. The objective of the games is to destroy all the other opponents (up to 4) in the level with the available dynamite. Brown walls can be destroyed to create new passages. 
+ <p>The game controls are straightforward: you can use the arrow keys to move around and the space bar to drop the dynamite. </p>
+ <p>By using <strong>SmartFoxServer PRO</strong> and it's Room Level extensions the game can easily &quot;attach&quot; the game logic to each new game room, which is then handled independently. Moreover the usage of the &quot;raw-protocol&quot; allows to send very small packets of data to each client, minimizing the network traffic and the server resources.</p>
+ <p>The game logic was all developed on the server side using Actionscript. This feature allows to quickly develop the application, cutting the times for compiling traditional Java code and speeding up the whole prototyping and development process. The server side code is quite clean and well commented: it's not very difficult for any intermediate flash developer to inspect it and follow the logic of the extension.</p>
+ <p><img src="images/game.gif" alt="dynamite demolition" width="558" height="454">
+ <p><span class="subTitle">&raquo; About the author</span> 
+ <p>The game was kindly submitted by 
+   <strong>Jon Reading</strong> (Nottingham - UK), who developed it as a study in Flash-based online multiplayer games for a university course. <br>You can check more works made by Jon at his<a href="http://www.jonreading.com" target="_blank"> portfolio website</a>. 
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../14_advBoardGame/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../16_theoChat/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+. /etc/rc.common
+
+cd /Library/StartupItems/SmartFoxServer
+
+StartService()
+{
+	ConsoleMessage "Starting"
+	/Library/StartupItems/SmartFoxServer/service_start
+}
+
+StopService()
+{
+	ConsoleMessage "Stopping"
+	#/Library/StartupItems/SmartFoxServer/service_stop
+}
+
+RestartService()
+{
+	StopService
+	StartService
+}
+
+RunService "$1"

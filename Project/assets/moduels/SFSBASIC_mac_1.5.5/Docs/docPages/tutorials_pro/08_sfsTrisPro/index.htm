@@ -1,0 +1,349 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.8 Tutorials: SmartFoxTris PRO </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>source FLA</strong> of this
+       example is found under the <strong>Examples/AS2/pro_smartFoxTris</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+<p>In this article we'll develop a complete turn-based game using server side
+  extensions. The example will be based on the well known <strong>SmartFoxTris</strong> game,
+  a multiplayer version of tic-tac-toe. We have already seen how to build the
+  game keeping all the application logic on the client side.<br>
+  This time we'll use a different approach and move all the game logic on the
+  server side.<br>
+  <br>
+  What are the advantages? In general, using a server side extensions is a more
+  flexibile and secure option. Even if <strong>SmartFoxServer</strong> provides
+  powerful tools for developing application logic on the client, this approach
+  can be limiting when your games start getting more complex. Also keeping sensitive
+  game data on the server side allows overall better security from hacking attempts,
+  cheating etc... <br>
+  <br>
+  <span class="subTitle">&raquo; The game </span><br> 
+  <br>
+  The game we're going to develop is based on the tutorial that you can find in
+  chapter 5.14 of the documentation: a tic-tac-toe game for two players with
+  support for spectators.<br>
+  The server side extension that handles the game is going to be dynamically
+  attached to each game room created, and it will send the game events to the
+  Flash interface. This way we can finally split the game logic, by moving it
+  on the server, from the game view which is handled by the Flash client.
+<p> <span class="subTitle">&raquo; Server side events </span><br>
+  <br>
+  Before we analyze the game code, it's a good idea to take a look at the the
+  events that the extension will handle:
+<table  border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>game start </strong></td>
+    <td>&nbsp;</td>
+    <td>The game begins when 2 players are available in the room </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>game end</strong></td>
+    <td>&nbsp;</td>
+    <td>The game ends when all board tiles have been filled. The extension will
+    then calculate if there's a winner or if it's a tie </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>game stop </strong></td>
+    <td>&nbsp;</td>
+    <td>The game is interrupted because one of the players has left the room
+      in the middle of a match </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>spectator enter </strong></td>
+    <td>&nbsp;</td>
+    <td>A spectator has entered the room. We'll need to send him the current
+      state of the game </td>
+  </tr>
+  <tr>
+    <td valign="top" nowrap="nowrap"><strong>spectator switch</strong></td>
+    <td>&nbsp;</td>
+    <td>A spectator was turned into a player. We'll have to check if two players
+    are available, if so a new game can start</td>
+  </tr>
+</table>
+<br>
+These conditions will be detected by the server side extension and will be sent
+to the clients to update the game status. <br>
+<br>
+<span class="subTitle">&raquo; Client side setup code </span><br>
+<br> 
+The most important part of the client code is located under the &quot;<strong>chat</strong>&quot; label
+in the main timeline of the source .FLA file:<br>
+<br> 
+<pre class="code">
+<font color="#993300">function</font> createRoom(name:<font color="#993300">String</font>, pwd:<font color="#993300">String</font>, spec:<font color="#993300">Number</font>)
+{
+        hideWindow("<font color='blue'>newGameWindow</font>")
+        
+        <font color="#993300">var</font> gameRoom:<font color="#993300">Object</font>		= <font color="#993300">new</font> <font color="#993300">Object</font>()
+        gameRoom.name 			= name
+        gameRoom.<font color="#000087">password</font> 		= pwd
+        gameRoom.maxUsers 		= 2
+        gameRoom.maxSpectators 	= spec
+        gameRoom.isGame 		= <font color="#000087">true</font>
+        gameRoom.isTemp 		= <font color="#000087">true</font>
+        
+        xt = {}
+        xt.name = "<font color='blue'>tris</font>"
+        xt.script = "<font color='blue'>sfsTris.as</font>"
+        
+        gameRoom.extension		= xt
+        
+        smartfox.createRoom(gameRoom)
+}
+</pre>
+<br>
+The code creates the new game room with support for 2 players and it  attaches
+our server side extension to it. The actionscript file is called &quot;<strong>sfsTris.as</strong>&quot; and
+it is located (as usual) in the <strong>sfsExtensions/</strong> folder.
+The name that we'll use to invoke the extension is &quot;<strong>tris</strong>&quot;.<br>
+<br>
+Now we can move the playhead
+to the next frame called &quot;<strong>game</strong>&quot; and have a look at the first lines
+of code:<br>
+<br>
+<pre class="code">import it.gotoandplay.smartfoxserver.*
+<font color="#000087">stop</font>()
+
+<font color="#000087">_global</font>.gameStarted = <font color="#000087">false</font>								<font color='#878787'>// global flag for tracking the game status
+</font>
+<font color="#993300">var</font> extensionName:<font color="#993300">String</font> = "<font color='blue'>tris</font>"						<font color='#878787'>// Name of the extension that we'll call
+</font><font color="#993300">var</font> win:<font color="#993300">MovieClip</font>										<font color='#878787'>// A movieclip used for dialogue windows
+</font><font color="#993300">var</font> myOpponent:User										<font color='#878787'>// My opponent user object
+</font><font color="#993300">var</font> player1Id:<font color="#993300">Number</font>									<font color='#878787'>// Id of player 1
+</font><font color="#993300">var</font> player1Name:<font color="#993300">String</font>									<font color='#878787'>// Name of player 1
+</font><font color="#993300">var</font> player2Name:<font color="#993300">String</font>									<font color='#878787'>// Name of player 2
+</font><font color="#993300">var</font> player2Id:<font color="#993300">Number</font>									<font color='#878787'>// Id of player 2
+</font>
+gamePaused("<font color='blue'></font>")
+</pre>
+<br>
+As you can see we setup the basic variables we'll use in the game to keep track
+of the players and we pause the game, calling the <strong>gamePaused()</strong> method. <br>
+At this point the SWF file will stay idle and wait for events coming from the
+server which we'll take care of in the <strong>onExtensionResponse()</strong> handler.<br>
+
+<br>
+<span class="subTitle">&raquo; The sfsTris.as extension </span><br>
+<br>
+We will now inspect the code of the server side extension. The first few lines
+define the main variables to handle the game state:<br>
+<br>
+<pre class="serverCode"><font color="#993300">var</font> whoseTurn			<font color='#878787'>// keep track of the current turn
+</font><font color="#993300">var</font> board				<font color='#878787'>// a 2D array containing the board game data
+</font><font color="#993300">var</font> numPlayers			<font color='#878787'>// count the number of players currently inside
+</font><font color="#993300">var</font> users = []			<font color='#878787'>// an array of users
+</font><font color="#993300">var</font> gameStarted			<font color='#878787'>// boolean, true if the game has started
+</font><font color="#993300">var</font> currentRoomId		<font color='#878787'>// the Id of the room where the extension is running
+</font><font color="#993300">var</font> p1id				<font color='#878787'>// userId of player1
+</font><font color="#993300">var</font> p2id				<font color='#878787'>// userId of player2
+</font><font color="#993300">var</font> moveCount			<font color='#878787'>// count the number of moves
+</font><font color="#993300">var</font> endGameResponse		<font color='#878787'>// save the final result of the game
+</font>
+<font color="#993300">function</font> init()
+{
+        numPlayers = 0
+        gameStarted = <font color="#000087">false</font>
+}
+<font color="#993300">
+function</font> destroy()
+{
+        <font color='#878787'>// Nothing special to do here
+</font>}
+</pre>
+<br>
+The<strong> init()</strong> function sets the <strong>gameStarted</strong> flag to false and the <strong>destroy() </strong>function
+is empty as we're not going to use any particular resources such as setIntervals
+or database connections. <br>
+<br>
+We can now take a look a the <strong>handleInternalEvents()</strong> function
+and see how game events are dispatched:<br>
+<br>
+<pre class="serverCode"><font color="#993300">function</font> handleInternalEvent(evt)
+{
+        evtName = evt.name
+        
+        <font color='#878787'>// Handle a user joining the room
+</font>        <font color="#993300">if</font> (evtName == "<font color='blue'>userJoin</font>")
+        {
+                <font color='#878787'>// get the id of the current room
+</font>                <font color="#993300">if</font> (currentRoomId == <font color="#000087">undefined</font>)
+                currentRoomId = evt["<font color='blue'>room</font>"].getId()
+                
+                <font color='#878787'>// Get the user object
+</font>                u = evt["<font color='blue'>user</font>"]
+                
+                <font color='#878787'>// add this user to our list of local users in this game room
+</font>                <font color='#878787'>// We use the userId number as the key
+</font>                users[u.getUserId()] = u
+                
+                <font color='#878787'>// Handle player entering game
+</font>                <font color='#878787'>// Let's check if the player is not a spectator (playerIndex != -1)
+</font>                <font color="#993300">if</font> (u.getPlayerIndex() != -1)
+                {
+                        numPlayers++
+                        
+                        <font color="#993300">if</font> (u.getPlayerIndex() == 1)
+                        p1id = u.getUserId()
+                        <font color="#993300">else</font>
+                        p2id = u.getUserId()
+                        
+                        <font color='#878787'>// If we have two players and the game was not started yet
+</font>                        <font color='#878787'>// it's time to start it now!
+</font>                        <font color="#993300">if</font>(numPlayers == 2 &amp;&amp; !gameStarted)
+                        startGame()
+                }
+                <font color="#993300">else</font>
+                {
+                        
+                        <font color='#878787'>// If a spectator enters the room
+</font>                        <font color='#878787'>// we have to update him sending the current board status
+</font>                        updateSpectator(u)
+                        
+                        <font color="#993300">if</font> (endGameResponse != <font color="#993300">null</font>)
+                        _server.sendResponse(endGameResponse, currentRoomId, <font color="#993300">null</font>, [u])
+                }
+        }
+        
+        <font color='#878787'>// Handle a user leaving the room or a user disconnection
+</font>        <font color="#993300">else</font> <font color="#993300">if</font> (evtName == "<font color='blue'>userExit</font>" || evtName == "<font color='blue'>userLost</font>")
+        {
+                <font color='#878787'>// get the user id
+</font>                <font color="#993300">var</font> uId = evt["<font color='blue'>userId</font>"]
+                
+                <font color='#878787'>// get the playerId of the user we have lost
+</font>                <font color="#993300">var</font> oldPid = evt["<font color='blue'>oldPlayerIndex</font>"]
+                
+                <font color="#993300">var</font> u = users[uId]
+                
+                <font color='#878787'>// Let's remove the player from the list
+</font>                <font color="#993300">delete</font> users[uId]
+                
+                <font color='#878787'>// If the user we have lost was playing
+</font>                <font color='#878787'>// we stop the game and tell everyone
+</font>                <font color="#993300">if</font> (oldPid &gt; 0)
+                {
+                        numPlayers--
+                        
+                        gameStarted = <font color="#000087">false</font>
+                        
+                        <font color="#993300">if</font>(numPlayers &gt; 0)
+                        {
+                                <font color="#993300">var</font> res = {}
+                                res._cmd = "<font color='blue'>stop</font>"
+                                res.n = u.getName()
+                                _server.sendResponse(res, currentRoomId, <font color="#993300">null</font>, users)
+                        }
+                }
+        }
+        
+        <font color='#878787'>// Handle a spectator switching to a player
+</font>        <font color="#993300">else</font> <font color="#993300">if</font> (evtName == "<font color='blue'>spectatorSwitched</font>")
+        {
+                <font color="#993300">if</font> (!gameStarted &amp;&amp; evt["<font color='blue'>playerIndex</font>"] &gt; 0)
+                {
+                        numPlayers++
+                        
+                        <font color='#878787'>// Update the playerId
+</font>                        <font color="#993300">this</font>["<font color='blue'>p</font>" + evt["<font color='blue'>playerIndex</font>"] + "<font color='blue'>id</font>"] = evt["<font color='blue'>user</font>"].getUserId()
+                        
+                        <font color='#878787'>// If we now have 2 players the game should be started
+</font>                        <font color="#993300">if</font>(numPlayers == 2)
+                        	startGame()
+                }
+        }
+}
+</pre>
+<br> 
+Even if the code is made up of many lines we can split it into three main sections
+and analyze each of them:<br>
+<br>
+<strong>1) Handle the &quot;userJoin&quot; event:</strong> in this case we're getting notified about the
+arrival of a new user inside the game room.<br> 
+The first thing to do is  see whether the client is a player or a spectator
+by checking his <strong>playerIndex</strong> (remember playerIndex == -1 means
+that the user is a spectator). Based on this information we can check if the
+game should start or if we should update the new spectator.<br>
+<br>
+The game
+is started by simply sending a &quot;<strong>start</strong>&quot; command to the client. The code for sending
+the game status to the spectator is this:<br>
+<br>
+<pre class="serverCode"><font color="#993300">function</font> updateSpectator(user)
+{
+        <font color="#993300">var</font> res = {}
+        
+        res._cmd = "<font color='blue'>specStatus</font>"
+        res.t = whoseTurn
+        res.status = gameStarted
+        res.board = board
+        
+        <font color="#993300">if</font> (users[p1id] != <font color="#000087">undefined</font>)
+        {
+                res.p1n = users[p1id].getName()
+                res.p1i = p1id
+        }
+        <font color="#993300">else</font>
+        	res.p1n = "<font color='blue'> </font>"
+        
+        <font color="#993300">if</font> (users[p2id] != <font color="#000087">undefined</font>)
+        {
+                res.p2n = users[p2id].getName()
+                res.p2i = p2id
+        }
+        <font color="#993300">else</font>
+        	res.p2n = "<font color='blue'> </font>"
+        
+        _server.sendResponse(res, currentRoomId, <font color="#993300">null</font>, [user])
+}
+</pre>
+<br>
+The code sends the board 2D array to the client together with the info (id and
+name) about the two players.<br>
+<br> 
+<strong>2) Handle the &quot;userExit&quot; and &quot;userLost&quot; events:</strong> here
+we change the status of the game based on which client left the room.<br> 
+In case he was not a player the game status will not be altered, otherwise we
+will send a &quot;<strong>stop</strong>&quot; action to the clients.<br>
+<br>
+<strong>IMPORTANT NOTE:</strong> in order to see if the user that left the
+room was a player or a spectator we don't call the <strong>getPlayerIndex()</strong> method
+as you may expect, but we use the <strong>oldPlayerIndex</strong> property received
+in the event object. The reason for this is pretty simple: if the user was lost
+(disconnected) you can't get its playerId and if he's now in another room calling
+the <strong>getPlayerIndex()</strong> method will tell you the playerId for the
+new room, which we don't need. <br>
+<br>
+<strong>3) Handle the &quot;spectatorSwitched&quot; event: </strong>when a spectator
+is turned into a player we should see if the room has now two players, and in
+this case start the game. <br>
+<br>
+Now that we have seen how the main game events are handled we can move to the
+second part of the article and see how game moves are sent between client and
+server. <br>
+<br>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../07_javaInActionscript/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="part2.htm" class="navLinks">next &raquo; </a></td>
+  </tr>
+</table>
+
+</body>
+</html>

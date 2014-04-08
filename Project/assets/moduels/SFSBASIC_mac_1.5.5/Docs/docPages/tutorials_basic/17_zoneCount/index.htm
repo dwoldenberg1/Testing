@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.17 Tutorial: External Zone Statistics </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The example <strong>sources </strong>can be found  under the <strong>Examples/AS2/zoneCount</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction </p>
+ <p>Since <strong>SmartFoxServer 1.5.0</strong> we introduced a simple way to get the number of users logged in the server from an external client, like a PHP/ASP/JSP page or a SWF file. The operation is done by anonymously connecting to the server and sending a simple XML formatted request. <br>
+<br>
+<span class="subTitle">&raquo; How it works </span></p>
+ <p>The steps to get informations about one or more Zones are the following:</p>
+ <ol>
+   <li>enable the feature on the server by adding <strong>&lt;EnableZoneInfo&gt;true&lt;/EnableZoneInfo&gt;</strong> in the main config.xml file. </li>
+   <li>establish a socket connection to the server</li>
+   <li>send the following XML: <pre class="code">&lt;msg t='sys'&gt;&lt;body r='-1' action='zInfo'&gt;zoneName&lt;/body&gt;&lt;/msg&gt;</pre>
+   where zoneName is the name of the zone that you want to inspect. You can also pass more multiple names, separating them with commas.
+   <br>
+   <br></li>
+   <li>close the connection   </li>
+ </ol>
+ <p>The server will respond with an XML message containing the number of users for each zone requested (comma separated).<br>
+Example:<pre class="code">&lt;zInfo&gt;255&lt;/zInfo&gt;</pre>
+or
+<pre class="code">&lt;zInfo&gt;255,100,20&lt;/zInfo&gt;</pre>
+<br>
+ In the first case you requested the user count for one Zone, the second case shows a response with the count for three Zones.
+    <p> <span class="subTitle">&raquo; PHP Sample script </span></p>
+    <p>The following code shows an implementation in <a href="http://www.php.net" target="_blank">PHP</a></p>
+    <pre class="code">
+&lt;?php
+	
+	$port = 9339;
+	$addr = "127.0.0.1";
+	
+	// Output basic HTML header
+	echo "&lt;html&gt;&lt;head&gt;&lt;title&gt;SmartFoxServer Zone Count Demo&lt;/title&gt;&lt;/head&gt;&lt;body style='font-size:70%; font-family:Arial'&gt;";
+	
+	// Create a socket object
+	$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+	if ($socket &lt; 0)
+	{
+		trace("Socket errror: " . socket_strerror($socket));
+		die();
+	}
+	else
+		trace("Socket object created");
+	
+	// Establish connection
+	$result = socket_connect($socket, $addr, $port);
+	
+	// Check connection
+	if ($result &lt; 0) 
+	{
+		trace ("Received: " . socket_strerror($result));
+	} 
+	else 
+	{
+		trace("Connection successfull");
+		$handShake = "&lt;msg t='sys'&gt;&lt;body r='-1' action='zInfo'&gt;simpleChat&lt;/body&gt;&lt;/msg&gt;" . chr(0);
+		socket_write($socket, $handShake, strlen($handShake));
+		
+		// Wait for server response
+		while(true)
+		{
+			$out = socket_read($socket, 1024);
+			trace("Received: " . htmlspecialchars ($out));
+			
+			if (strpos($out, "zInfo") &gt; 0 )
+			{
+				$users = substr($out, 7);
+				$users = substr($out, strpos($user, "&lt;"));
+				
+				echo("&lt;h2&gt;Users in zone: $users&lt;h2&gt;");
+				break;
+			}
+			
+		}	
+		
+		// Close html tags
+		echo "&lt;/body&gt;&lt;/html&gt;";
+		socket_close($socket);
+	}
+
+	function trace($msg)
+	{
+		echo "--&gt; " . $msg . "&lt;br/&gt;";
+	}
+
+?&gt;
+</pre>
+
+<p>
+  In the first lines we start by creating a socket  object and establish a connection to the provided address and port.
+  
+  <br>
+  If the operation is successful 
+  we can send the XML request to the server and pass the zone name(s) that we need.
+The following <em>while(true)</em> loop waits for a server response that contains the expected <em>zInfo</em> token. Not necessarily the first response sent by the server is going to be what we expect: for instance if the auto-policy option is turned on the server will send the client the crossdomain policy data first, which is not what we need.</p>
+<p>Once the <em>zInfo</em> tag is found we simply read its data (by skipping the token characters), output the result to the html page and finally break the <em>while</em> loop. </p>
+<p><span class="subTitle">&raquo; Flash Sample script </span></p>
+<p>If you want to display the number of users inside a SWF file you can directly connect to the server and retrieve the XML data using an XMLSocket connection.<br>
+The following is an example of how to do it:</p>
+<pre class="code">
+ var request:String = '&lt;msg t="sys"&gt;&lt;body r="-1" action="zInfo"&gt;simpleChat&lt;/body&gt;&lt;/msg&gt;'
+var zeros:String = "000"
+
+// Create a socket connection
+var conn:XMLSocket = new XMLSocket()
+conn.onConnect = connected
+conn.onClose = closed
+conn.onData = gotData
+
+// Connect to SmartFoxServer
+conn.connect("127.0.0.1", 9339)
+
+// Handle connection to the server
+function connected(ok:Boolean)
+{
+	// Connection successfull: send message to server
+	if (ok)
+	{
+		trace("---&gt; Connected")
+		this.send(request)
+	}
+}
+
+// Connection was closed
+function closed():Void
+{
+	trace("---&gt; Lost")
+}
+
+
+function gotData(msg:String)
+{
+	// Check if this is the message we're expecting
+	if (msg.indexOf("zInfo") &gt; -1)
+	{
+		var xml:XML = new XML(msg)
+		var count:String = xml.firstChild.childNodes[0].toString()
+
+		// Format the number
+		userCount.text = zeros.substr(0, 3 - count.length) + count
+		
+		// Close connection
+		conn.close()
+	}
+}
+</pre>
+
+<p>
+  The socket connection is established using the XMLSocket object and it is handled by the <strong>onConnect() </strong>and <strong>onData()</strong>   methods. The former checks if the connection was successful and sends the XML request, the latter handles the message received from the server and parses them.<br>
+When the <em>zInfo</em> token is detected we simply extract the data from the string and display it in the textfield on Stage called <em>userCount</em>.</p>
+<p>If you're wondering why we didn't parse the XML data instead of manipulating the string, the reason is that the server response is so simple that it takes more code to do the XML parsing  than just analyzing the plain string data. </p>
+<p><span class="subTitle">&raquo; Using the embedded webserver (PRO only)</span></p>
+<p><strong>SmartFoxServer PRO 1.5.0</strong> comes with a powerful embedded webserver that integrates with the SmartFoxServer framework.<br>
+  If you're serving your application files from the embedded webserver it is very easy to show the current status of the server. An example of how to get the current server status is provided in the <strong>webserver/webapps/examples/</strong> folder.</p>
+<p>Open the <strong>ServerInfo.py</strong> file:</p>
+<pre class="code">
+from javax.servlet.http import HttpServlet
+from it.gotoandplay.smartfoxserver.webserver import WebHelper
+
+
+class ServerInfo(HttpServlet):
+
+	def __init__(self):
+	  self.htmlHead = &quot;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body style='font-family:Verdana'&gt;&quot;
+	  self.closeHtml = &quot;&lt;/body&gt;&lt;/html&gt;&quot;
+	  
+	  #
+	  # Handle GET requests
+	  #
+	  def doGet(self, request, response): 
+		w = response.getWriter()
+		w.println(self.htmlHead)
+	  
+		status = WebHelper.getServerStatus()
+		keys = status.keySet()
+		
+		w.println(&quot;&lt;h2&gt;SmartFoxServer :: Status&lt;/h2&gt;&lt;hr&gt;&quot;)
+		w.println(&quot;&lt;table cellpadding='6' cellspacing='0' border='0'&gt;&quot;)
+		w.println(&quot;&lt;tr bgcolor='#eeeeee'&gt;&lt;th align='left'&gt;Key&lt;/th&gt;&lt;th align='left'&gt;Value&lt;/th&gt;&lt;/tr&gt;&quot;)
+		
+		for key in keys:
+		w.println(&quot;&lt;tr&gt;&quot;)
+		w.println(&quot;&lt;td&gt;%s&lt;/td&gt;&lt;td&gt;%s&lt;/td&gt;&quot; % (key, status[key]))
+		w.println(&quot;&lt;/tr&gt;&quot;)
+		
+		w.println(&quot;&lt;/table&gt;&lt;hr&gt;&quot;)
+		
+		w.println(self.closeHtml)
+		w.close()
+	  
+	  #
+	  # Handle POST requests
+	  #
+	  def doPost(self, request, response): 
+		pass
+</pre>
+<p>The <strong>doGet</strong>() handles  a &quot;regular&quot; <strong>GET</strong> request to the webserver, which is what we expect in this case. (a <strong>POST</strong> request is handled when a form-data is sent to the page) </p>
+<p>In order to access the <strong>SmartFoxServer</strong> status we have to first import the <strong>it.gotoandplay.smartfoxserver.webserver.WebHelper</strong> object.<br>
+The WebHelper class has a <strong>getServerStatus</strong>() method that returns a map (java.util.Map) of values with the following keys:</p>
+<table border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td><strong>zones</strong></td>
+    <td>the number of active zones </td>
+  </tr>
+  <tr>
+    <td><strong>rooms</strong></td>
+    <td>number of active rooms </td>
+  </tr>
+  <tr>
+    <td><strong>users</strong></td>
+    <td>the number of active users </td>
+  </tr>
+  <tr>
+    <td><strong>uptime</strong></td>
+    <td>the SmartFoxServer uptime </td>
+  </tr>
+  <tr>
+    <td><strong>version</strong></td>
+    <td>current server version </td>
+  </tr>
+</table>
+<p>In order to check the provided example you should open a browser page and point it to http://127.0.0.1:8080/examples/ServerInfo.py<br>
+  (unless you have changed the default IP/port configuration parameters)
+</p>
+<p>&nbsp; </p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../15_yahtzee/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../A_appTemplate/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">Internal Event :: userJoin</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Event name:</p>
+ <p class="plain"><strong>userJoin</strong></p>
+ <p class="title">Description:</p>
+<p class="plain">This event is fired each time a user is joined in a room within
+  the current Zone.<br />The event is available for both <strong>Zone
+  Level</strong> and <strong>Room
+  Leve</strong>l extensions. 
+<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr class="tHead">
+     <td valign="top" nowrap="nowrap">name</td>
+     <td>&nbsp;</td>
+     <td>description</td>
+     <td>type</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>user</strong></td>
+     <td>&nbsp;</td>
+     <td>The User object of the new client </td>
+     <td>object</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>room</strong></td>
+     <td>&nbsp;</td>
+     <td>The Room object  representing the room that the new client joined </td>
+     <td>object</td>
+   </tr>
+</table>
+ <p class="title">Example:</p>
+<pre class="code">
+// Handle server events
+function handleInternalEvent(evtObj)
+{
+	if (evtObj.name == "userJoin")
+	{
+		var r = evtObj.room
+		var u = evtObj.user
+		
+		trace("User: " + u.getName() + " joined room: " + r.getName())
+	}
+}
+</pre>
+<br /> 
+<p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

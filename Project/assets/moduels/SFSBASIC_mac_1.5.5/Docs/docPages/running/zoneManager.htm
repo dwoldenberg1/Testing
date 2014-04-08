@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">3.4 Administrator Tool: Runtime zone management.</p>
+ <p>From <strong>SmartFoxServer version 1.1.0 </strong> it is possible to manage
+   your server zones dynamically while the server is running.<br>
+   This feature is particularly useful when you need to update your zone settings,
+   add new zones or disable one of them without the need to restart the server. <br>
+   <br>
+   Here's a list of what can be done:<br> 
+   <br>
+   &raquo; Activate or deactivate a zone on the fly. <br>
+   &raquo; Add a new zone.<br>
+   &raquo; Change the zone settings (uCount, buddyList, max users, max rooms
+   etc...) <br>
+   &raquo; Add, modify, delete moderators <br>
+   <br>
+   All these operations can be done without the need of restarting the server.</p>
+ <p class="subTitle">&raquo; The Zone Manager:</p>
+ <p><img src="images/admin_znManager.jpg" width="600" height="422"> </p>
+ <p>By selecting one Zone node from the Zone tree you will be presented a screen
+   showing all current settings for that zone. Also you will find three buttons:<br>
+   <br>
+   &raquo; <strong>Toggle Status: </strong>by clicking this button you can instantly
+   activate / deactivate a Zone. By default all the zones loaded by SmartFoxServer
+   are immediately activated in order to allow clients connections. By deactivating
+   a zone you will automatically disconnect all currently connected clients and
+   shut down the application. All attempts to connect to a disabled zone will
+   be refused.</p>
+ <p>&raquo; <strong>Refresh:</strong> request an update of the current view.</p>
+ <p>&raquo; <strong>Send Message:</strong> sends an administrator message to
+   all clients in the currently selected zone. It is reccomendable to send an
+   alert to all users before deactivating a zone.</p>
+ <p><span class="subTitle">&raquo; Reloading Zones and Settings: </span></p>
+ <p>The <strong>RELOAD ZONES</strong> button below the zone tree will reload
+   the entire &lt;Zone&gt; definition from the config.xml file.<br>
+   <br>
+ This process is made up of two phases:</p>
+ <p>1) Create and activate the new zones found in the config file.<br>
+   2) Apply the config changes to the currently running Zones.</p>
+ <p>In the first phase the config file is analyzed and all new zones definition
+   are activated, while in the second phase all changes done to the zone settings
+   are applied and made available.<br>
+   <br>
+   This way you can add new applications on the fly, add and remove moderators,
+   modify the capacity of each zone etc... </p>
+ <p><span class="subTitle">&raquo; Removing zones?</span></p>
+ <p>Now that you've seen how to add new zones and modify their current settings
+   you may be wondering if there's a way to dynamically remove zones as well.<br>
+   Actually this can be done in a couple of steps:<br>
+   <br>
+   1) Deactivate the zone: all clients will be disconnected and new connections
+   attempts will fail.<br>
+   2) Remove the zone definition from your config file and save it.<br>
+   <br>
+   Now the zone is hidden and ready to be destroyed.
+   Next time you will restart the server it will be completely removed. </p>
+ <hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="adminTool.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="extManager.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

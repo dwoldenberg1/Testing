@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.setUserVariables()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.4.0 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.setUserVariables(who, varList, 
+   sendUpdate)</p>
+ <p class="title">Description:</p>
+<p class="plain">Set one or more User Variables from the server side 
+<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>who</strong></td>
+     <td>&nbsp;</td>
+     <td>the User object where the variables will be set </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>varList</strong></td>
+     <td>&nbsp;</td>
+     <td><p>an object containing the variable(s) to set (<b>undefined</b> to delete an existing variable)
+     </p>
+     </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>sendUpdate</strong></td>
+     <td>&nbsp;</td>
+     <td>an optional boolean flag. By deafult is set to true. Set it to false
+       to avoid sending an update to all clients in the rooms where the user
+       is present. </td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="title">Example:</p>
+ <pre class="code">
+var uVars = {}
+
+uVars.strength = 1000
+uVars.agility = 800
+uVars.speed = 20
+
+
+// Set the variables for this client
+_server.setUserVariables(userObj, uVars)
+</pre>
+ <br /> 
+<p class="plain"><span class="title">See also:</span></p>
+</body>
+</html>

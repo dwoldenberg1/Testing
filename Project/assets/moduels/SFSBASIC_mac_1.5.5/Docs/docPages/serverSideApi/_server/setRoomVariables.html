@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">_server.setRoomVariables()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.4.0 </p>
+ <p class="title">Usage:</p>
+ <p class="plain">_server.setRoomVariables(room, who, varList, setOwnership,
+   sendUpdate)</p>
+ <p class="title">Description:</p>
+<p class="plain">Set one or more Room Variables from the server side 
+<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>room</strong></td>
+     <td>&nbsp;</td>
+     <td><p>the Room where the variables should be set <br />
+        <br />
+     </p>     </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>who</strong></td>
+     <td>&nbsp;</td>
+     <td>the User who wants to perform the action (null for Server owned variables) </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>varList</strong></td>
+     <td>&nbsp;</td>
+     <td><p>a list of objects representing each variable. Each object has the following
+       properties:</p><br />
+
+       <table  border="0" cellspacing="0" cellpadding="3">
+         <tr>
+           <td nowrap="nowrap"><em><strong>name</strong></em></td>
+           <td>&nbsp;</td>
+           <td> the variable name</td>
+         </tr>
+         <tr>
+           <td nowrap="nowrap"><em><strong>val</strong></em></td>
+           <td>&nbsp;</td>
+           <td>variable value (<b>undefined</b> to delete an existing variable) </td>
+         </tr>
+         <tr>
+           <td nowrap="nowrap"><em><strong>priv</strong></em></td>
+           <td>&nbsp;</td>
+           <td>true if the variable is private  </td>
+         </tr>
+         <tr>
+           <td valign="top" nowrap="nowrap"><em><strong>persistent</strong></em></td>
+           <td>&nbsp;</td>
+           <td>true if the variable is persistent (will continue to exist when
+             the user goes to another room. It is destroyed when the user closes
+            the connection) </td>
+         </tr>
+       </table> 
+<br />     </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>setOwnership</strong></td>
+     <td>&nbsp;</td>
+     <td>an optional boolean flag. By deafult is set to true. Set it to false
+     to avoid to change the ownership of the variable(s) </td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>sendUpdate</strong></td>
+     <td>&nbsp;</td>
+     <td>an optional boolean flag. By deafult is set to true. Set it to false
+       to avoid sending an update to all clients in the room where the variables
+     were changed. </td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="title">Example:</p>
+ <strong>Example #1</strong>
+<pre class="code">
+var rVars = []
+rVars.push( {name:"bestTime", val:100, priv:true} )
+rVars.push( {name:"bestLap", val:120} )
+
+// Set the variables
+_server.setRoomVariables(roomObj, userObj, rVars)
+</pre>
+<strong><br />
+Example #2</strong>
+<pre class="code">
+var rVars = []
+
+rVars.push( {name:"highscore", val:12000, priv:true} )
+
+// Set the variables
+_server.setRoomVariables(roomObj, null, rVars)
+</pre>
+<br />
+In the above example a private &quot;highscore&quot; variable is set in the room, passing <strong>null</strong> as
+the variable owner.<br />
+This way no one will be able to overwrite the variable from the client side,
+as it belongs to the server and it is private. <br />
+<br /> 
+<p class="plain"><span class="title">See also:</span></p>
+</body>
+</html>

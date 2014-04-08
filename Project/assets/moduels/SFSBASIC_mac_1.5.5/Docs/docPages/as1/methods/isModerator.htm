@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">isModerator()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">user.isModerator()</p>
+ <p class="title">Description:</p>
+<p class="plain">Returns True if the client is a moderator.<br />
+  This allows the client to send kick and ban requests to the server. </p>
+ <p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td>none</td>
+     <td>&nbsp;</td>
+     <td>none</td>
+   </tr>
+ </table>
+    <p class="title">Returns:</p>
+ <p class="plain">A boolean, true = is a moderator </p>
+ <p class="title">Example:</p>
+ <pre class="code">
+var isMod = user.isModerator()
+
+if (isMod)
+{
+	//... do something cool here ...
+}
+</pre><br />
+The following code shows how to use the moderator &quot;super powers&quot;:<br />
+<br />
+<pre class="code">
+var dataObj = {}
+dataObj.id = userId.toString()
+dataObj.msg = msg
+
+smartFox.sendXtMessage("$dmn", "kick", dataObj)
+</pre> 
+<br />
+<span class="mainmenu"><span class="postbody"> The params are: <br />
+<br />
+"<strong>$dmn</strong>" : this is the name of the admin extension, never change it <br />
+"<b>kick</b></span>": is the command you
+want to invoke ("<strong>ban</strong>" is also available) <br />
+dataObj: an object with the userId (as a string) and the mod message<br />
+<br />
+If you substitute &quot;<strong>kick</strong>&quot; with &quot;<strong>ban</strong>&quot; you will banish the user from the server. </span></span>
+ <p class="title">See also:</p>
+ <p class="plain"><strong>login(), onLogin() </strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

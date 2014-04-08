@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">3.1 The Basics </p>
+ <p class="subTitle">&raquo; Running the server </p>
+ <p>Running the server is a very simple task:</p>
+ <p><strong>Windows:</strong> go in the Start Menu &gt;&gt; programs &gt;&gt; SmartFoxServer and
+   click on &quot;Start&quot;</p>
+ <p><strong>Unix/Linux/MacOS X:</strong> open a terminal window, locate the SmartFoxServer folder
+   and just type ./start</p>
+ <p>Once the server is running you can monitor it using the <a href="adminTool.htm">Administrator
+ Tool</a>.</p>
+ <p><span class="subTitle">&raquo; Flash player: connection restrictions and
+     cross-domain policy file.</span></p>
+ <p>Flash player version 6 introduced a number of restrictions when trying
+   to connect or access resources  outside the domain where the SWF file
+   is published. <br>
+   In other words it was not possible to connect via XMLSocket to another domain
+   or load assets/variables from a domain other than the one where the movie
+   is located.<br>
+   <br>
+   For example if your SWF file was published on www.mywebsite.com it would have
+   refused to load some variables from www.anotherwebsite.com<br>
+   <br>
+   With Flash player version 7 Macromedia added extra restrictions that don't
+   allow connections even to subdomains of the parent domain.<br>
+   <br>
+   To overcome these limitations <strong>cross-domain policy files</strong> where
+   introduced: these files are simple xml files that  should be published
+   in the web root of the external domain you want to access. When you are pointing
+   the flash player to a resource outside the current domain it will try to load
+   the policy file from the web-root of the external domain and see if it can
+   access the required resource. This is valid for XMLSocket connections, loading
+   of variables, xml files and external movieclips. <br>
+   <br>
+Here's an example of a policy file:</p>
+ <pre class="code">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE cross-domain-policy SYSTEM &quot;http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd&quot;&gt;
+&lt;cross-domain-policy&gt;
+	&lt;allow-access-from domain=&quot;www.gotoandplay.it&quot; /&gt;
+&lt;/cross-domain-policy&gt; </pre>
+ <br>
+ The first 2 lines declare the document type and the following 3 are those you
+ have to edit. In this case we are allowing connections from www.gotoandplay.it
+ domain but you could also allow all domains by substituting the 4th line with
+ this one:<br>
+ <br>
+ <pre class="code"> &lt;allow-access-from domain=&quot;*&quot; /&gt;</pre>
+ <br>
+ This XML file should be always saved under the name of <strong>crossdomain.xml</strong> and
+ it should be placed in your web root folder. In the case of www.gotoandplay.it
+ the file should be reachable at this url: http://www.gotoandplay.it/crossdomain.xml<br>
+ <p><span class="subTitle">&raquo; An easier way. (SmartFoxServer Basic and PRO
+     only) </span></p>
+ <p> In Flash Player 7 (7.0.19.0) and later, ActionScript can inform the
+   Flash player of a non-default location for a policy file using <strong>System.security.loadPolicyFile</strong>. <br>
+   <br>
+   Let's say you have your SWF file published on <strong>www.mywebsite.com</strong> and SmartFoxServer
+   running on another machine at the ip address <strong>192.168.0.1</strong><br>
+   By using this line of Actionscript (before the smartfox.connect() method is
+   invoked) you will be able to automatically authorize the flash player to connect
+   outside the current domain:
+<pre class="code">System.security.loadPolicyFile(&quot;xmlsocket://192.168.0.1:9339&quot;)</pre>
+</p>
+   <br>
+   In other words you're requesting the XML cross-domain policy file from the
+   server itself.<br>
+   <strong>SmartFoxServer</strong> can automatically generate a valid xml cross-domain
+   file and
+   deliver it through the socket connection, simplyfing the solution to this
+   problem. <br>
+   By default this feature is activated. If you need more info please refer to
+   the <a href="../config/basics.htm">configuration section 2.1</a> <br>
+   <br> 
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../config/advanced.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="logs.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

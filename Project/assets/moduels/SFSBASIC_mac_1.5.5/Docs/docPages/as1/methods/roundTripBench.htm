@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">roundTripBench()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.roundTripBench()</p>
+ <p class="title">Description:</p>
+<p class="plain">Sends a a roundTrip request to the server. The roundTrip request
+  sends a small packet to the server which immediately responds<br />
+  with another small packets, firing the <strong>onRoundTripResponse </strong>event.
+  The time taken from the packet to travel back and forth is returned and it<br />
+  indicates the average network &quot;lag&quot; of the client.<br />
+  <br />
+  A good way to measure the network lag is to send continuos requests (say every
+  3 to 5 seconds) and then calculating the average value on a fixed<br />
+  number of responses (i.e. the last 10 results) </p>
+ <p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td>none</td>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+   </tr>
+ </table>
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong><strong>onRoundTripResponse</strong></strong> event </p>
+ <p class="title">Example:</p>
+ <pre class="code">
+smartFox.roundTripBench()
+</pre>
+ <p class="title">See also:</p>
+ <p class="plain"><strong><strong>onRoundTripResponse</strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

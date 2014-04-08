@@ -1,0 +1,2867 @@
+<?xml version="1.0" ?>
+<!--TheoAvatar--> 
+<!--http://www.TheoWorlds.com--> 
+<map> 
+<info rows="28" cols="20" name="" message =""/>
+<start row = "26" col="12" dir ="up"/>
+<bg image="maps/atrium/bg.swf"/>
+<fg image="maps/atrium/fg.swf"/>
+<content>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="flowers" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="flowers" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="volume16:12" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="atable1" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="volume16:12" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="flowers" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="volume16:12" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="volume18:13" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="atable1" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="volume18:13" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="volume18:13" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="volume23:13" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="object1" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="volume23:13" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="volume23:13" status="-1"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+<row>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="trans" status="1"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+<tile>
+<floor name="empty" status="0"/>
+<furniture name="empty" status="0"/>
+<character/>
+</tile>
+</row>
+</content>
+</map>

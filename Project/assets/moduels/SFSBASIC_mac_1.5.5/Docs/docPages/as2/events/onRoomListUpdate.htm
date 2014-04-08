@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">onRoomListUpdate()</p>
+ <p class="title">Availability:</p>
+<p class="plain">Flash Player 7, 8 <br />
+ SmartFoxServer  Lite / Basic / Pro</p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.onRoomListUpdate(roomList:Object) </p>
+ <p class="title">Description:</p>
+<p class="plain">The event is fired when entering a zone (usually during a <strong>login()</strong>  call).
+  The server sends a list of rooms in the zone.<br />
+  <br />
+  <strong>NOTE:</strong><br />
+If you are using the default login mechanism provided by SmartFoxServer you will receive this event right after a successfull login.<br />
+This is because the client API, internally, call the <strong>getRoomList()</strong> method after the login response has arrived.<br />
+<br />
+If you're implementing your own custom login handler you will have to manually request the list of rooms from the client side, by calling getRoomList()
+</p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td valign="top"><strong>roomList</strong></td>
+     <td>&nbsp;</td>
+     <td>A list of room objects </td>
+   </tr>
+</table>
+                                <br />
+                                Check the <a href="../classes/Room.htm">Room
+                                Class</a> for more info on the objects returned. <br />
+                                <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="plain"><span class="title">Example:</span>
+<pre class="code">
+smartFox.onRoomListUpdate = function(roomList)
+{
+	// Dump the names of the rooms available
+	for (var r:String in roomList:Object)
+	{
+		trace(roomList[r].getName())
+	}
+}
+</pre> 
+ </p>
+<strong class="plain"></strong>
+<p class="title">See also:</p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

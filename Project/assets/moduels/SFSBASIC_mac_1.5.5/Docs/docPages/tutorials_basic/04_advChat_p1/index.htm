@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.4 Tutorials: Advanced Chat (part 1) </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available  under the <strong>Examples/(Actionscript version)/advancedChat</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>In this tutorial we will expand the concepts learned in the previous ones and we will enhance the &quot;<strong>Simple
+     Chat</strong>&quot; demo
+   to make it a more advanced chatting application.</p>
+ <p>The picture below shows the main GUI (graphical user interaface) of the &quot;<strong>AdvancedChat</strong>&quot;:</p>
+ <p><img src="images/gui.jpg" width="500" height="378" class="imgBorder"></p>
+ <p>Here's a list of the features that we're going to add to the &quot;<strong>Simple
+ Chat</strong>&quot; example:</p>
+ <p><strong>&raquo; A roomlist</strong><br>
+  It will show every room available with realtime user count. You will be able to:<br>
+  - 
+  join any room by clicking on it;<br>
+  - join password protected rooms;<br>
+  - create new rooms (with password also).<br>
+  <br>
+  <strong>&raquo; A better UserList</strong><br>
+  By clicking on one user you will be able to send a private message.<br>
+  <br>
+  <strong>&raquo; An exit button</strong><br>
+  By clicking it you will log out of the chat.</p>
+ <p><span class="subTitle">&raquo; The RoomList </span></p>
+ <p>By opening the source .FLA file you will notice that the code in the first two labels is almost identical to the previous sample, so you can safely position the playhead on the &quot;<strong>chat</strong>&quot; label.</p>
+ <p>The first thing you should notice in the GUI is the presence of a new listbox called roomList_lb.</p>
+ <p>Now open the Actionscript panel (F9) and inspect the code for the onRoomListUpdate() event:</p>
+ <pre class="code">smartfox.onRoomListUpdate = <font color="#993300">function</font>(roomList)
+{
+        roomList_lb.<font color="#000087">removeAll</font>()
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> roomList)
+        {
+                <font color="#993300">var</font> room = roomList[i]
+                roomList_lb.<font color="#000087">addItem</font>(room.getName() + "<font color='blue'> (</font>" + room.getUserCount() + "<font color='blue'>)</font>", room.getId())
+        }
+        
+        roomList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+        
+        <font color='#878787'>// Join the default room
+</font>        <font color="#993300">this</font>.autoJoin()
+}</pre>
+ <p>The first line makes sure that no item is present in the listbox. Then we proceed by iterating through the <strong>roomList</strong> array and we add each room name to the listbox (plase note that the label is built by joining the room name and the user count for that room).</p>
+ <p>Once the list is populated we can sort it in ascending alphabetical order.</p>
+ <p>Just like we did in the other tutorials we call the <strong>autoJoin()</strong> method to automatically join the default room.</p>
+ <p><strong><br>
+  NOTE<br>
+  Using the autoJoin() method is not mandatory but it is usually easier, if you always need to bring the &quot;just-arrived&quot; users in a default room. Also the autoJoin() method works only if you have defined an autoJoin room in the zone, if none was defined the call will fail.</strong></p>
+ <p><span class="subTitle">&raquo; Updating the Room status</span></p>
+ <p>  Now that we have a complete list of rooms with the number of users for each of them how do we know when something changes? What happens if two users exit one room? SmartFoxServer will send you notices of these changes, so all we need to do is writing the appropriate handler for the <strong>onUserCountChange</strong> event.</p>
+ <pre class="code">smartfox.onUserCountChange = <font color="#993300">function</font>(roomObj)
+{
+        updateRoomStatus(roomObj.getId())
+}</pre>
+ <p>Every time the event is fired the server passes a Room object that represents the room in which the change occured.<br>
+We have setup a simple function called <strong>updateRoomStatus</strong> that will take care of changing the label in the room list component.</p>
+ <pre class="code"><font color="#993300">function</font> updateRoomStatus(roomId)
+{
+        <font color="#993300">var</font> room = smartfox.roomList[roomId]
+        <font color="#993300">var</font> newLabel = room.name + "<font color='blue'> (</font>" + room.getUserCount() + "<font color='blue'>)</font>"
+        <font color="#993300">for</font> (i=0; i &lt; roomList_lb.<font color="#000087">getLength</font>(); i++)
+        {
+                <font color="#993300">var</font> item = roomList_lb.<font color="#000087">getItemAt</font>(i)
+                <font color="#993300">if</font> (roomId == item.data)
+                {
+                        roomList_lb.<font color="#000087">replaceItemAt</font>(i, newLabel, item.data)
+                        <font color="#993300">break</font>;
+                }
+        }
+}</pre>
+ <p>The function takes the Id of the room and loops through the list box items until it finds the right item. Then it changes its label updating the user count.</p>
+ <p><span class="subTitle">&raquo; Joining another Room </span></p>
+ <p>At the very beginning of the code you will find these lines:</p>
+ <pre class="code"><font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Setup components callback functions
+</font><font color='#878787'>//----------------------------------------------------------
+</font>roomList_lb.<font color="#000087">setChangeHandler</font>("<font color='blue'>changeRoom</font>")
+userList_lb.<font color="#000087">setChangeHandler</font>("<font color='blue'>userSelected</font>")</pre>
+ <p>They set the name of the function to call when an item in the list component is clicked. We'll concentrate on the changeRoom() method for now:</p>
+ <pre class="code"><font color="#993300">function</font> changeRoom()
+{
+        <font color="#993300">var</font> item = roomList_lb.<font color="#000087">getSelectedItem</font>()
+        
+        <font color='#878787'>// new Room id
+</font>        <font color="#993300">var</font> newRoom = item.data
+        
+        <font color="#993300">if</font> (newRoom != smartfox.activeRoomId)
+        {
+                <font color='#878787'>// Check if new room is password protected
+</font>                <font color="#993300">var</font> priv = smartfox.getRoom(newRoom).isPrivate()
+                
+                <font color="#993300">if</font> (priv)
+                {
+                        <font color='#878787'>// Save newroom as _global for later use
+</font>                        <font color="#000087">_global</font>.newRoom = newRoom
+                        
+                        showWindow("<font color='blue'>passwordWindow</font>")
+                }
+                <font color="#993300">else</font>
+                {
+                        <font color='#878787'>// Pass the room id
+</font>                        smartfox.joinRoom(item.data)
+                }
+        }
+}</pre>
+ <p>The code checks that the room we've selected is different from the one we're currently in, and it uses a SmartFoxClient property that we haven't met yet: <strong>activeRoomId</strong>. This property always holds the Id of the last room we've joined.</p>
+ <p>Another important check we have to do is controlling if the room is password protected.</p>
+ <pre class="code"><font color="#993300">var</font> priv = smartfox.getRoom(newRoom).isPrivate()</pre>
+ <p>The <strong>getRoom(id) </strong>method returns a <strong>Room object</strong>. The <strong>isPrivate()</strong> is a Room method: it returns a boolean (true = password needed, false = no password).</p>
+ <p>If the room has no access restrictions we can join it by simply using smartfox.joinRoom() and passing the room Id to it.</p>
+ <pre class="code">smartfox.joinRoom(item.data)</pre>
+ <p>If the room needs a password we need to do some extra operations:</p>
+ <p>1) save the Id of the room we want to join somewhere for later use (_global.newRoom = newRoom)<br>
+  2) show a dialog box and wait for user input (see previous tutorial)<br>
+  3) finally send the login and password: smartfox.joinRoom(_global.newRoom, pwd)</p>
+ <p>Once the password is submitted the dialog box will call the <strong>loginProtectedRoom()</strong> method in the main timeline:</p>
+ <pre class="code"><font color="#993300">function</font> loginProtectedRoom(pwd)
+{
+        hideWindow("<font color='blue'>passwordWindow</font>")
+        smartfox.joinRoom(<font color="#000087">_global</font>.newRoom, pwd)
+}</pre>
+ <p>which in turn sends the previously saved room Id and the password.</p>
+ <p><strong>NOTE<br>
+We have used the joinRoom() method with one argument for rooms with no passwords and with two arguments when a password is needed. For completeness, the full set of arguments is this:</strong></p>
+ <pre class="code">joinRoom = <font color="#993300">function</font>(newRoom, pword, isSpectator, dontLeave, oldRoom)</pre>
+ <p><strong>SmartFoxServer</strong> allows a user to be present in more than one room at a time. This can be useful for complex applications where you need more advanced user interaction. However to keep things simple the <strong>joinRoom</strong> method leaves the current room by default before entering a new one as this is the most common behaviour for most applications.
+If you need to stay in one room while joining a new one you can pass the <strong>dontLeave</strong> parameter as true.<br>
+One more thing about the <strong>newRoom</strong> argument: you can both pass the room Id or the room name as first parameter.<strong><br>
+              <br>
+              </strong>Now that we have sent our <strong>joinRoom</strong> request we should be prepared to receive complaints by the server.<br>
+For example the server may generate an error if the room we're trying to join is already full. Antoher error could be generated if the password sent is wrong.</p>
+ <p>The <strong>onJoinRoomError</strong> is responsible of handling such event:</p>
+ <pre class="code">smartfox.onJoinRoomError = <font color="#993300">function</font>(errorMsg)
+{
+        <font color="#993300">var</font> win = showWindow("<font color='blue'>errorWindow</font>")
+        win.errorMsg.<font color="#000087">text</font> = errorMsg
+        
+        <font color='#878787'>// Put the selected room in the combo box back to its old value
+</font>        resetRoomSelected(smartfox.activeRoomId)
+}</pre>
+ <p>The first two lines will show an error window and the text box inside the dialog box will show the error message passed by the server.<br>
+The next line invokes the <strong>resetRoomSelected()</strong>: this is a little &quot;trick&quot; that we use to restore the selected item in the room list component if the joinRoom request fails.</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../03_simpleChat_p2/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../05_advChat_p2/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

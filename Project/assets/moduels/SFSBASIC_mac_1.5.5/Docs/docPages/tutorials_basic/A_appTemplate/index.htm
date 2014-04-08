@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.a Appendix: Application code template </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available for both Flash MX and MX2004 under the <strong>Examples/(Actionscript version)/applicationTemplate</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>In this article we will take a look at a simple code template that can be
+   used as a starting point for almost any SmartFoxServer based multiuser application.<br>
+   The template contains all the basic methods to establish a connection, authenticate,
+   join rooms etc... and all the necessary server response handlers. </p>
+ It is required that you're already familiar at least with the &quot;Connection&quot; (5.1)
+ and &quot;Simple Chat&quot; (5.2) tutorials before you proceed with this article. <br>
+ <p><span class="subTitle">&raquo; The basic steps </span></p>
+ <p>One of the problem that developers may find when taking their first steps
+   in multiuser applications, is to fully understand the basic operations that
+   are necessary to interact with the server. In fact there's a precise sequence
+   of commands that is used to establish the  connection with the server,
+   before you can fully interact with it.<br>
+   <br>
+The sequence is very simple, and looks like this:</p>
+ <p><strong>1) Establish a socket connection:  </strong>this is the very first
+   step. At this point it is just like if you were knocking at the server's
+   door. <br>
+ If the server is up and running it will immediately respond and activate a new
+ communication channel for your client application. </p>
+ <p><strong>2) Login:</strong> in this phase you should tell the server who you are and which
+   application you would like to interact with.<br>
+ If this operation is successfull you will receive the list of rooms available
+ in the current zone/application. </p>
+ <p><strong>3)  Join a room:</strong> this is the last step. Once a room is joined you can start
+   interacting with the other users and the application logic.</p>
+ <p><span class="subTitle">&raquo; The code </span> <br>
+   <br>
+ Here's the code of the application-template. For brevity we have stripped the
+ comments. You will find them in the source .FLA file. </p>
+ <pre class="code">import it.gotoandplay.smartfoxserver.*
+
+<font color="#000087">stop</font>()
+
+<font color="#993300">var</font> ip:<font color="#993300">String</font>		= "<font color='blue'>127.0.0.1</font>"
+<font color="#993300">var</font> port:<font color="#993300">Number</font> 	= 9339
+<font color="#993300">var</font> zone:<font color="#993300">String</font> 	= "<font color='blue'>simpleChat</font>"
+
+<font color='#878787'>// Load the policy file from the server</font>
+System.security.loadPolicyFile("xmlsocket://" + ip + ":" + port)
+
+<font color="#993300">var</font> smartfox:SmartFoxClient = <font color="#993300">new</font> SmartFoxClient()
+smartfox.onConnection = handleConnection
+smartfox.<font color="#000087">connect</font>(ip, port)
+
+
+<font color="#993300">function</font> handleConnection(success)
+{
+        <font color="#993300">if</font> (success)
+        {
+                <font color="#993300">trace</font>("<font color='blue'>&gt;&gt; Connection successfull</font>")
+                sendLogin()
+        }
+        <font color="#993300">else</font>
+        {
+                <font color="#993300">trace</font>("<font color='blue'>[ ERROR ]: Can't connect!</font>")
+        }
+}
+
+
+<font color="#993300">function</font> sendLogin()
+{
+        smartfox.login(zone, "<font color='blue'></font>")
+}
+
+
+smartfox.onLogin = <font color="#993300">function</font>(resObj:<font color="#993300">Object</font>)
+{
+        <font color="#993300">if</font> (resObj.success)
+        {
+                <font color='#878787'>// Login Successfull
+</font>                <font color="#993300">trace</font>("<font color='blue'>&gt;&gt; Login successfull. Nickname: </font>" + resObj.name)
+        }
+        <font color="#993300">else</font>
+        {
+                <font color="#993300">trace</font>("<font color='blue'>[ ERROR ]: Login error. Server said: </font>" + resObj.error)
+        }
+}
+
+
+smartfox.onRoomListUpdate = <font color="#993300">function</font>(roomList:<font color="#993300">Object</font>)
+{
+        <font color="#993300">trace</font>("<font color='blue'>&gt;&gt; Received the list of rooms\n</font>")
+        <font color="#993300">trace</font>("<font color='blue'>\tRoom List:</font>")
+        <font color="#993300">trace</font>("<font color='blue'>\t--------------------------------------------</font>")
+        
+        <font color='#878787'>// Show the list of rooms
+</font>        <font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> roomList)
+        {
+                <font color="#993300">trace</font>("<font color='blue'>\t</font>" + roomList[i].getName())
+        }
+        
+        <font color='#878787'>// a blank line
+</font>        <font color="#993300">trace</font>("<font color='blue'></font>")
+        
+        <font color='#878787'>// Join the default room
+</font>        <font color="#993300">this</font>.autoJoin()
+}
+
+
+smartfox.onJoinRoom = <font color="#993300">function</font>(roomObj:Room)
+{
+        <font color="#993300">trace</font>("<font color='blue'>&gt;&gt; Room: '</font>" + roomObj.getName() + "<font color='blue'>' joined successfully</font>")
+}
+
+
+smartfox.onJoinRoomError = <font color="#993300">function</font>(errorMsg)
+{
+        <font color="#993300">trace</font>("<font color='blue'>[ ERROR ]: Error joining the room. Server said: </font>" + errorMsg)
+}
+
+
+smartfox.onConnectionLost = <font color="#993300">function</font>()
+{
+        <font color="#993300">trace</font>("<font color='blue'>[ ERROR ]: Connection with server was lost</font>")
+}
+
+
+</pre>
+<p>   The three steps that we have highlighted in the introduction are easily
+  recognizable:</p>
+<p><strong>1) Establish a socket connection: </strong>it is done by calling the
+<strong>connect()</strong> method and it is handled in the <strong>onConnection()</strong> function. </p>
+<p><strong>2) Login:</strong> the <strong>sendLogin()</strong> method sends the
+  zone name and an empty user-name. This the simplest form of login: the client
+  is treated as a &quot;guest&quot; and he will be assigned an automatically generated
+  nickname. The login response is received by the <strong>onLogin()</strong> handler <br>
+  <br>
+  <strong>NOTE:</strong> the login process is completely customizable using
+  server side extensions, we have chosen the &quot;guest login&quot; system for the sake
+  of simplicity. </p>
+<p><strong>3) Join a room:</strong> Finally a room is joined with the join()
+  or autoJoin() method and the result is handled in the <strong>onJoinRoom()</strong> / <strong>on
+  JoinRoomError() </strong>functions. </p>
+<p><span class="subTitle">&raquo; Skipping Frames </span></p>
+<p>As you may have noticed, the example template contains all the actionscript
+  code in the first frame. We usually reccomend to use this approach whenever
+  possible, however there are  developers who prefer to use different frames
+  for different sections of their applications, which is also good. <br>
+  <br>
+  If you plan to use the latter approach you should pay attention not to separate
+  a server request from its handler in two different frames, as this may cause
+  some problems. For example if you execute a server request in frame 1 be sure
+  to have the response handler for that request in frame 1 too. 
+</p>
+<p><span class="subTitle">&raquo; Conclusions</span></p>
+<p>Once the three simple steps we've listed are successfully executed, you can
+  start to fully interact with the application logic.<br>
+  </p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../16_theoChat/index.htm" class="navLinks"></a></td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../02_simpleChat_p1/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

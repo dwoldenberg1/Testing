@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">sendObjectToGroup()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.sendObjectToGroup(obj, userList)</p>
+ <p class="title">Description:</p>
+<p class="plain">Sends an Actionscript object to one or more users, as specified
+  in the second parameter <br />
+Can be useful for sending complex/nested data structures to clients, like a
+  game move or a game status change.<br />
+  <br />
+Supported datatypes are: Strings, Booleans, Numbers, Arrays, Objects</p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>obj</strong></td>
+     <td>&nbsp;</td>
+     <td>An object containing all data that you need to send. The Object can
+       contain other objects, arrays etc... </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>userList</strong></td>
+     <td>&nbsp;</td>
+     <td>An array containing one or more recipient id </td>
+   </tr>
+ </table>
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong><strong>onObjectReceived</strong></strong> event </p>
+ <p class="title">Example:</p>
+<p class="plain">A simple object with primitive data is sent to the users with id = 1,2</p>
+ <pre class="code">
+move = {}
+move.x = 150
+move.y = 250
+move.speed = 8
+
+smartFox.sendObjectToGroup(move, [1,2])
+</pre>
+<p class="plain">&nbsp;</p>
+ 
+ <p class="title">See also:</p>
+ <p class="plain"><strong><strong><strong>onObjectReceived</strong></strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

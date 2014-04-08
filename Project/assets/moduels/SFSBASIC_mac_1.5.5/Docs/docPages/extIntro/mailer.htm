@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.5 Sending emails </p>
+ <p>Sending emails from SmartFoxServer Extension is very easy and it allows developers
+to send confirmation messages after a user registration, news about the game,
+administrator messages etc... <br>
+Emails can be formatted as simple text or HTML.<br>
+<br> 
+Before you can send email messages from an extension you should configure the
+SMTP server you're going to use.<br>
+   <br>
+ <span class="subTitle">&raquo; Configuring the SMTP</span></p>
+<p>Open your config.xml file and look for the <strong>&lt;Mailer&gt;&lt;/Mailer&gt;</strong> block:
+<pre class="code">
+&lt;Mailer&gt;
+	&lt;MailHost&gt;smtp.mail.com&lt;/MailHost&gt;
+	&lt;MailUser&gt;myAccount@mail.com&lt;/MailUser&gt;
+	&lt;MailPass&gt;myPassword&lt;/MailPass&gt;
+	&lt;WorkerThreads&gt;1&lt;/WorkerThreads&gt;
+&lt;/Mailer&gt;
+  </pre>
+  <br>
+  There are only three parameters to set:<br>
+  <br>
+  <table  border="0" cellspacing="0" cellpadding="3">
+    <tr>
+      <td valign="top" nowrap="nowrap"><strong>MailHost</strong></td>
+      <td>&nbsp;</td>
+      <td>Your email SMTP IP address or url </td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><strong>MailUser</strong></td>
+      <td>&nbsp;</td>
+      <td>Your SMTP account </td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><strong>MailPassword</strong></td>
+      <td>&nbsp;</td>
+      <td>Your account password</td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><strong>WorkerThreads</strong></td>
+      <td>&nbsp;</td>
+      <td>The number of threads that should handle the mail taks. By default it is set to 1. <br>
+      We recommend not to change this value unless you really need it and you understand what java threads are and how they work. </td>
+    </tr>
+  </table> 
+  <br>
+  <span class="subTitle">&raquo; Sending emails from a server side extension<br></span>
+  <br> 
+  Sending messages with the server side API is straightforward. Here's a quick
+  code example: <br>
+  <br>
+  <pre class="code">
+/*
+* Example of how to send an email.
+*/
+var from = "info@gotoandplay.it"
+var to = "dickDynamite@mail.com"
+var subject = "1, 2, 3 ... check!"
+var message = "Hi there! This email was sent from SmartFoxServer!"
+
+var ok = _server.sendMail(from, to, subject, message)
+
+if (ok)
+	trace("Mail sent!")
+else
+	trace("Ooops! Failed sending mail to: " + to)
+</pre> 
+  <br>
+  Everything is handled by the <strong>_server.sendMail()</strong> method which
+  takes four arguments:<br>
+  <br>
+  <table  border="0" cellspacing="0" cellpadding="3">
+    <tr>
+      <td valign="top" nowrap="nowrap"><strong>from</strong></td>
+      <td>&nbsp;</td>
+      <td>the email address of the sender</td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><strong>to</strong></td>
+      <td>&nbsp;</td>
+      <td>the email address of the recipient </td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><strong>subject</strong></td>
+      <td>&nbsp;</td>
+      <td>the subject of the email </td>
+    </tr>
+    <tr>
+      <td valign="top" nowrap="nowrap"><strong>message</strong></td>
+      <td>&nbsp;</td>
+      <td>a text or html message </td>
+    </tr>
+  </table> 
+  <br>
+  The method returns <strong>true</strong> if the email was sent successfully
+  and if it returns <strong>false</strong> you should check what's wrong with
+  your SMTP configuration. <br>
+</p>
+<br>
+<br>
+<hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="databaseConnection.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="javaInActionscript.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

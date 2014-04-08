@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">onSpectatorSwitched()</p>
+ <p class="title">Availability:</p>
+<p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer  Basic / Pro</p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.onSpectatorSwitched(success, newId, roomObj) </p>
+ <p class="title">Description:</p>
+<p class="plain">The event is fired in response to a <strong>switchSpectator() </strong>request.
+  The request to turn a spectator into a player may fail if another user did
+  the same before your request and there was only one player slot available. <br />
+  All spectators have their playerId property set to -1 when you become a player
+  your playerId will get a number &gt; 0, representing the player number.<br />
+  For example in a game room for 3 players your Id can be any number between
+  1,2,3. These values are assigned by the server, based on the order in which
+  the players joined. <br /> 
+</p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td valign="top"><strong>success</strong></td>
+     <td>&nbsp;</td>
+     <td>True if the spectator user was turned into a player in a game room,
+       otherwise will return False</td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>newId</strong></td>
+     <td>&nbsp;</td>
+     <td>The playerId assigned by the server </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>roomObj</strong></td>
+     <td>&nbsp;</td>
+     <td>the object representing the room where the switch occurred</td>
+   </tr>
+</table>
+                                <p>Check the <a href="../classes/Room.htm">Room
+                                Class</a> for more info on the objects returned. </p>
+                                <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="plain"><span class="title">Example:</span>
+<pre class="code">
+smartFox.onSpectatorSwitched = function(success, newId, roomObj)
+{
+	if (success)
+	{
+		trace("Great! Now I am player #" + newId)
+	}
+	else
+	{
+		trace("The attempt to switch as a player failed.")
+	}
+}
+</pre> 
+ </p>
+<strong class="plain"></strong>
+<p class="title">See also:</p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.6 Introduction: Using Java in Actionscript</p>
+ <p>The Server Side Framework is not only limited by the provided API, but it
+   can easily access the entire <strong>Java2</strong> Framework and any <strong>other
+   Java classes</strong>, providing
+   an unlimited amount of possibilities for developers.<br>
+   <br>
+   Mixing Java classes in your Actionscript code is really very simple. Have
+   a look at the example below:
+<pre class="code">
+   var list = new java.util.LinkedList()
+   
+   for (var i = 0; i < 10; i++)
+   {
+   		list.add("Item " + i)
+   }
+   
+   // Use a Java iterator to cycle through the list
+   for (var it = list.iterator(); it.hasNext();)
+   {
+   		trace(it.next())
+   }
+   </pre>
+   <br>
+   As you can see from the code, Java classes can be instantiated and accessed
+   using their fully qualified name.<br>
+   <br>
+   With this approach there's really no limit to what could be achieved
+   with <strong>SmartFoxServer PRO</strong>: parsing and writing XML, using XSLT and XPath, writing
+   web services etc... <br>
+   <br>
+   Not only Java classes can extend the possibilities of what you can do on the
+   server side, but they may also help in obtaining <strong>better
+   performance</strong> in critical
+   parts of your code. For example in a complex 2D array loop you may want to
+   use Java native collections instead of Actionscript arrays to get faster code
+   execution.<br>
+   <br>
+<span class="subTitle">&raquo; The Packages object </span><br>
+     <br>
+     A special object called <strong>Packages</strong>
+is available to access Java classes outside of the J2SE standard packages.<br>
+In order to access your custom classes you should add them to the classpath in
+the start.bat (Win) or start.sh (Linux) scripts. <br>
+<br>
+Here follows an example that shows how to create an instance of the <strong>User</strong> class
+inside the <strong>it.gotoandplay.smartfoxserver.data</strong> package<br>
+<br>
+<pre class="code">
+	var data = Packages.it.gotoandplay.smartfoxserver.data
+	var user = new data.User()
+</pre>
+<br>
+A complete Extension example is provided with <strong>SmartFoxServer
+PRO</strong> showing how
+to integrate Java libraries in Actionscript, you can read it in <a href="../tutorials_pro/07_javaInActionscript/index.htm">chapter 8.7</a> <br>
+<br>
+<hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="mailer.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right">&nbsp;</td>
+  </tr>
+</table>
+
+</body>
+</html>

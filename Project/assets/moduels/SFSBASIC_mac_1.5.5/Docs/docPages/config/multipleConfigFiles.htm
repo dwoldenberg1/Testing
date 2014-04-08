@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+<p class="title">2.4 Multiple configuration files</p>
+<p>
+	By default the <strong>SmartFoxServer</strong> configuration is stored in a file called <strong>config.xml</strong>
+	<br />
+	Since version <strong>1.5.5</strong> and higher it is possible to save multiple configuration files and tell the server which one to load
+	at boot time. This can be especially helpful during development for storing different server settings. 
+</p>
+<p>
+	The following document briefly illustrates how you can specify which configuration file should be loaded
+	when the server starts.
+</p>
+<p class="subTitle">&raquo; Server running standalone</p>
+<p>
+	The server is run in standalone mode using a script that depends on the operating system being used:
+	<table border="0" cellspacing="1" cellpadding="4">
+		<tr style="font-weight:bold; color:fff; background-color:f60;">
+			<td>OS Type</td>
+			<td>Start script</td>
+		</tr>
+		<tr>
+			<td>Windows</td>
+			<td>start.bat</td>
+		</tr>
+		<tr style="background-color:f4f4f4;">
+			<td>Linux</td>
+			<td>start.sh</td>
+		</tr>
+		<tr>
+			<td>MacOS X</td>
+			<td>start.sh</td>
+		</tr>
+		<tr style="background-color:f4f4f4;">
+			<td>Other Unix(es)</td>
+			<td>start.sh</td>
+		</tr>
+	</table>
+</p>
+<p>
+	In order to use a different configuration file, open the start script located in the <strong>Server/</strong> folder with your favorite
+	text editor: 
+	<ul style="line-height:20px;">
+	<li>You will find a very long line of text.</li>
+	<li>Move to the end of it and locate the following text: <em>it.gotoandplay.smartfoxserver.SmartFoxServer</em></li>
+	<li>Add a blank space and the name of the configuration file you want to use</li>
+	<li>
+		In other words the file will look something like this:
+		<pre class="code">java -cp ....... lots of text here ...... it.gotoandplay.smartfoxserver.SmartFoxServer myConfig.xml</pre>
+	</li>
+	<li>Finally save the file and launch the server</li>
+	</ul>
+</p>
+
+
+<p class="subTitle">&raquo; Server running as a service</p>
+	When running the server as a service the JVM (Java Virtual Machine) is wrapped by a third party
+	software which enables the server to run as daemon. In order to specify an alternative configuration file you will have to follow these simple steps:
+	
+	<ul style="line-height:20px;">
+		<li>Edit the <strong>wrapper.conf</strong> file located in the <strong>Server/wrapper/</strong> folder</li>
+		<li>
+			Reach at around line 50 and locate the following line:<br/>
+			<pre class="code">wrapper.app.parameter.1=it.gotoandplay.smartfoxserver.SmartFoxServer</pre>
+		</li>
+		<li>
+			Add the following line, with the name of your configuration file:<br/>
+			<pre class="code">wrapper.app.parameter.2=myConfig.xml</pre>
+		</li>
+		<li>Start / Restart the server</li>
+	</ul>
+</p>
+<p>&nbsp;</p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%">&nbsp;</td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="features.htm" class="navLinks"></a></td>
+  </tr>
+</table
+
+</body>
+</html>

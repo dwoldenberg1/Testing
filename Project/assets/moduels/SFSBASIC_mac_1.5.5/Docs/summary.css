@@ -1,0 +1,51 @@
+.bodyStyle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	background-color: #FFFFFF;
+	margin: 6px;
+	margin-left: 10px;
+}
+
+.chapter {
+	font-family: Verdana, "Times New Roman", Times, serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #FF6600;
+}
+
+a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #990000;
+	text-decoration: none;
+	padding:2px;
+	font-weight: normal;
+}
+
+a:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #ff0000;
+	text-decoration: none;
+	padding:2px;
+	font-weight: normal;
+}
+
+.tableStyle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	background-color: #f6f6f6;
+}
+
+hr {
+	border: 1px dotted #CCCCCC;
+}
+.chapterPro {
+
+	font-family: Verdana, "Times New Roman", Times, serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #CC0000;
+}

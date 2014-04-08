@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">Internal Event :: loginRequest </p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.2.1 </p>
+ <p class="title">Event name:</p>
+ <p class="plain"><strong>loginRequest</strong></p>
+ <p class="title">Description:</p>
+<p class="plain">This event is fired when a user is trying to connect to a Zone.
+  The event is available only for <strong>Zone
+  Level</strong> extensions. <br />
+  In order to receive this event the <strong>customLogin</strong> attribute of
+  your Zone should be set to true. If it is set to false the user will login
+  using the default SmartFoxServer login procedure.<br />
+  <br />
+  Turning on the 
+  <strong>customLogin</strong> attribute allows developers to handle the login
+with his own custom logic, mayb using a database etc...<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr class="tHead">
+     <td valign="top" nowrap="nowrap">name</td>
+     <td>&nbsp;</td>
+     <td>description</td>
+     <td>type</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>nick</strong></td>
+     <td>&nbsp;</td>
+     <td>The nickname sent by the user <strong></strong></td>
+     <td>java.lang.String (*)</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>pass</strong></td>
+     <td>&nbsp;</td>
+     <td>The password sent by the user </td>
+     <td>java.lang.String (*)</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>chan</strong></td>
+     <td>&nbsp;</td>
+     <td>The socket channel representing the client connection. </td>
+     <td>object</td>
+   </tr>
+</table>
+ <p><strong>(*) A note on data types:</strong> the parameters passed by the  server events to the running extensions are all Java types.<br />
+You can use them transparently in Actionscript or cast them to AS native data types. <br />
+<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/String.html" target="_blank">&raquo; javadoc for -&gt; java.lang.String</a></p>
+ <p class="title">Example:</p>Here's an example of a very simple custom login function.<br />
+  The correct user name and password were written directly in the code for the
+  sake of simplicity. <br />
+  <br />
+
+<pre class="code">
+function handleInternalEvent(evtObj)
+{
+	if (evt.name == "loginRequest")
+	{
+		var nick = evt.nick
+		var pass = evt.pass
+		var chan = evt.chan
+		
+		// Check login
+		if (nick == "Smart" && pass == "Fox")
+		{
+			// Successfull ... but ...
+			// we're not done YET! The server may refuse to login the user because the Zone is full
+			// or another user has the same name, or the user was banned etc ...
+			
+			// We ask the server to login this new user
+			var obj = _server.loginUser(nick, pass, chan)
+			
+			// Let's see the server response!
+			if (obj.success == true)
+			{
+				// Success!!
+				trace("Welcome " + nick)
+			}
+			else
+			{
+				// Login failed
+				trace("Sorry mate, there was a server error: " + obj.error)
+			}
+		}
+	}
+}
+</pre>
+<br /> 
+<p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

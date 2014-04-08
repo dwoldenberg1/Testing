@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">Internal Event :: fileUpload </p>
+ <p class="title">Availability:</p>
+ <p class="plain">SmartFoxServer PRO 1.5.0 </p>
+ <p class="title">Event name:</p>
+ <p class="plain"><strong>fileUpload</strong></p>
+ <p class="title">Description:</p>
+<p class="plain">The event is fired by the server each time a client uploads a file using the clientside APIs<br />
+  The uploaded file is stored by default in the <strong>webserver/webapps/default/uploads/</strong> folder with an automatically generated name to avoid name collisions.<br />
+  The original file name is however preserved and passed as a parameter in the event handler.
+
+<p class="title">Properties:</p>
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr class="tHead">
+     <td valign="top" nowrap="nowrap">name</td>
+     <td>&nbsp;</td>
+     <td>description</td>
+     <td>type</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>files</strong></td>
+     <td>&nbsp;</td>
+     <td>A list of files that were uploaded. Each item in the array is an object with the following properties:<br />
+     <br />
+     - <strong>fileName</strong>: the name used by the server to store the file.<br />
+     - <strong>originalName</strong>: the original name of the file sent by the client </td>
+     <td valign="top">Array</td>
+   </tr>
+   <tr>
+     <td valign="top" nowrap="nowrap"><strong>user</strong></td>
+     <td>&nbsp;</td>
+     <td>The user object representing the client that uploaded the file </td>
+     <td>User</td>
+   </tr>
+</table>
+  <p class="title">Example:</p>
+<pre class="code">
+
+function handleInternalEvent(evt)
+{	
+	if (evt.name == "fileUpload")
+	{
+		var files = evt.files
+		var user = evt.user
+		
+		// Display the user name
+		trace("Files uploaded by: " + user.getName())
+		
+		// Show uploaded files
+		for (var i in files)
+		{
+			trace("File: " + files[i].fileName + ", " + files[i].originalName)
+		}
+	}
+}
+</pre>
+<br /> 
+<p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

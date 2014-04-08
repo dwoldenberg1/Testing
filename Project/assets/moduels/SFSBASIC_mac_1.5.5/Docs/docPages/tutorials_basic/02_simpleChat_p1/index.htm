@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.2 Tutorials: Simple Chat (part 1) </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available  under the <strong>Examples/(Actionscript version)/simpleChat</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>
+ </p>
+ In this  tutorial, together with the next one, you'll learn how to build a basic chat application that will be able to:
+ <p><strong>&raquo; connect to the server</strong><br>
+     <strong>&raquo; log in users</strong><br>
+     <strong>&raquo; send and receive user messages</strong></p>
+ <p>Open the source .FLA and have a look at the timeline. Don't worry about the
+   amount of layers, the ones in which we are interested now are only the top
+ two called &quot;<strong>labels</strong>&quot; and &quot;<strong>{ code }</strong>&quot;. Most of the other layers contain the graphics for the chat interface.</p>
+ <p><img src="images/pic01.gif" width="356" height="156" class="imgBorder"></p>
+ <p>Have a look at the &quot;labels&quot; layer and you will find three different labels corresponding to 3 different &quot;states&quot; of the application.<br>
+Let's examine those states in detail.</p>
+ <p><span class="subTitle">&raquo; Load </span></p>
+ <p>The playhead will start here and it will wait until the movieclip is fully loaded.<br>
+We've just implemented a very basic preloading system in order to prevent that
+  the movieclip attempts to connect to the server before it's completely loaded.</p>
+ <p><span class="subTitle">&raquo; Connect </span></p>
+ <p>In this screen we will use most of the code from the previous tutorial: we will present a screen with a dynamic textbox saying &quot;Connecting...&quot;. Also we have one more hidden input field and a button that will appear only when the connection is established.</p>
+ <p> The <strong>showLogin()</strong> method is responsible for showing/hiding these 2 controls. <br>
+  In case the connection attempt fails, those controls will never appear and an error dialog box will be shown with a message in it.<br>
+  We'll cover the error handling in depth in the next tutorial, for now we'd
+  like to concentrate more on the chat application and see how we can send and
+  receive messages in realtime.</p>
+ <p>Please note that the server connection code is very similar to the previous tutorial, however we've added two extra things:</p>
+ <pre class="code">zone = "<font color='blue'>simpleChat</font>"</pre>
+ <p>The zone name corresponds to a zone defined in the server config file. As you may remember you can define as many zones as you want on the server, and each of these is just like an isolated world where all your users can interact. In this example we will use the &quot;simpleChat&quot; zone that is already defined in the <strong>config.xml </strong>file, found in the &quot;<strong>SmartFoxServer/Server</strong>&quot; folder.</p>
+ <pre class="code">smartfox.debug = <font color="#000087">true</font></pre>
+ <p>   The &quot;debug&quot; flag can be turned on to inspect the messages that are sent and received by the client application. <br>
+You can safely turn it off if you don't want to see all those debug info in the Flash output window.</p>
+ <p>  When the &quot;log in&quot; button is pressed the <strong>sendLogin()</strong> function is called which in turn calls the login method of the <strong>SmartFoxClient</strong> object. The method takes two arguments: login(zone, username)</p>
+ <pre class="code"><font color="#993300">function</font> sendLogin()
+{
+        <font color="#993300">if</font> (!<font color="#000087">_global</font>.isBusy)
+                smartfox.login(zone, login_txt.<font color="#000087">text</font>)
+}</pre>
+<p>The username can be whatever string but not all characters are allowed in
+  a username so when the user tries to log in, its user name is sent to the server,
+  processed and then sent back to the client. Also the server does not allow
+  two identical usernames and in case it finds a duplicate it will emit an error.<br>
+If you send and empty log in name the server will automatically create a user name like &quot;guest_n&quot; where n is a progressive number.</p>
+ <p>The <strong>_global.isBusy</strong> variable it's used by the error-message window to
+disable the other GUI buttons. We'll cover this topic in the second part of this tutorial.</p>
+ <p>In order to handle the server response to our login request we need to handle the <strong>onLogin</strong> event. When the event is fired an Object is sent to the client with the following properties:</p>
+ <p>&raquo; <em>success</em> = boolean, determines if the login operation was successfull<br>
+&raquo; <em>error</em> = string, an error message if the operation failed</p>
+ <p>The code that handles this event is the following:</p>
+<pre class="code">smartfox.onLogin = <font color="#993300">function</font>(resObj)
+{
+        <font color="#993300">if</font> (resObj.success)
+        {
+                <font color='#878787'>// Login Successfull
+</font>                <font color="#000087">_global</font>.myName = resObj.name
+                <font color="#000087">gotoAndStop</font>("<font color='blue'>chat</font>")
+        }
+        <font color="#993300">else</font>
+        {
+                <font color='#878787'>// Login Failed
+</font>                <font color="#000087">_global</font>.isBusy = <font color="#000087">true</font>
+                
+                <font color='#878787'>// Show an error window
+</font>                <font color="#993300">var</font> win = showWindow("<font color='blue'>errorWindow</font>")
+                win.errorMsg.<font color="#000087">text</font> = resObj.error
+        }
+}</pre>
+<p>If login succeeded the user name is saved in a _global variable otherwise an error window is displayed.</p>
+ <p class="subTitle">&raquo; Chat</p>
+ <p>After the connection and login events are handled we can move in the <strong>chat label </strong>and start working on the application itself.<br>
+First of all take a look a the image below. It shows how the interface has been laid out:</p>
+ <p><img src="images/pic02.gif" width="383" height="259" class="imgBorder"></p>
+ <p>The most important folder in the timeline is the one called &quot;<strong>components</strong>&quot; contained in the main &quot;GUI&quot; folder.<br>
+There you will find the main four interface components: the chat multiline dynamic text box, the user listbox, the chat input text box and the user name dynamic text box.</p>
+ <p>The first thing we do in the code is writing our user name in the top-rigth textbox so that we know our nickname in the chat room (see the second line of code).</p>
+ <p>In the previous section we created an event handler to manage the login response, but there's something more we should do to complete this activity. When a login request is successfull you will receive two responses or events: one of them is already known and the missing one is called <strong>onRoomListUpdate</strong> with a list of available rooms to join.<br>
+   <br>
+ This happens because upon reception of a successfull login the client API automatically sends a &quot;getRoomList&quot; request to the server and you will need to setup an event handler for it.</p>
+ <p>Have a look at the <strong>onRoomListUpdate</strong> method and you will notice that everything is very simple, just one line of code:</p>
+<pre class="code"><font color="#993300">this</font>.autoJoin()</pre>
+<p>This command tells the server to automatically join (enter) the default room in the zone. </p>
+ <p><strong>NOTE<br>
+   You can do this only if you have specified an autoJoin room in the server config.xml file.</strong></p>
+ <p>What we are doing here is that we are ignoring the room list data sent by the server and just proceed to joining the default room:<br>
+  in a &quot;real-world&quot; application we should analyze the data sent by the server and, for example, populate a list box with all the available rooms and show their statuses, but this is far beyond the purpose of this tutorial.<br>
+  We'll analyze these more advanced concepts in the next ones.</p>
+ <p>Let's sum up what we've done so far:</p>
+ <p>1) We've established a socket connection with the server<br>
+  2) We've sent the server a login request for a specific zone in the server and handled the onLogin and onRoomListUpdate events.<br>
+  3) We've sent an autoJoin request, asking to enter the defualt room in the zone but we have not yet defined a response handler<br>
+  so this is our next step.</p>
+<pre class="code">smartfox.onJoinRoom = <font color="#993300">function</font>(roomObj)
+{
+        <font color="#993300">var</font> userList = roomObj.getUserList()
+        
+        <font color='#878787'>// Clear text area
+</font>        chat_txt.<font color="#000087">htmlText</font> = "<font color='blue'></font>"
+        
+        <font color='#878787'>// Clear current list
+</font>        userList_lb.<font color="#000087">removeAll</font>()
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> userList)
+        {
+                <font color="#993300">var</font> user = userList[i]
+                userList_lb.<font color="#000087">addItem</font>(user.getName(), user.getId())
+        }
+        
+        <font color='#878787'>// Sort names
+</font>        userList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+        chat_txt.<font color="#000087">htmlText</font> += "<font color='blue'>&lt;font color='#cc0000'&gt;&gt;&gt; Room [ </font>" + roomObj.getName() + "<font color='blue'> ] joined&lt;/font&gt;</font>";
+}</pre>
+ <p>Let's analyze the <strong>onJoinRoom</strong> function:
+the first thing we should notice is the argument passed to the method: <strong>roomObj</strong>.</p>
+ <p><strong>roomObj</strong> is an instance of the <strong>SmartFoxClient</strong> Room object and here's a quick view of its properties and methods:</p>
+ <p>&raquo; <em>getId()</em> = get room id<br>
+&raquo; <em>getName()</em> = get room name<br>
+&raquo; <em>isPrivate()</em> = is the room private? (0 = false, 1 = true)<br>
+&raquo; <em>isTemp()</em> = is the room temporary? (0 = false, 1 = true)<br>
+&raquo; <em>isGame()</em> = is it a game room? (0 = false, 1 = true)<br>
+&raquo; <em>getUserCount()</em> = get # of users in the room<br>
+&raquo; <em>getMaxUsers()</em> = get capacity of the room<br>
+&raquo; <em>getUser(id)</em> = get the user Object from a known user id<br>
+&raquo; <em>getUserList()</em> = get the userList Object<br>
+&raquo; <em>variables</em> = a property Object containing all room variables</p>
+ <p>The methods we'd like to talk about right now are <strong>getId()</strong>, <strong>getName()</strong>, <strong>getUserList()</strong>.</p>
+ <p>The first two just return the unique id and name of the joined room while the <strong>getUserList()</strong> returns an array of <strong>User objects</strong>, one for each user already logged in the room.</p>
+ <p>The <strong>User object</strong> is simpler than the Room obj and it has just three methods:</p>
+ <p>&raquo; <em>getId()</em> = get user unique id<br>
+&raquo; <em>getName()</em> = get user nickname<br>
+&raquo; <em>variables</em> = a property Object containing all user vars</p>
+ <p>Take a look at the scheme below, it will help understanding the datastructure:</p>
+ <p><img src="images/diagramFull.gif" width="678" height="373" class="imgBorder"></p>
+ <p>From top to bottom you can see that each <strong>Zone</strong> is a container of <strong>Rooms</strong> and each room contains its <strong>Users</strong>.<br>
+All users can interact together when they are in the same room, also they can see the rooms within their zone and move from<br>
+one to another. In other words this allows more applications (a chat, a game, a whiteboard, etc.) to run at the same time on the server independently.</p>
+ <p>Basically you enter a zone which essentially is a container of rooms. 
+   Every room contains users and you can join one of them (actually you can join more of one simultaneously) and start interacting with the users inside.</p>
+ <p>Back to our <strong>onJoinRoom</strong> code:
+  we need to read the userList, get the name and id of each user and populate the userList list box on stage.<br>
+<br>
+First we get the list (remember, it is an array of User objects):</p>
+ <pre class="code"><font color="#993300">var</font> userList = roomObj.getUserList()</pre>
+ <p>Then we cycle through it and add data to the list box component:</p>
+ <pre class="code"><font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> userList)
+{
+        <font color="#993300">var</font> user = userList[i]
+        userList_lb.<font color="#000087">addItem</font>(user.getName(), user.getId())
+}</pre>
+ <p>Finally we have to  sort the items in the list box so that user names are in ascending alphabetical order:</p>
+ <pre class="code">userList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")</pre>
+ <p>The last line of the method writes the name of the just-joined room in the main chat text-area using a red font.</p>
+ <p><span class="subTitle">&raquo; More on &quot;user events&quot; </span></p>
+ <p>Before we can move on to the sending/receiving message part, we have to analyze
+   two simple events that are handled in this simpleChat application.<br>
+<br>
+In order to have our application behave in the right way we need to update our
+user list each and every time a new user enters the room or leaves the room.
+This way we can have a real &quot;real-time&quot; view on what's going on in
+the room.<br>
+<br>
+To keep everything in synch SmartFoxServer will send us events called <strong>onUserEnterRoom</strong> and <strong>onUserLeaveRoom</strong> that we need to handle.<br>
+<br>
+Scroll the source code down a little and look at the <strong>onUserEnterRoom</strong>, it's all very basic.<br>
+              <br>
+We can ignore the &quot;fromRoom&quot; argument as it is only used when you are logged in more than one room at the same time.<br>
+The next parameter is the User object of the newly joined user, so we can just
+take it's Id and name and safely add it to the listbox.<br>
+<br>
+The <strong>onUserLeaveRoom</strong> handler is almost identical, only this time
+you will receive the user Id of the client that left the room. In order to take
+its name out of our list box we have to loop through the entire component data
+until we find the right Id. Once it's found we just remove it.<br>
+<br>
+Also we add a line in the chat text-area with the name of the user that left the room.</p>
+ <p><span class="subTitle">&raquo; Sending and receiving messages </span></p>
+ <p>Now we can examine the heart of a chat application: how to send and receive messages.</p>
+ <p>We already have our input textbox ready for use and  a &quot;Send&quot; button on stage that is linked to the <strong>sendChatMsg()</strong> function.<br>
+ Let's have a look at it:</p>
+<pre class="code"><font color="#993300">function</font> sendChatMsg()
+{
+        <font color="#993300">if</font> (input_txt.<font color="#000087">text</font>.<font color="#000087">length</font> &gt; 0)
+        {
+                smartfox.sendPublicMessage(input_txt.<font color="#000087">text</font>)
+                input_txt.<font color="#000087">text</font> = "<font color='blue'></font>"
+        }
+}</pre>
+ <p>We just check that there's some text in the input field and then we send it to the other clients using the <strong>sendPublicMessage</strong> command. Also we clear the input field so that it's ready for a new message.</p>
+ <p>Now let's see how we handle the reception of public messages. The event to look for is called <strong>onPublicMessage()</strong>:</p>
+ <pre class="code">smartfox.onPublicMessage = <font color="#993300">function</font>(msg, user)
+{
+        chat_txt.<font color="#000087">htmlText</font> += "<font color='blue'>&lt;b&gt;[ </font>" + user.getName + "<font color='blue'> ]:&lt;/b&gt; </font>" + msg
+        main_sb.<font color="#000087">setScrollPosition</font>(chat_txt.<font color="#000087">maxscroll</font>)
+}</pre>
+ <p>The event handler receives a message string (msg) and a User object (user); also we set the scrollbar position to the maxscroll property of the chat text-area. This way the last message sent is always visible.</p>
+ <p>Please take your time to go through all these instructions and also check the additional source code comments as they can help you in better understanding the code flow. In the next tutorial we will examine a little more in detail the code created so far.</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%">&nbsp;</td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../03_simpleChat_p2/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

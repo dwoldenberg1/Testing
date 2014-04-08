@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">3.2 Server Logs </p>
+ <p><strong>SmartFoxServer</strong> can log a number of server messages based
+   on their level of importance both to log files and to the console. 
+   It also offers advanced options for splitting and rotating log files based on the type
+   of installation you're using (standalone / service).<br />
+
+	<p class="subTitle">&raquo; Basic logging (standalone mode)</p>
+   
+   <p>By default
+   <strong>SmartFoxServer</strong> is configured to log messages of WARNING level
+   to file and of INFO level to console.<br>
+   The available
+   levels from low to high are: FINEST, FINER, FINE, INFO, WARNING, SEVERE.<br>
+   <br>
+   The first four levels are related to simple notifications about actions taken
+   by the server with different importance level: it can be useful to trace these
+   messages to the console while debugging your multiplayer applications. This
+   way you can see when a server-side variable is set or destroyed, when new
+   rooms are created or removed etc...<br>
+   This output can also be sent to the file logger but only for debugging, as
+   this would make the log files grow too quickly.<br>
+   <br>
+   Generally speaking  it is recommendable to keep
+   the file level to WARNING and the console level to INFO for production configurations.<br>
+   <br>
+   The <strong>WARNING</strong> messages informs about  some unexpected condition
+   that has been found during runtime.<br>
+   For example a malformed request could have been sent for different reasons:
+   a hacking attempt or simply a programming error on the client side etc...<br>
+   Other examples of WARNINGs can be a user trying to log in with the name of
+   another existing user, a user trying to login when there's no more room for
+   him etc...<br>
+   <br>
+   The <strong>SEVERE</strong> message level indicates that a serious problem
+   is going on and it may cause the server to stop running. The conditions
+   under which this error may appear are very rare. Most of these messages can
+   occur when trying to start the server but some necessary files are missing
+   or a configuration error is found.<br>
+   <br>
+   You can inspect log files by going in the <strong>log/</strong> folder
+   inside the <strong>Server/</strong>   directory.
+   <br>
+   <br>
+   A log rotation system is also provided to avoid unlimited growth of log files.
+   You can specify the maximum size of a log file before a new one is created
+   and the max. number of files that can be generated. By default the size is
+   set to 500Kb and the max number of files to 5. (See <a href="../config/basics.htm">section
+   2.1</a> for detailed info)<br>
+   <br>
+For specific documentation on how to configure the logging system please refer
+   to <a href="../config/basics.htm">section 2.1 </a><br>
+   <br></p>
+  
+	<p class="subTitle">
+		&raquo; Advanced logging (service mode)
+	</p>
+	<p>
+		If you have installed <strong>SmartFoxServer</strong> as a service (under Windows or Linux) all the console
+		output will be redirected to the <em>wrapper</em> log files which also contain further log informations about the
+		status of the <em>wrapper itself.</em> 
+		The <em>wrapper</em> is the software that acts as a service/daemon and wraps the JVM process.
+		(we usa a product called <a href="http://wrapper.tanukisoftware.org/" target="_blank">Java Service Wrapper</a>) 
+	</p>
+	
+	<p>
+		You can check and modify the wrapper logging options by opening the <strong>wrapper.conf</strong> found in the 
+		<strong>Server/wrapper/ folder.</strong> By default the log files are stored in the <strong>Server/logs/</strong>
+		folder and split every day.
+		<br/><br/>
+		<a href="http://wrapper.tanukisoftware.org/doc/english/props-logging.html" target="_blank">Detailed documentation for the wrapper.conf file can be found at this page</a>
+	</p>
+
+ <hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="basics.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="adminTool.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

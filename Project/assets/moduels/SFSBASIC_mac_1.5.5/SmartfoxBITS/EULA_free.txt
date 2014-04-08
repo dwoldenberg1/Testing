@@ -1,0 +1,24 @@
+LICENSE AGREEMENT
+
+For the purpose of this License, the term "Components" refers to the visual assets and behavioral code in addition to the composite components packaged within this product.
+
+Subject to your compliance with this License and except as provided otherwise herein, you are granted a non-exclusive and non-transferable right to use the Components provided herewith, and to reproduce and distribute the Components in whole or in part, provided that you agree with the following Terms:
+
+a) you may use the Components on an unlimited number of websites;
+
+b) you may install the Components on an unlimited number of workstations at any time, independently of the number of licenses you purchased;
+
+c) you may distribute the Components provided herewith only in conjunction with and as part of a software application product (and not the Components stand alone) developed by you in which the Components add functionality to such software application;
+
+d) you have to include your own valid copyright notice in your software application product which shall be sufficient to protect GOTOANDPLAY's copyright in the Components;
+
+e) you are not allowed to remove or obscure any copyright, trademark or patent notices that appear in the Components as delivered to you;
+
+f) you are not allowed to use gotoAndPlay and SmartFoxServer' names, logos, or trademarks to endorse or promote your software application products without specific prior written permission from GOTOANDPLAY s.n.c.;
+
+g) you may distribute your software application product containing the Components pursuant to an End User License Agreement with terms no less protective than those contained herein;
+
+h) you are not allowed to permit further distribution of the Components by your end users, except you may permit further redistribution of the Components by your distributors to your end-user customers if your distributors only distribute the Components in conjunction with, and as part of, your software application product and you and your distributors comply with all other terms of this License.
+
+SmartFoxBits, and any other accompanying software, files, data and materials, are distributed and provided "AS IS" and with no warranties of any kind, whether express or implied.
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT WILL GOTOANDPLAY S.N.C. BE LIABLE FOR ANY LOST PROFITS OR BUSINESS OPPORTUNITIES, LOSS OF USE, BUSINESS INTERRUPTION, LOSS OF DATA, OR ANY OTHER INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES UNDER ANY THEORY OF LIABILITY, WHETHER BASED IN CONTRACT, TORT, NEGLIGENCE, PRODUCT LIABILITY, OR OTHERWISE.

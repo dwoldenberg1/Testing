@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.5 Tutorials: Advanced Chat (part 2) </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available  under the <strong>Examples/(Actionscript version)/advancedChat</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>
+ </p>
+ In the previous tutorial you learnt some advanced features about Room objects and the related events. In this tutorial you will add some more features like:
+ <p><strong>&raquo; create rooms </strong><br>
+   <strong>&raquo; handle private messages </strong><br>
+   <strong>&raquo; log out users </strong></p>
+ <p><span class="subTitle">&raquo; Creating rooms</span></p>
+ <p>Basically everything in SmartFox is a Room. Every time you're interacting with other users you're doing this in a room, whether there're two users only or two hundreds, whether you're chatting, playing a game or drawing on a whiteboard.</p>
+ <p>There are essentially two types of Rooms: rooms created by the server (<strong>static</strong>) and rooms created by the clients (<strong>dynamic</strong>).</p>
+ <p><strong>Static rooms</strong><br>
+The first type represents the default set of rooms for your application and they will be always present in your zone; they're created<br>
+when at server boot and you won't be able to delete or alter them unless you modify the config file and restart the server.</p>
+ <p>Open the config.xml located in the root of the SmartFoxServer folder and you will find something like this code:</p>
+<pre class="code">&lt;Zone name=&quot;simpleChat&quot;&gt;
+  &lt;Rooms&gt;
+    &lt;Room name=&quot;The Hall&quot; maxUsers=&quot;70&quot; isPrivate=&quot;false&quot; isTemp=&quot;false&quot; isGame=&quot;false&quot; autoJoin=&quot;true&quot; /&gt;
+    &lt;Room name=&quot;The Kitchen&quot; maxUsers=&quot;70&quot; isPrivate=&quot;false&quot; isTemp=&quot;false&quot; isGame=&quot;false&quot;/&gt;
+    &lt;Room name=&quot;The Garden&quot; maxUsers=&quot;70&quot; isPrivate=&quot;false&quot; isTemp=&quot;false&quot; isGame=&quot;false&quot; /&gt;
+    &lt;Room name=&quot;The Bathroom&quot; maxUsers=&quot;70&quot; isPrivate=&quot;false&quot; isTemp=&quot;false&quot; isGame=&quot;false&quot; /&gt;
+    &lt;Room name=&quot;The Garage&quot; maxUsers=&quot;70&quot; isPrivate=&quot;false&quot; isTemp=&quot;false&quot; isGame=&quot;false&quot; /&gt;
+    &lt;Room name=&quot;The Living Room&quot; maxUsers=&quot;50&quot; isPrivate=&quot;true&quot; isTemp=&quot;false&quot; pwd=&quot;test&quot; isGame=&quot;false&quot; /&gt;
+  &lt;/Rooms&gt;
+&lt;/Zone&gt;</pre>
+ <p>Here's represented a zone named &quot;<strong>simplechat</strong>&quot; and its set of default rooms that will be created as the server is launched.</p>
+ <p>Every room tag can have the following attributes:</p>
+ <p>&raquo; <em>name</em> = a unique room name (unique in this zone)<br>
+     &raquo; <em>maxUsers</em> = max capacity of the room<br>
+   &raquo; <em>isPrivate</em> = set to &quot;true&quot; if the room is password protected<br>
+   &raquo; <em>isTemp</em> = set to &quot;true&quot; if the room is temporary. All dynamic rooms are set to &quot;true&quot;<br>
+   &raquo; <em>isGame</em> = set to &quot;true&quot; if the room holds a game<br>
+&raquo; <em>pwd</em> = the room password</p>
+ <p>The only one mandatory attribute is the name, all the others can also be skipped. If you don't specify a maxUser value the default of 30 will be used and the boolean parameters will be all set to &quot;false&quot;.</p>
+ <p>The changes made to this config file won't be applied until you restart the server.</p>
+ <p><strong>  Dynamic rooms</strong><br>
+  The second type of rooms can be dynamically created at runtime by the client using the SmartFoxClient API. These rooms can be destroyed by the server when there're no more users inside, and its creator isn't logged anymore in the zone.<br>
+  This means that if all users have logged out of the room but its creator is still present in the zone the room will not be removed.</p>
+ <p>A dynamic room is created using the SmartFoxClient <strong>createRoom() </strong>method like this:</p>
+ <pre class="code">createRoom(roomObj)</pre>
+ <p>The <strong>roomObj</strong> argument is an object with the following properties:</p>
+ <p>&raquo; <em>name</em> = a unique room name (unique in this zone)<br>
+&raquo; <em>maxUsers</em> = max capacity of the room<br>
+   &raquo; <em>isGame</em> = set to &quot;true&quot; if the room holds a game<br>
+&raquo; <em>password</em> = the room password</p>
+ <p>The code used in the &quot;<strong>Advanced Chat</strong>&quot; to create a new room is the following:</p>
+ <pre class="code"><font color="#993300">function</font> makeNewRoom()
+{
+        showWindow("<font color='blue'>newRoomWindow</font>")
+}
+
+<font color="#993300">function</font> createRoom(name, pwd, <font color="#000087">max</font>)
+{
+        hideWindow("<font color='blue'>newRoomWindow</font>")
+        
+        <font color="#993300">var</font> roomObj = <font color="#993300">new</font> <font color="#993300">Object</font>()
+        roomObj.name = name
+        roomObj.<font color="#000087">password</font> = pwd
+        roomObj.maxUsers = <font color="#000087">max</font>
+        
+        smartfox.createRoom(roomObj)
+}</pre>
+ <p>First we call the <strong>makeNewRoom</strong> function to show a dialog box where the user will input the room name, password and maximum capacity of the new room. When the &quot;OK&quot; button in the window is pressed the <strong>createRoom()</strong> method is called passing the values submitted by the user.</p>
+ <p>Finally the <strong>roomObj</strong> is passed to the SmartFoxClient API
+   method, <strong>createRoom()</strong>.<br>
+                <br>
+                <br>
+                <strong>NOTE<br>
+  We have here two methods with the same name that may create a little confusion. However is worth noticing that one exist in the main timeline and the other exist only in the SmartFoxClient object called smartfox. This is why there's no problem with using two identical method names.<br>
+                <br>
+                </strong><br>
+  If the room is created succesfully it will immediately appear in your room list. If something goes wrong (i.e. you've chosen a room name that already exists) an <strong>onCreateRoomError</strong> event will be fired.</p>
+ <p>Here's how we handled it in the sample application:</p>
+ <pre class="code">smartfox.onCreateRoomError = <font color="#993300">function</font>(errorMsg)
+{
+        <font color="#993300">var</font> win = showWindow("<font color='blue'>errorWindow</font>")
+        win.errorMsg.<font color="#000087">text</font> = errorMsg
+}</pre>
+ <p>The handler shows an error dialog box and dynamically attaches the error message sent by the server in the errorMsg text box.</p>
+ <p><span class="subTitle">&raquo; Private messages</span></p>
+ <p>The last feature we have to talk about is how to send private messages. PMs are very useful in a chat when you want to privately talk for a while with another user. All private messages are exclusively exchanged between two users, so no one else in the room can read them.</p>
+ <p>In the previous part of the article we said that the PM function was going to be activated when a user clicks on a name in the user list component.</p>
+ <p>Here's the code from the source .FLA:</p>
+ <pre class="code"><font color="#993300">function</font> userSelected()
+{
+        uid = userList_lb.<font color="#000087">getSelectedItem</font>().data
+        
+        <font color='#878787'>// If it's not me...
+</font>        <font color="#993300">if</font> (uid != smartfox.myUserId)
+        {
+                <font color='#878787'>// store the recipient for later use
+</font>                <font color="#000087">_global</font>.pmUid = uid
+                <font color="#993300">var</font> win = showWindow("<font color='blue'>pmWindow</font>")
+                <font color="#993300">var</font> uList	= smartfox.getActiveRoom().getUserList()
+                <font color="#993300">var</font> targetUsr	= uList[uid]
+                win.title_txt.<font color="#000087">text</font> = "<font color='blue'>Send a private message to </font>" + targetUsr.getName()
+        }
+}</pre>
+ <p>You will notice that this function behaves pretty much like the one we used for loggin in another room.<br>
+First of all we get the user Id from the listbox data property and we check that the Id clicked is not our current user Id. Then we store this identifier in a _global variable for later use and we show a dialog box where the user can write the message.<br>
+If you wish to inspect the window open the library (F11) and check the clip called &quot;<strong>pmWindow</strong>&quot; in the &quot;<strong>_windows</strong>&quot; folder.</p>
+ <p>When the &quot;OK&quot; button is clicked this code is executed:</p>
+ <pre class="code"><font color="#993300">function</font> sendMessage()
+{
+        <font color="#993300">var</font> m = message.<font color="#000087">text</font>
+        <font color="#993300">if</font> (m.<font color="#000087">length</font> &gt; 0)
+        {
+                <font color="#000087">_parent</font>.sendPrivateMessage(m, <font color="#000087">_global</font>.pmUid)
+                message.<font color="#000087">text</font> = "<font color='blue'></font>"
+        }
+}</pre>
+ <p>The <strong>sendPrivateMessage()</strong> method takes two arguments: the text of the message and the recipient id.</p>
+ <p><span class="subTitle">&raquo; Log out </span></p>
+ <p> We still have one control in the GUI which we didn't talk about: the &quot;Exit&quot; button. You can press this button at any time to log out of the chat.</p>
+ <p>Also we have to handle another less predictable possibility: an unexpected
+   disconnection. There are many factors that can lead to an abrupt server disconnection
+   like slow network connections, timeouts, server crashes, etc. Whatever the
+   reason we have to deal with this problem:</p>
+ <pre class="code">smartfox.onConnectionLost = <font color="#993300">function</font>()
+{
+        <font color="#000087">gotoAndStop</font>("<font color='blue'>connect</font>")
+}</pre>
+ <p>The <strong>onConnectionLost</strong> is fired by the client API when the socket connection is closed and the user will be sent back to the login screen. The &quot;EXIT&quot; button is also handled by the above function: when you will click on it a <strong>smartfox.disconnect()</strong> command will be issued which in turn will close the socket connection. By closing the connection the <strong>onConnectionLost</strong> handler will be invoked.</p>
+ <p> In the next tutorials we will discuss more advanced topics like &quot;User variables&quot; and we will build a simple <strong>Avatar
+ Chat</strong>.</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../04_advChat_p1/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right">&nbsp;</td>
+  </tr>
+</table>
+
+</body>
+</html>

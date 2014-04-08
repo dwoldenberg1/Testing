@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">setUserVariables()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.setUserVariables(varObj) </p>
+ <p class="title">Description:</p>
+<p class="plain">Stores data on the server side. When you set/update/delete one
+  or more User Variables all the other users in the room will be notified. User
+  variables are usefull to store user profile data that can be shared across
+  other users.</p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>varObj</strong></td>
+     <td>&nbsp;</td>
+     <td>an object containing the variables to save </td>
+   </tr>
+ </table>
+    <br />
+    Allowed datatypes are Strings, Numbers, Booleans.<br />
+    If a User Variable is set to <strong>null</strong> it is going to be deleted
+    from the server.<br />
+    <br />
+    User variables are destroyed when the user logs out or gets disconnected.<br />
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong><strong>onUserVariablesUpdate</strong></strong> event </p>
+ <p class="plain"><span class="title">Example:</span><br />
+   <br />
+ <strong class="plain">Example #1</strong>
+ <br />
+ in an avatar chat you could save the user profile (avatar name and position)
+ like this: <pre class="code">
+var uVars = new Object()
+uVars.myAvatar = "Homer"
+uVars.posx = 100
+uVars.posy = 200
+
+smartFox.setUserVariables(uVars)
+</pre> 
+ </p>
+<strong class="plain"><br />
+</strong>User variables are broadcasted to all other users in the same room. <br />
+<p class="title">See also:</p>
+ <p class="plain"><strong><strong><strong><strong><strong><strong>onUserVariablesUpdate</strong></strong></strong></strong></strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

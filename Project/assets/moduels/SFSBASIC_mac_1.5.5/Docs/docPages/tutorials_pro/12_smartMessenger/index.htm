@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">8.12 Tutorials: Smart Messenger </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="right" bgcolor="#f4f4f4">The <strong>sources</strong> of 
+       this example is found under the <strong>Examples/AS2/20_pro_smartMessenger</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>The <strong>Smart Messenger</strong> example implements some of the new  features of the latest  framework (1.4.0), demonstrating how to create a simple instant messenger application.<br>
+   <br>
+   The demo shows how a client can browse a list of available users and add them to their &quot;contact list&quot;. Once they've been added you will be able to see their statuses in realtime (offline, online, &quot;be right back&quot;, &quot;busy&quot;) and start mulitple one-on-one chat sessions.<br>
+   The contact list is persistent, so each user will find their buddies when they will log in again at a later time.<br>
+   <br>
+   <img src="images/sm01.gif" width="640" height="490" class="imgBorder">
+<p><span class="subTitle">&raquo; The 1.4.0 framework features</span></p>
+<p>The example uses a couple of new features introduced in the 1.4.0 framework:</p>
+<p><strong>1. Limbo Rooms:</strong> a new attribute called &quot;<strong>limbo</strong>&quot; is available in the Room object. Limbo rooms can be created statically in the config.xml file or dynamically from a server side extension. Limbo rooms are special rooms that can contain hundreds or thousands of clients that don't need to interact directly with each other. This type of room can be useful when the client needs to interact with the server, without the need to know the list of all the other users, their variables,  etc...</p>
+<p>For example a &quot;limbo room&quot; can be used for a lobby where you can setup your avatar character, edit your personal info, check a list of available games running etc... In this case many hundreds clients can enter the same room and perform these actions without the need to know what other clients are doing in the same room.</p>
+<p>When the <strong>limbo flag</strong> is turned on, the room  suppresses certain events (new user arrived, user left, user count changed, room and user variables) and inhibits the ability to send public messages. This way the room can handle thousands of clients without generating too much traffic and saving bandwidth. If clients need to communicate with each other they can use private messages, which don't need to be broadcasted to all other users. </p>
+<p><strong>2. Buddy Variables: </strong>the ability to attach variables to each &quot;buddy&quot; in the buddy list allows to send more status informations about each item in a contact list. From version 1.4.0 it is possible to set additional properties to each buddy that gets transmitted back to each client who have the buddy in their list.<br>
+We used this feature in the application to handle the status changes of each client (online, busy, etc...)</p>
+<p><span class="subTitle">&raquo; The Smart Messenger</span></p>
+<p>The whole application uses one single room called &quot;Main&quot; with the limbo flag  set to true. All the users will be automatically joined in this room, once their credentials have been checked.<br>
+In a real world application we should have used a database, but for learning purposes we kept everything simple by defining a user data structure directly inside the extension.</p>
+<pre class="serverCode">
+function initUserData()
+{
+	userData.push( {nick:"jimi", age:20, location:"U.S.A", email:"jimi@mail.us", interest:"Rock Guitar"} )
+	userData.push( {nick:"blaise", age:30, location:"France", email:"blaise@mail.fr", interest:"Math and Physiscs"} )
+	userData.push( {nick:"wolfgang", age:17, location:"Germany", email:"wolf@mail.de", interest:"Orchestral Music"} )
+	userData.push( {nick:"pablo", age:20, location:"Spain", email:"pablo@mail.sp", interest:"Painting"} )
+	userData.push( {nick:"leonardo", age:20, location:"Italy", email:"leo@mail.it", interest:"Painting, architecture, science"} )
+	userData.push( {nick:"dante", age:20, location:"Italy", email:"dante@mail.it", interest:"Literature"} )
+	userData.push( {nick:"miles", age:20, location:"U.S.A.", email:"miles@mail.us", interest:"Jazz music, trumpet"} )
+	userData.push( {nick:"agatha", age:20, location:"U.K.", email:"agatha@mail.co.uk", interest:"Mystery, thrillers"} )
+}
+</pre>
+<p>The userData object will be used as an &quot;internal database&quot; to check if a user name is valid.<br>
+In order to test the application you will need to login as one of the available users:<strong> jimi, blaise, wolfgang, pablo, leonardo, dante, miles, agatha.</strong></p>
+<p><img src="images/sm02.gif" alt="img02" width="640" height="489" class="imgBorder"> </p>
+<p>Once inside you will see your &quot;<strong>contact list</strong>&quot; on the left side, and the main &quot;<strong>member browser</strong>&quot;. The latter allows the client to navigate through the user profiles of all messenger members, and add them to their contact list. As soon as a user is added, its status will be updated in realtime. Also you will be able to change your current status using the three radio buttons in the bottom of the contact list.</p>
+<p>From the list you can also select any user and start a private conversation or remove the contact. </p>
+<p><span class="subTitle">&raquo; Conclusions </span></p>
+<p>You will find the main source file in the <strong>it/gotoandplay/smartfoxserver/smartmessenger/Messenger.as</strong> class (starting from the example folder) <br>
+The server side extension is located in the <strong>sfsExtensions/messenger.a</strong>s file.</p>
+<p>&nbsp;</p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../14_advBoardGame/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../16_theoChat/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">createRoom()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 7, 8 <br />
+ SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.createRoom(roomObj:Object, roomId:Number)</p>
+ <p class="title">Description:</p>
+<p class="plain">Dynamically create a new room in the current zone.<br />
+The <strong>roomId</strong> parameter is optional and only needed for advanced tasks, when using multiple room at the same time. </p>
+ <p class="title">Parameters:</p>
+ An object with the following properties: <br />
+ <br />
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td><strong>name</strong></td>
+     <td>&nbsp;</td>
+     <td>the room name </td>
+   </tr>
+   <tr>
+     <td><strong>password</strong></td>
+     <td>&nbsp;</td>
+     <td>a password for the room (optional)</td>
+   </tr>
+   <tr>
+     <td><strong>maxUsers</strong></td>
+     <td>&nbsp;</td>
+     <td>the max. number of users for that room </td>
+   </tr>
+   <tr>
+     <td><strong>maxSpectators</strong></td>
+     <td>&nbsp;</td>
+     <td>the max. number of spectator slots (only for game rooms ) </td>
+   </tr>
+   <tr>
+     <td><strong>isGame</strong></td>
+	 <td>&nbsp;&nbsp;&nbsp;</td>
+     <td>a boolean, true if the game is a game room </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>exitCurrentRoom</strong></td>
+     <td>&nbsp;</td>
+     <td>a boolean value. It can be used when creating a new game room.<br />
+       By default when a new game rooms is launched, its creator is auto-joined
+         inside the room leaving the one he was in before. If you don't want
+         to leave the old room you should set this property to false. </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>uCount</strong></td>
+     <td>&nbsp;</td>
+     <td>a boolean, indicating if the new room will receive the uCount update
+       messages. <br />
+The uCount messages are updates about the number of users in each room of the
+zone. If you're not handling them in the current room it is reccomended to turn
+it off. </td>
+   </tr>
+   <tr>
+     <td><strong>vars</strong></td>
+     <td>&nbsp;</td>
+     <td>an array of room variables (see below) </td>
+   </tr>
+   <tr>
+     <td valign="top"><strong>extension</strong></td>
+     <td>&nbsp;</td>
+     <td>an optional object. Specifies which extension should be dynamically attached to the room.<br />
+       The extension must be a Room-level extension.<br />
+       <br />
+       The object should contain the following properties:<br />
+       <br />
+       <table  border="0" cellspacing="0" cellpadding="3">
+         <tr>
+           <td><strong>name</strong></td>
+           <td>&nbsp;</td>
+           <td>the name used to reference the extension </td>
+         </tr>
+         <tr>
+           <td><strong>script</strong></td>
+           <td>&nbsp;</td>
+           <td>the file name of the extension  script (<strong>.as</strong> for Actionscript, <strong>.class</strong> for java)<br />
+             The file name is relative to the root of the extension folder (sfsExtensions/ for AS, javaExtensions/ for java) </td>
+         </tr>
+       </table></td>
+   </tr>
+ </table>
+ <br />
+ A Room can be initialized with any number of Room Variables. The variables parameter
+ is an array of objects with these properties:
+ <br />
+ <br />
+ <table  border="0" cellspacing="0" cellpadding="3">
+   <tr>
+     <td><strong>name</strong></td>
+     <td>&nbsp;</td>
+     <td>variable name </td>
+   </tr>
+   <tr>
+     <td><strong>val</strong></td>
+     <td>&nbsp;</td>
+     <td>variable value </td>
+   </tr>
+   <tr>
+     <td><strong>priv</strong></td>
+     <td>&nbsp;</td>
+     <td>boolean, true if the variable is private</td>
+   </tr>
+   <tr>
+     <td><strong>persistent</strong></td>
+     <td>&nbsp;</td>
+     <td>boolean, true if the variable is persistent </td>
+   </tr>
+</table>
+ <br />
+ <p class="title">Returns:</p>
+ <p class="plain">Nothing.</p>
+ <p class="title">Example:</p>
+ <pre class="code">
+var room:Object = new Object
+
+room.name = "The Cave"
+room.isGame = true
+room.maxUsers = 15
+
+var variables:Array = new Array()
+variables.push( {name:"ogres", val:5, priv:true} )
+variables.push( {name:"skeletons", val:4} )
+
+room.vars = variables
+
+smartFox.createRoom(room)
+</pre>
+ <p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong>onRoomAdded()</strong>, <strong>onCreateRoomError()</strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

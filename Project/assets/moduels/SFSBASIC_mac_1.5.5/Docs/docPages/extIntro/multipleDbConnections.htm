@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../lib.js"></script>
+<link href="../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">6.4 Multiple Database Connections </p>
+ <p>In the previous article we've seen how to configure a <strong>Zone</strong> in the server in order to connect to a database source.<br>
+   This is done by adding simple XML tags in the main <strong>config.xml</strong> file, specifying all the necessary connection informations. <br>
+   There's also a dynamic way of setting up a connection to a database server which <strong>allows to handle multiple data sources</strong> in your extensions. <br>
+   <br>
+ <span class="subTitle">&raquo; Creating new connections using code </span> <br>
+ <br>
+ The following is an example of server side Actionscript code that creates a new database connection:</p>
+ <pre class="code">
+function testDB()
+{
+   var driverName = "org.gjt.mm.mysql.Driver"
+   var connString = "jdbc:mysql://localhost:3306/myDatabase"
+   var usrName = "login"
+   var pword = "password"
+   var connName = "myDbConnection"
+   var maxActive = 10
+   var maxIdle = 10
+   var exhaustedAction = "fail"
+   var blockTime = 5000
+   
+   dbase2 = new __db.DbManager(   driverName,
+                           connString,
+                           usrName,
+                           pword,
+                           connName,
+                           maxActive,
+                           maxIdle,
+                           exhaustedAction,
+                           blockTime
+                        )
+   
+   var sql = "SELECT nick,pass FROM users ORDER BY nick"      
+      
+   var queryRes = dbase2.executeQuery(sql)
+   
+   // etc... etc...
+}
+ </pre>
+ <p>The code is pretty straightforward: we prepare the necessary parameters to setup a connection (as seen in the previous article) and we pass them to the <strong>__db.DbManager</strong> constructor which returns a <strong>database manager</strong> object that can be used to interact with the database. </p>
+ <p>We recommend to create these connections once in the <strong>init()</strong> method of your extension and keeping a global reference to the <strong>database manager</strong> object returned. </p>
+ <p>The following is a simple example of how it should be done:</p>
+ <pre class="code">
+// Let's declare these variables in the global scope
+// they will keep the reference to that databaseManager objects
+var db1, db2
+
+// Extension initialization method
+function init()
+{
+	// Add your initialization code here
+	// ...
+	
+	// Set up the database connections
+	setupDbConnections()
+	
+	// From now on, we can refere to db1 and db1 all over in our code.
+}
+
+// Create the connections
+function setupDbConnections()
+{
+    db1 = __db.DbManager( ... )
+    db2 = __db.DbManager( ... )
+}
+ </pre>
+ <p>&nbsp;</p>
+ <hr width="99%" size="1" noshade>
+ <table width="99%"  border="0" cellspacing="0" cellpadding="4">
+   <tr>
+     <td width="33%"><a href="whatIsAnExtension.htm" class="navLinks"></a> </td>
+     <td width="34%" align="center"><a href="../../index.htm" target="_top" class="navLinks">doc index </a></td>
+     <td width="33%" align="right"><a href="databaseConnection.htm" class="navLinks"></a></td>
+   </tr>
+ </table>
+ <p>&nbsp;</p>
+</body>
+</html>

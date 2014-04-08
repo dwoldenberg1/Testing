@@ -1,0 +1,263 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.11 Tutorials: Room Variables </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available under the <strong>Examples/AS2/roomVariables</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>In this tutorial we will take a closer look to Server Side variables in <strong>SmartFoxServer</strong>,
+   how they work and why they are usefull. In particular the article is focused
+   on <strong>RoomVariables</strong>. We have already encountered
+   them in the board game tutorials and they have been usefull to keep custom
+   user data in the room without having to write server side code.</p>
+ <p><span class="subTitle">&raquo; Requirements<br>
+   <br>
+ </span>Before proceeding with this tutorial it is necessary that you're already
+   familiar with the basic <strong>SmartFoxServer</strong> concepts explained
+   in the previous articles.<br>
+     <br>
+     <span class="subTitle">&raquo; Objectives</span></p>
+ <p>The example application shows the various features of the Room Variables
+   objects and allow to see them in action.<br>
+   The interface will show the variables available in each room and you will
+   be able to create new ones, modify and delete them, change their attributes
+ and so on.</p>
+ <p><img src="images/roomVarsApp.gif" width="500" height="364" class="imgBorder"></p>
+ <p><span class="subTitle">&raquo; The setRoomVariables() method</span></p>
+ <p>As we have already seen in the other articles SmartFoxServer allows data
+   to be stored on the server side using <strong>RoomVariables</strong> and <strong>UserVariables</strong>.<br>
+   The first ones store data at room level and the second ones store data at
+   User level. Each has is own advanatges: for example if you want to keep track
+   of the position of an avatar for each client in the room you can save this
+   property in each User, by using <strong>UserVariables</strong>.<br>
+   On the other hand if you want to keep track of the status of a board game,
+   say a battle-ship game, it would be better to keep those values at Room level.<br>
+   In both cases data saved on the server-side is shared across all other users,
+ so that they are constantly kept in synch as data is updated.<br>
+ <br>
+ Before we analyze
+   the application I'd like to show you how RoomVariables are created with a
+ client request.<br>
+ <br>
+ The <strong>SmartFoxServer Client API</strong> command used is<strong> setRoomVariables(varList)</strong> where varList is an Array of objects each one representing a<br>
+ variable with the following properties:</p>
+ <table width="100%"  border="0" cellspacing="0" cellpadding="2">
+   <tr>
+     <td><strong>name</strong></td>
+     <td>the name of the server side variable</td>
+   </tr>
+   <tr>
+     <td><strong>val</strong></td>
+     <td>the value of the variable</td>
+   </tr>
+   <tr>
+     <td><strong>priv</strong></td>
+     <td>a boolean flag, if true the variable is private and it can't be changed
+     by another user except the one who created it</td>
+   </tr>
+   <tr>
+     <td><strong>persistent</strong></td>
+     <td>a boolean flag, if true the variables persist until the user who created
+     it disconnects.</td>
+   </tr>
+ </table>
+ <p>As you can see everything sounds pretty simple, just give your variables
+ a name and value and you're ready to use them!</p>
+ <p>The two boolean flags available need a more in-depth look at how these variables
+   work.<br>
+   In the most simple case we can set a RoomVariable like this:</p>
+ <pre class="code"><font color="#993300">var</font> varList:<font color="#993300">Array</font> = []
+<font color="#993300">var</font> roomVar:<font color="#993300">Object</font> = {name:"<font color='blue'>test</font>", value:"<font color='blue'>Hello world!</font>"}
+
+varList.<font color="#000087">push</font>(roomVar)
+
+smartFox.setRoomVariables(varList)
+</pre>
+ <p>We first create an empty array that will hold the variables we'd like to
+   create, in this case just one variable.<br>
+   Then we declare an Object with name and value properties which represents
+ our simple variable and finally we send the request to the server.</p>
+ <p>By default the variable is going to be created and sent to the other clients
+   in the room. It will be destroyed when its owner will go out of the room where
+   the variable was generated.</p>
+ <p>Once the variable exist in the room other users may update it as well, and
+   if they do the ownership of the variable is changed to the last user who has
+   modified it. If you want to avoid this behaviour you should set the &quot;<strong>priv</strong>&quot; flag
+   to true, this way no one will overwrite your server side values.</p>
+ <p>Setting the &quot;<strong>persistent</strong>&quot; flag to true will allow your variables
+   to persist throughout the entire user session.</p>
+ <p><span class="subTitle">&raquo; Variable types</span></p>
+ <p>Room Variables support all the &quot;primitive&quot; Actionscript types:
+   Strings, Numbers, Booleans and null.<br>
+   The null value is used to delete a variable, so if you want to remove one
+ of them you should use a code like this:</p>
+ <pre class="code"><font color="#993300">var</font> varList:<font color="#993300">Array</font> = []
+<font color="#993300">var</font> roomVar:<font color="#993300">Object</font> = {name:"<font color='blue'>test</font>", value:<font color="#993300">null</font>}
+
+varList.<font color="#000087">push</font>(roomVar)
+
+smartFox.setRoomVariables(varList)
+</pre>
+ <p>In this case you will delete the variable called &quot;test&quot;. The variable
+ will not be deleted if it's private and you are not its owner.</p>
+ <p><span class="subTitle">&raquo; Other ways of creating variables</span></p>
+ <p>Using the setRoomVariables method is not the only way in which you can create
+   RoomVariables. <br>
+ There are two other ways to create them:</p>
+ <p>1) In the config.xml file<br>
+   2) At the time a new room is created</p>
+ <p><strong>1)</strong> Defining room vars in the <strong>config.xml</strong> file
+   is useful when you need to create persistent variables at server start.Here's
+   a code example you could use in the config.xml file:</p>
+ <pre class="code">&lt;Room name=&quot;Disco Fever&quot; maxUsers=&quot;12&quot; isPrivate=&quot;false&quot; isTemp=&quot;false&quot;&gt;
+	&lt;Vars&gt;
+		&lt;Var name=&quot;bg&quot; type=&quot;n&quot; private=&quot;true&quot;&gt;5&lt;/Var&gt;
+	&lt;/Vars&gt;
+&lt;/Room&gt;</pre>
+ <p>This example is taken from our &quot;SmartChat&quot; application. In our
+   chat every room loads a different background image so we decided to define<br>
+   each background as a RoomVariable. By defining it in the config.xml file the
+   variable is created as soon as the server starts so we don't have to worry
+   about creating them later. Also we wanted to avoid these values to be changed
+so we set the <strong>private</strong> flag.</p>
+ <p><strong>NOTE:</strong> <strong>all variables created in the config.xml file will be always persistent,
+   since the owner of those variable is the server itself.</strong></p>
+ <p>You should have also noticed the <strong>type=&quot;n&quot;</strong> attribute.
+   What is it about? Each Room Variable preserves its type to avoid mismatches,
+   so if you send a String you will always get back a String and so on: this
+   is done transparently by the <strong>SmartFox Client API</strong> and you don't have to take
+   care of it.</p>
+ <p>In this particular case you will have to tell the server what type are the
+   variables you are setting, by using this convention:</p>
+ <p><strong>n</strong> = Number<br>
+   <strong>s</strong> = String<br>
+   <strong>b </strong>= Boolean</p>
+ <p><strong>2) </strong>An alternative to the previous method is to declare the room variables
+ when creating a new room</p>
+ <p>The createRoom method of the SmartFoxClient object accept a rooObj argument
+   where you can define all properties of the room you want to<br>
+   create, variables included.</p>
+ <p>Here's a code example:</p>
+ <pre class="code">room:<font color="#993300">Object</font> = <font color="#993300">new</font> <font color="#993300">Object</font>()
+
+room.name = "<font color='blue'>The Cave</font>"
+room.isGame = <font color="#000087">true</font>
+room.maxUsers = 15
+
+vars:<font color="#993300">Array</font> = <font color="#993300">new</font> <font color="#993300">Array</font>()
+vars.<font color="#000087">push</font>( {name:"<font color='blue'>ogres</font>", val:5, private:<font color="#000087">true</font>} )
+vars.<font color="#000087">push</font>( {name:"<font color='blue'>skeletons</font>", val:4} )
+
+room.vars = vars
+
+smartFox.createRoom(room)
+</pre>
+ <p>First an empty object is created, then we add the various room properties
+ and then we define a new Array with a list of Room Variables.</p>
+ <p><span class="subTitle">&raquo; Other ways of creating variables</span></p>
+ <p>By moving the playhead in the main timeline to the &quot;<strong>app</strong>&quot; label
+   you can inspect the stage. In the &quot;variable list&quot; panel we have
+   a datagrid that <br>
+ will show names and values of each variable defined in the current room.</p>
+ <p>The &quot;create variable&quot; area allows you to create a new room variable
+   by assigning name, value, type and the two boolean flags we've talked about
+   earlier. On the right side of the application you'll find the usual room list
+   and user list components.</p>
+ <p>You will notice that most of the code in the example is similar to the the
+   other applications, so we'll analyze the most important section.</p>
+ <pre class="code">room:<font color="#993300">Object</font> = <font color="#993300">new</font> <font color="#993300">Object</font>()
+
+room.name = "<font color='blue'>The Cave</font>"
+room.isGame = <font color="#000087">true</font>
+room.maxUsers = 15
+
+vars:<font color="#993300">Array</font> = <font color="#993300">new</font> <font color="#993300">Array</font>()
+vars.<font color="#000087">push</font>( {name:"<font color='blue'>ogres</font>", val:5, private:<font color="#000087">true</font>} )
+vars.<font color="#000087">push</font>( {name:"<font color='blue'>skeletons</font>", val:4} )
+
+room.vars = vars
+
+smartFox.createRoom(room)
+</pre>
+ <p>This method is called each time you press the &quot;create&quot; button.
+   We've used a little &quot;trick&quot; to cast the values taken from the textfield
+   to the appropriate Actionscript type: we created a variable called &quot;fn&quot; of
+   type Function which will dynamically point to one of the built-in AS functions
+ String, Number, Boolean depending on the datatype. </p>
+ <p><span class="subTitle">&raquo; Optimizations Tips</span></p>
+ <p>When you send and receive variables from the server their names and values
+ should always be kept as short as possible to save precious bandwidth.</p>
+ <p>Try keeping the variables names as short as possible, one or two characters
+   would be the best choice, for example if you have in your SWF a variable called &quot;enemy_posX&quot; and
+   you need to save it as a Room Variable try to shorten its name to &quot;ex&quot; or
+   similar.</p>
+ <p>Example:</p>
+<pre class="code"><font color="#993300">var</font> roomVar:<font color="#993300">Array</font> = []
+roomVar.<font color="#000087">push</font>( {name:"<font color='blue'>ex</font>", val:enemy_posX} )
+....
+</pre>
+ <p>Another important aspect is floating point numbers as they can get pretty
+   big while you may not necessarily need many decimal places.<br>
+   For example (100 / 3) gives 33.3333333333333 which is 17 characters long:
+   in this case you may try to round them to the 2nd or 3rd decimal place to
+ shorten the amount of data you're sending.</p>
+ <p>One trick that can help save quite a lot of space is using strings to compress
+   more data into one single variable. Imagine you have to send four numbers
+   to the server which in turn will update the other clients.</p>
+ <p>You could use the traditional approach :</p>
+ <pre class="code"><font color="#993300">var</font> roomVar:<font color="#993300">Array</font> = []
+roomVar.<font color="#000087">push</font>( {name:"<font color='blue'>x</font>", val:100} )
+roomVar.<font color="#000087">push</font>( {name:"<font color='blue'>y</font>", val:200} )
+roomVar.<font color="#000087">push</font>( {name:"<font color='blue'>w</font>", val:50} )
+roomVar.<font color="#000087">push</font>( {name:"<font color='blue'>h</font>", val:50} )
+
+smartfox.setRoomVariables(roomVar)
+</pre>
+ <p>... or you could put the four values in one string with a separator like
+ this:</p>
+<pre class="code"><font color="#993300">var</font> roomVar:<font color="#993300">Array</font> = []
+roomVar.<font color="#000087">push</font>( {name:"<font color='blue'>s</font>", val:"<font color='blue'>100,200,50,50</font>"} )
+
+smartfox.setRoomVariables(roomVar)
+</pre>
+ <p>when you receive them on the client you would use this code:</p>
+ <pre class="code">smartFox.onRoomVariablesUpdate = <font color="#993300">function</font>(roomObj:<font color="#993300">Object</font>)
+{
+        <font color="#993300">var</font> variables:<font color="#993300">Object</font> = roomObj.getVariables()
+        
+        <font color="#993300">var</font> values:<font color="#993300">Array</font> = variables["<font color='blue'>s</font>"].<font color="#000087">split</font>("<font color='blue'>,</font>")
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i:<font color="#993300">Number</font> = 0; i &lt; value.<font color="#000087">length</font>; i++)
+        <font color="#993300">trace</font>(<font color="#993300">Number</font>(values[i]))
+}
+</pre>
+ <p>In other words you pack the four values into one single string choosing the &quot;,&quot; (comma)
+   as the delimitator and when you receive them on the<br>
+ other clients you use the String split() method to obtain your values back.</p>
+ <p><span class="subTitle">&raquo; Conclusions </span></p>
+ <p>By the end of this article you should be a Server-side variable master!<br>
+   Try experimenting some more with this simple application by launching one
+ or more instances of it at the same time.</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../10_multiChat/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../12_buddyList/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

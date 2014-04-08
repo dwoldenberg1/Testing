@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.12 Tutorials: Buddy List</p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available under the <strong>Examples/AS2/buddyList</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p>In this tutorial we will learn how to implement a buddy list using the <strong>SmartFoxServer
+   Client API</strong>. The buddy list allows each client to keep a list of friends
+   and know in realtime if they are online. Also you can add more interesting
+   features like private messaging between buddies across rooms and a function
+   to join the room where the buddy is currently located.</p>
+ <p><strong>SmartFoxServer</strong> stores buddy lists on the server side, allowing each user
+   to save his list and retrieve next time he gets connected.</p>
+ <p><span class="subTitle">&raquo; Requirements<br>
+   <br>
+ </span>Before proceeding with this tutorial it is necessary that you're already
+   familiar with the basic <strong>SmartFoxServer</strong> concepts explained
+   in the previous articles.<br>
+     <br>
+     <span class="subTitle">&raquo; Objectives</span></p>
+ <p>The purpose of this example is to show how the different buddylist-related
+   commands work by implementing it in a simple chat application.<br>
+   The application allows each user to populate their own list of friend which
+   is automatically updated when on of them logs in or out of the server. Also
+   we've added a button for sending private messages to the buddy and another
+   button for instantly joining the friend in the room where he's currently located.
+   Buddies can also be removed and we will not receive any more notices about
+   his status.</p>
+ <p><img src="images/buddyApp.gif" width="500" height="364" class="imgBorder"></p>
+ <p><span class="subTitle">&raquo; The Server Side</span></p>
+ <p>In order to enable a zone to handle buddy lists you will have to specify
+   the buddList = &quot;nn&quot; attribute of a zone definition in the <strong>config.xml</strong>   file.<br>
+   Here's
+   an example:</p>
+ <pre class="code">&lt;Zone name=&quot;buddyChat&quot; buddyList=&quot;20&quot;&gt;</pre>
+ <p>In the above line we have enabled the buddy list for the zone called &quot;buddyChat&quot; and
+   we have limited it to 20 buddies for each client.<br>
+   You can specify any number as a limit, usually values between 20 to 50 are
+ optimal. For each user that uses the buddy list a file with extension &quot;.list&quot; is
+ saved in the <strong>buddyLists/</strong> folder inside your SFS main folder. <br>
+ Now that you have
+ enabled this feature we can check the tools that the <strong>SmartFoxServer
+ Client API</strong> provide for this functionality.</p>
+ <p><span class="subTitle">&raquo; The application</span></p>
+ <p>With the source file open you can safely skip the &quot;load&quot; and &quot;connect&quot; labels
+   in the main timeline and park the playhead in the &quot;chat&quot;<br>
+ label where the main application code is located.</p>
+ <p>As you will notice in the very first lines of code we have this boolean variable
+   declared:</p>
+ <pre class="code"><font color="#993300">var</font> buddyListLoaded:<font color="#993300">Boolean</font> = <font color="#000087">false</font>
+</pre>
+ <p>We keep this flag to know if we have already loaded our buddy list or not.
+   At around line 36 you will find the usual <strong>onRoomListUpdate</strong> handler:</p>
+ <pre class="code">smartfox.onRoomListUpdate = <font color="#993300">function</font>(roomList:<font color="#993300">Array</font>)
+{
+        roomList_lb.<font color="#000087">removeAll</font>()
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> roomList)
+        {
+                <font color="#993300">var</font> room:Room = roomList[i]
+                roomList_lb.<font color="#000087">addItem</font>(room.getName() + "<font color='blue'> (</font>" + room.getUserCount() + "<font color='blue'>)</font>", room.getId())
+        }
+        roomList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+        
+        <font color='#878787'>// Join the default room
+</font>        <font color="#993300">this</font>.autoJoin()
+        
+}
+</pre>
+
+ <p>As you have noticed the handler is similar to the one we've used in other
+ applications so we can safely skip to the next event handler: <strong>onJoinRoom</strong>. </p>
+ <pre class="code">smartfox.onJoinRoom = <font color="#993300">function</font>(roomObj:Room)
+{
+        <font color="#993300">var</font> roomId:<font color="#993300">Number</font> 		= roomObj.getId()
+        <font color="#993300">var</font> userList:<font color="#993300">Object</font>	 	= roomObj.getUserList()
+        
+        resetRoomSelected(roomId)
+        
+        <font color="#000087">_global</font>.currentRoom = roomObj
+        
+        <font color='#878787'>// Clear text area
+</font>        chat_txt.<font color="#000087">htmlText</font> = "<font color='blue'></font>"
+        
+        <font color='#878787'>// Clear current list
+</font>        userList_lb.<font color="#000087">removeAll</font>()
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> userList)
+        {
+                <font color="#993300">var</font> user:User = userList[i]
+                userList_lb.<font color="#000087">addItem</font>(user.getName(), user.getId())
+        }
+        
+        <font color='#878787'>// Sort names
+</font>        userList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+        
+        chat_txt.<font color="#000087">htmlText</font> += "<font color='blue'>&lt;font color='#cc0000'&gt;&gt;&gt; Room [ </font>" + roomObj.getName() + "<font color='blue'> ] joined&lt;/font&gt;</font>";
+        
+        <font color="#993300">if</font> (!buddyListLoaded)
+        {
+                buddyListLoaded = <font color="#000087">true</font>
+                smartfox.loadBuddyList()
+        }
+}
+</pre>
+ <p>The last four lines of code check the boolean flag we've set on initialization
+   and load the buddy list from the server: in order to handle the buddy data
+   we need to handle a new event called <strong>onBuddyList</strong>:</p>
+ <pre class="code"><font color='#878787'>//----------------------------------------------------------
+</font><font color='#878787'>// Handles the loading of the buddyList from server
+</font><font color='#878787'>//----------------------------------------------------------
+</font>smartfox.onBuddyList = <font color="#993300">function</font>(bList:<font color="#993300">Array</font>)
+{
+        buddyList_lb.<font color="#000087">removeAll</font>()
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> bList)
+        {
+                <font color="#993300">var</font> label:<font color="#993300">String</font> = bList[i].name + "<font color='blue'> [ </font>" + (bList[i].isOnline ? "<font color='blue'>On</font>" : "<font color='blue'>Off</font>") + "<font color='blue'> ]</font>"
+                buddyList_lb.<font color="#000087">addItem</font>(label, bList[i])
+        }
+        
+        buddyList_lb.<font color="#000087">sortItemsBy</font>("<font color='blue'>label</font>", "<font color='blue'>ASC</font>")
+}
+</pre>
+ <p>The server returns an Array of objects with three properties:</p>
+ <table width="100%"  border="0" cellspacing="0" cellpadding="2">
+   <tr>
+     <td width="100"><strong>id</strong></td>
+     <td>the user Id of the buddy</td>
+   </tr>
+   <tr>
+     <td><strong>name</strong></td>
+     <td>the buddy name</td>
+   </tr>
+   <tr>
+     <td><strong>isOnline</strong></td>
+     <td>the online status. (boolean) </td>
+   </tr>
+ </table>
+ <p>The above code just cycles through the array received by the handler and
+   populate the list box in the &quot;buddy list&quot; panel. It's important
+   to note that the &quot;data&quot; object passed to the each
+   item in the list is the buddy object itself. By storing a reference to each
+   buddy in the list box it will be very simple to retrieve or search for buddy
+   data. The list passed as argument in the event handler is simply a reference
+   to a public <strong>SmartFoxClient</strong> property called <strong>buddyList</strong> which holds<br>
+   the current list of friends.</p>
+ <p>At any time in your code you can access this data by simply using the <strong>smartFox.buddyList</strong>   property.</p>
+ <p><span class="subTitle">&raquo; Adding buddies</span></p>
+ <p>If you have never initalized your list of friends the server will just return
+   an empty array, so in order to populate our buddy list we should use the <strong>addBuddy()</strong>   method.</p>
+ <p>The usage is trivial:</p>
+ <pre class="code">smartFox.addBuddy("<font color='blue'>Lapo</font>")
+</pre>
+ <p>You just pass the user name that you want to add to your list. Once you have
+   ent the request the server may respond in two ways: if you don't have any
+   more room in your list it will fire a <strong>onBuddyListError</strong> event otherwise you
+   will receive an <strong>onBuddyList</strong> event.</p>
+ <p>In the first case you can handle the error by showing the server message
+   on screen, like this:</p>
+ <pre class="code">smartfox.onBuddyListError = <font color="#993300">function</font>(errorMsg:<font color="#993300">String</font>)
+{
+        <font color="#993300">var</font> win:<font color="#993300">MovieClip</font> = showWindow("<font color='blue'>errorWindow</font>")
+        win.errorMsg.<font color="#000087">text</font> = errorMsg
+}
+</pre>
+ <p>In the second case your <strong>buddList</strong> property gets updated with the status of
+ the new user you have added. We've already seen how to handle a <strong>onBuddyList</strong> event so we can move on.</p>
+ <p><span class="subTitle">&raquo; Handling updates</span></p>
+ <p>If one of the users in our buddy list changes status (i.e. goes offline)
+ we'll immediately receive a <strong>onBuddyListUpdate:</strong></p>
+ <pre class="code">smartfox.onBuddyListUpdate = <font color="#993300">function</font>(buddy:<font color="#993300">Object</font>)
+{
+        <font color="#993300">var</font> label = buddy.name + "<font color='blue'> [ </font>" + (buddy.isOnline ? "<font color='blue'>On</font>" : "<font color='blue'>Off</font>") + "<font color='blue'> ]</font>"
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i:<font color="#993300">Number</font> = 0; i &lt; buddyList_lb.<font color="#000087">getLength</font>(); i++)
+        {
+                <font color="#993300">var</font> item:<font color="#993300">Object</font> = buddyList_lb.<font color="#000087">getItemAt</font>(i)
+                
+                <font color="#993300">if</font> (item.data.name == buddy.name)
+                {
+                        buddyList_lb.<font color="#000087">replaceItemAt</font>(i, label, buddy)
+                        <font color="#993300">break</font>
+                }
+        }
+}
+</pre>
+ <p>The argument passed to the event handler is the object representing the buddy
+   that has changed status: what we have to do here is cycle through the buddy
+   list box until we find the item with same name of the buddy object received,
+ then replace it with a new label and object.</p>
+ <p><span class="subTitle">&raquo; Removing buddies</span></p>
+ <p>In order to remove users from the list you can use the <strong>removeBuddy()</strong> command:</p>
+ <pre class="code"><font color="#993300">function</font> removeBuddy()
+{
+        <font color="#993300">var</font> item:<font color="#993300">Object</font> = buddyList_lb.<font color="#000087">getSelectedItem</font>()
+        
+        <font color="#993300">if</font> (item != <font color="#000087">undefined</font>)
+        {
+                smartfox.removeBuddy(item.data.name)
+        }
+}
+</pre>
+ <p>Before invoking the method we check if there's a selected item in the list
+   box, then we call the removeBuddy() function passing the buddy name. This
+   will fire a <strong>onBuddyList()</strong> event which will update the view
+   in the buddy list box. Another way of removing buddies is done by calling
+   the <strong>clearBuddyList()</strong>.
+   In this case the whole list is cleared and all buddies are removed.</p>
+ <p><span class="subTitle">&raquo; Removing buddies</span></p>
+ <p>In the sample application you can select one buddy and click on the &quot;MSG&quot; button
+   to send him a private message even if he's not in the same room where you
+   are. Actually this isn't something really new and it's not related with the
+   buddy list features.<br>
+   The private messages can be sent to any user in the same
+     zone so it is possible to chat with your buddies regardless of which room
+     they are currently in. A nice feature that could be easily implemented with
+     <strong>SmartFoxServer</strong> is a multi-chat applications like ICQ, Messenger and the
+   like, where each private chat has its own movable and resizable window and
+   you can check the status of all your friends in real time.</p>
+ <p>This is the code used to send the private message:</p>
+ <pre class="code"><font color="#993300">function</font> sendBuddyPrivateMessage()
+{
+        <font color="#993300">var</font> item:<font color="#993300">Object</font> = buddyList_lb.<font color="#000087">getSelectedItem</font>()
+        
+        <font color="#993300">if</font> (item != <font color="#000087">undefined</font> &amp;&amp; item.data.id != -1)
+        {
+                <font color="#000087">_global</font>.pmUid = item.data.id
+                showWindow("<font color='blue'>pmWindow</font>")
+        }
+        
+}
+</pre>
+ <p>The operation is splitted in two parts: first we store the id of the recipient
+   in a <strong>_global</strong> variable and then we show the input dialog box
+   on screen. When the user hits the &quot;Send&quot; button this code is executed.</p>
+ <pre class="code"><font color="#993300">function</font> sendPrivateMessage(m:<font color="#993300">String</font>, recipient:<font color="#993300">Number</font>)
+{
+        hideWindow("<font color='blue'>pmWindow</font>")
+        smartfox.sendPrivateMessage(m, <font color="#000087">_global</font>.pmUid)
+}
+</pre>
+ <p><span class="subTitle">&raquo; Joining buddies</span></p>
+ <p>Another nice option we have added to the application is the ability to instantly
+   join one of the buddies in the list: the client selects one friend from the
+   list, press the &quot;Join&quot; button and he is &quot;teleported&quot; in
+ the buddy room. In order to achieve this we must ask the server to tell us where
+ the user is currently located:</p>
+ <pre class="code"><font color="#993300">function</font> joinBuddy()
+{
+        <font color="#993300">var</font> item:<font color="#993300">Object</font> = buddyList_lb.<font color="#000087">getSelectedItem</font>()
+        <font color="#993300">if</font> (item != <font color="#000087">undefined</font>)
+        {
+                smartfox.getBuddyRoom(item.data)
+        }
+}
+</pre>
+ <p>The above function is very simple: you just pass the the buddy object to
+ the <strong>getBuddyRoom</strong> method. The server will respond with a onBuddyRoom event:</p>
+ <pre class="code">smartfox.onBuddyRoom = <font color="#993300">function</font>(<font color="#000087">list</font>:<font color="#993300">Array</font>)
+{
+        <font color="#993300">var</font> roomId:<font color="#993300">Number</font> = <font color="#000087">list</font>[0]
+        
+        <font color="#993300">if</font> (roomId != smartfox.activeRoomId)
+        {
+                <font color='#878787'>// Check if new room is password protected
+</font>                <font color="#993300">var</font> priv:<font color="#993300">Boolean</font> = smartfox.getRoom(roomId).isPrivate()
+                
+                <font color="#993300">if</font> (priv)
+                {
+                        <font color='#878787'>// Save newroom as _global for later use
+</font>                        <font color="#000087">_global</font>.newRoom = roomId
+                        
+                        showWindow("<font color='blue'>passwordWindow</font>")
+                }
+                <font color="#993300">else</font>
+                {
+                        <font color='#878787'>// Pass the room id
+</font>                        smartfox.joinRoom(roomId)
+                }
+        }
+}
+</pre>
+ <p>If you look at the above event handler you may be surprised that a list is
+ returned by the server... didn't we just expect a <strong>roomId</strong> number?<br>
+ Well,
+ this is exactly what we should expect but what about if the buddy we want to
+ join is currently present in 2 or 3 rooms at the same time? That's why we're
+ receiving an array, it contains a list of available rooms where the buddy is
+ located.<br>
+ <br>
+ For the sake of simplicity in this application we don't allow users
+ to join more than one room at the same time, so we can safely get the one and
+ only <strong>roomId</strong> at position 0 in the array. Also before joining
+ the room we must check if it's private and in case it is we should show the
+ appropriate input dialog box before proceeding. If the room is public we go
+ ahead and join it.</p>
+ <p class="subTitle">&raquo; Conclusions</p>
+ <p>As you can see the buddy list commands provided with SmartFoxServer introduce
+   quite a few interesting possibilities for advanced chatting features. For
+   example by paring the buddy list functions with the ability to send private
+   messages everywhere in the zone you could easily create Flash based instant
+   messengers, advanced chatting apps etc...</p>
+ <hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../11_roomVars/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right"><a href="../13_customLogin/index.htm" class="navLinks"></a></td>
+  </tr>
+</table>
+
+</body>
+</html>

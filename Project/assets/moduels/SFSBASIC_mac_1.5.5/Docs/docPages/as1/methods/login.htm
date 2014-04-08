@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">login()</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.login(zone, name, password)</p>
+ <p class="title">Description:</p>
+<p class="plain">The standard SmartFoxServer  login method accepts guest
+  users. Duplicate nicknames in the same zone are not allowed. <br />
+  If a user logs
+  in with an empty nickname the server automatically creates a name for the client
+  using this format: &quot;guest_n&quot; where n is a progressive number.<br />
+  <br />
+  If you
+  need to implement your own login procedure, for example to check nicknames
+  against a database, you can add it to your code BEFORE the SmartFox login code.
+  This way, once the client is validated, you can just use the stadard login
+  procedure.<br />
+  <br />
+  Also the provided name and password are checked against the moderator list
+  (configured in the config.xml file on the server side) and if a user matches
+  it is set<br />
+  as a moderator</p>
+ <p>zone = the name of the zone (a string)<br />
+  nick = the user's nickname</p>
+ <p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td><strong>zone</strong></td>
+     <td>&nbsp;</td>
+     <td>the zone name in which you want to connect </td>
+   </tr>
+   <tr>
+     <td><strong>name</strong></td>
+     <td>&nbsp;</td>
+     <td>the user name </td>
+   </tr>
+   <tr>
+     <td><strong>password</strong></td>
+     <td>&nbsp;</td>
+     <td>the user password (optional) </td>
+   </tr>
+ </table>
+    <p class="title">Returns:</p>
+ <p class="plain">Fires the <strong>onLogin</strong> event </p>
+ <p class="title">Example:</p>
+ <pre class="code">
+smartFox.login("testZone", "Jim")
+</pre>
+ <p class="title">See also:</p>
+ <p class="plain"><strong>isModerator()</strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>

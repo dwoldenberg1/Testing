@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">onRandomKey()</p>
+ <p class="title">Availability:</p>
+<p class="plain">Flash Player 6.0 <br />
+ SmartFoxServer  Pro</p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.onRandomKey(theKey) </p>
+ <p class="title">Description:</p>
+<p class="plain">The event is fired in response to a <strong>getRandomKey()</strong> request.
+  The server responds sending the unique string key.<br />
+  For more details please check the <a href="../../tutorials_pro/09_secureLogin/index.htm" target="bodyFrame">Secure
+Login tutorial.</a></p>
+<p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td valign="top"><strong>theKey</strong></td>
+     <td>&nbsp;</td>
+     <td>the unique random string key  </td>
+   </tr>
+</table>
+
+        <p class="title">Returns:</p>
+ <p class="plain">nothing</p>
+ <p class="plain"><span class="title">Example:</span>
+<pre class="code">
+smartfox.onRandomKey = function(theKey)
+{
+	trace("Here's the secret key: " + theKey)
+}
+</pre> 
+ </p>
+<strong class="plain"></strong>
+<p class="title">See also:</p>
+<p class="title">&nbsp;</p>
+</body>
+</html>

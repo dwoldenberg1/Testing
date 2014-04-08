@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>SmartFoxServer Documentation</title>
+<script language="javascript" src="../../../lib.js"></script>
+<link href="../../../main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="bodyStyle">
+ <p class="title">5.9 Tutorials: Board game (part 2) </p>
+ <table width="250" border="1" align="right" cellpadding="4" cellspacing="0" bordercolor="#999999">
+   <tr>
+     <td align="center" bgcolor="#f4f4f4">The <strong>source FLA</strong> of
+       this example is available for both Flash MX and MX2004 under the <strong>Examples/(Actionscript version)/smartFoxTris</strong> folder.</td>
+   </tr>
+ </table>
+ <p class="subTitle">&raquo; Introduction</p>
+ <p><strong>SmartFoxTris</strong> is  a complete mutiplayer version of the famous &quot;Tic-Tac-Toe&quot; game. The related source file for this article is found in the &quot;Examples/smartFoxTris/&quot; folder under the name of &quot;smartFoxTris.fla&quot;. <span class="articleText">In the  first part of this tutorial we have introduced a number of  features, among which the &quot;Room variables&quot;.</span></p>
+ <p><span class="articleText">In this second part we'll analyze the gameplay and finish 
+ this first &quot;turn-based&quot; game.</span></p>
+ <p><span class="subTitle">&raquo; Ready to play </span></p>
+<p>Open the actionscript panel (F9) to analyze the code in the &quot;<strong>game</strong>&quot; label.
+  The first lines of code are mostly initialization stuff:</p>
+<pre class="code">inGame = <font color="#000087">true</font>
+moveCount = 0
+<font color="#000087">_global</font>.gameStarted = <font color="#000087">false</font>
+<font color="#000087">_global</font>.whoseTurn = 1</pre>
+<dl class="kASHglobal">
+  <dt>The <strong>inGame</strong> flag is finally set, then the <strong>moveCount</strong> counter is initialized together with two more _global vars:</dt>
+</dl>
+<p>&raquo; <em>_global.gameStarted</em>: a flag that tells us if the game is started<br>
+&raquo; <em>_global.whoseTurn</em>: a number telling whose player turn is</p>
+<p>  The code below shows the player name on screen and  set the opponentID variable:</p>
+<pre class="code"><font color="#000087">_root</font>["<font color='blue'>player</font>" + <font color="#000087">_global</font>.myID].name.<font color="#000087">text</font> = <font color="#000087">_global</font>.myName
+opponentID = (<font color="#000087">_global</font>.myID == 1) ? 2 : 1</pre>
+<p>The application can dynamically behave like if it was player one or player two. 
+This is achieved using the <strong>_global.myID</strong> variable which in turn is a copy of the <strong>smartfox.playerId</strong> variable: by knowing which player is currently playing we can easily play both sides.</p>
+<p>The line where we set the <strong>opponentID</strong> may look a little tricky if you're not used to this type of syntax, however the same line<br>
+  could have been written like this:</p>
+<pre class="code"><font color="#993300">if</font> (<font color="#000087">_global</font>.myID == 1)
+        opponentID = 2
+<font color="#993300">else</font>
+        opponentID = 1
+</pre>
+<p>We've already commented the following lines: here the room variable for the player is created.</p>
+<pre class="code">vObj = <font color="#993300">new</font> <font color="#993300">Array</font>()
+vObj.<font color="#000087">push</font>({name:"<font color='blue'>player</font>" + <font color="#000087">_global</font>.myID, val:<font color="#000087">_global</font>.myName})
+
+smartfox.setRoomVariables(vObj)</pre>
+<p>Here is where we notify our arrival into the room, and also where we can control the
+game flow.</p>
+<p>To understand why, you have to check the <strong>onRoomVariablesUpdate</strong> handler:</p>
+<pre class="code">smartfox.onRoomVariablesUpdate = <font color="#993300">function</font>(roomObj)
+{
+        <font color="#993300">if</font> (inGame)
+        {
+                <font color="#993300">var</font> rVars = roomObj.variables
+                <font color="#993300">if</font> (rVars["<font color='blue'>player1</font>"].<font color="#000087">length</font> &gt; 0 &amp;&amp; rVars["<font color='blue'>player2</font>"].<font color="#000087">length</font> &gt; 0)
+                {
+                        <font color="#993300">if</font> (!<font color="#000087">_global</font>.gameStarted)
+                        {
+                                <font color="#000087">_global</font>.gameStarted = <font color="#000087">true</font>
+                                hideWindow("<font color='blue'>gameMessage</font>")
+                                <font color="#000087">_root</font>["<font color='blue'>player</font>" + opponentID].name.<font color="#000087">text</font> = rVars["<font color='blue'>player</font>" + opponentID]
+                                <font color="#000087">_global</font>.whoseTurn = 1
+                                waitMove()
+                        }
+                }
+                <font color="#993300">else</font>
+                {
+                        <font color='#878787'>// Reset game status
+</font>                        <font color="#000087">_global</font>.gameStarted = <font color="#000087">false</font>
+                        resetGameBoard()
+                        moveCount = 0
+                        <font color="#993300">var</font> win = showWindow("<font color='blue'>gameMessage</font>")
+                        win.message_txt.<font color="#000087">text</font> = "<font color='blue'>Waiting for player </font>" + ((<font color="#000087">_global</font>.myID == 1) ? "<font color='blue'>2</font>" : "<font color='blue'>1</font>")
+                                             + <font color="#993300">newline</font> + <font color="#993300">newline</font> + "<font color='blue'>press [cancel] to leave the game</font>"
+                }
+        }
+}</pre>
+<p>The code above handles three possible cases:</p>
+<p>1) we are the first user to enter the room, so we need to wait for our opponent;<br>
+  2) we are playing the game but our opponent leaves the room or gets disconnected;<br>
+3) the second player has entered and we can start the game.</p>
+<p>If only one player variable exists in the room we will show a small dialog box that will tell the user to wait his/her opponent.<br>
+  This will also hanlde the case in which one of the two players exits from the room during the game. Also the game board is cleared and the <strong>moveCount</strong> is set back to zero.</p>
+<p>If both player variables exist in the room we can set the _global.gameStarted to true, remove the dialog box and initialize the game. Player one will always move first in the first game, then the first move will be done by the client who won the previous game.</p>
+<p>The control is then passed to the <strong>waitMove()</strong> method:</p>
+<pre class="code"><font color="#993300">function</font> waitMove()
+{
+        <font color="#993300">var</font> msg = (<font color="#000087">_global</font>.whoseTurn == <font color="#000087">_global</font>.myID) ? "<font color='blue'>It's your turn</font>" : "<font color='blue'>It's your opponent turn</font>"
+        <font color="#000087">_root</font>.turn.<font color="#000087">text</font> = msg
+}</pre>
+<p>The simple code above shows the turn message based on the player Id and then the application will wait for user interaction.</p>
+<p>When a user clicks on one of the squares in the game board this code is executed:</p>
+<pre class="code"><font color="#000087">on</font> (release)
+{
+        <font color="#993300">if</font> (gameStarted)
+        {
+                <font color="#993300">if</font> (<font color="#000087">_global</font>.myID == <font color="#000087">_global</font>.whoseTurn)
+                {
+                        <font color="#993300">if</font> (<font color="#993300">this</font>.status != "<font color='blue'>R</font>" &amp;&amp; <font color="#993300">this</font>.status != "<font color='blue'>G</font>")
+                        {
+                                <font color="#993300">var</font> stat = (<font color="#000087">_global</font>.myColor == "<font color='blue'>red</font>") ? "<font color='blue'>R</font>" : "<font color='blue'>G</font>"
+                                <font color="#993300">this</font>.status = stat
+                                <font color="#993300">this</font>.ball.<font color="#000087">gotoAndStop</font>(<font color="#000087">_global</font>.myColor)
+                                <font color="#000087">_root</font>.moveDone(<font color="#993300">this</font>)
+                        }
+                }
+        }
+}</pre>
+<p>We have three nested if(s) to check: if the game is started, if it's the user's turn and finally if the clicked item was not yet taken. </p>
+<p>Each square has a &quot;status&quot; property that can have 3 different values:</p>
+<p>&raquo; undefined: if never clicked before<br>
+&raquo; &quot;<strong>R</strong>&quot;: if it contains a red ball<br>
+&raquo; &quot;<strong>G</strong>&quot;: if it contains a green ball</p>
+<p>If the board cell is free we set it to the user color and invoke the <strong>moveDone()</strong> method in the main timeline passing a reference<br>
+  to the square movieclip.</p>
+<p>The <strong>moveDone</strong> function uses the <strong>sendObject</strong> API method to send the move data to our opponent:</p>
+<pre class="code"><font color="#993300">var</font> x = tile.<font color="#000087">_name</font>.<font color="#000087">substr</font>(3,1)
+<font color="#993300">var</font> y = tile.<font color="#000087">_name</font>.<font color="#000087">substr</font>(5,1)
+smartfox.sendObject({<font color="#000087">type</font>:"<font color='blue'>move</font>", x:x, y:y})
+moveCount++
+checkBoard()
+nextTurn()</pre>
+<p>The <strong>x</strong> and <strong>y</strong> vars are extracted from the <strong>_name</strong> String property: as you may remember each square has an instance name like &quot;sq_x_y&quot; By respectively taking the 3rd and 5th char from the instance name we obtain the x and y values. </p>
+<p>These values are then passed to the <strong>sendObject</strong> function together with a property called &quot;<strong>type</strong>&quot; that can have two values:</p>
+<p>&raquo; &quot;<strong>move</strong>&quot;, when we're sending a game board move;<br>
+&raquo; &quot;<strong>restart</strong>&quot;, when we're restarting the game at the end of it.</p>
+<p>After each move is peformed the <strong>checkBoard()</strong> function will loop through the board to see if there's a winner and in such case it will 
+  stop the game showing the win/lose message. We'll take a closer look to it later.</p>
+<p>If no winner is found the <strong>nextTurn()</strong> function is called:</p>
+<pre class="code"><font color="#993300">function</font> nextTurn()
+{
+        <font color="#000087">_global</font>.whoseTurn = (<font color="#000087">_global</font>.whoseTurn == <font color="#000087">_global</font>.myID) ? ((<font color="#000087">_global</font>.myID == 1) ? 2:1) : <font color="#000087">_global</font>.myID
+        waitMove()
+}</pre>
+<p>What this does is pretty strightforward: the <strong>whoseTurn</strong> variable is inverted and then we go back to the <strong>waitMove()</strong>. </p>
+<p>At this point the game flow should be clear:</p>
+<p>1) wait for player move;<br>
+  2) check if there's a winner;<br>
+  3) if no winner is found switch the active player and go back to 1 else the game is over.</p>
+<p>Now that we've seen how the player move is sent to the opponent is time to check the code that handles the reception<br>
+  of a move from the other player(s):</p>
+<pre class="code">smartfox.onObjectReceived = <font color="#993300">function</font>(o)
+{
+        <font color="#993300">if</font> (inGame)
+        {
+                <font color='#878787'>// we received a move from the opponent
+</font>                <font color="#993300">if</font> (o.<font color="#000087">type</font> == "<font color='blue'>move</font>")
+                {
+                        <font color='#878787'>// Visualize opponent move
+</font>                        <font color="#993300">var</font> tile = "<font color='blue'>sq_</font>" + o.x + "<font color='blue'>_</font>" + o.y
+                        <font color="#993300">var</font> ballColor = (<font color="#000087">_global</font>.myID == 1) ? "<font color='blue'>red</font>" : "<font color='blue'>green</font>"
+                        
+                        board[tile].ball.<font color="#000087">gotoAndStop</font>(ballColor)
+                        board[tile].status = ballColor.<font color="#000087">substr</font>(0,1).<font color="#000087">toUpperCase</font>()
+                        
+                        moveCount++
+                        
+                        checkBoard()
+                        nextTurn()
+                }
+                <font color="#993300">else</font> <font color="#993300">if</font> (o.<font color="#000087">type</font> == "<font color='blue'>restart</font>")
+                {
+                        restartGame()
+                }
+        }
+}</pre>
+<p>If the &quot;<strong>type</strong>&quot; property is set to &quot;<strong>move</strong>&quot;, we have to display the opponent move in our board to keep all client's boards in sync.</p>
+<p>The &quot;<strong>tile</strong>&quot; variable represents the movieclip name of the cell in the board where the client clicked and the &quot;<strong>ballColor</strong>&quot; is found<br>
+  by assigning the opposite color to the one we're using.</p>
+<p>The status property is set by taking the first uppercase char in the <strong>ballColor</strong> variable (&quot;R&quot; or &quot;G&quot;) then the <strong>moveCount</strong> is incremented
+  and the <strong>checkBoard()</strong> and <strong>nextTurn()</strong> methods are called, just like we did previously.</p>
+<p>You will be able to send a &quot;<strong>restart</strong>&quot; command when the game finishes and you will be presented a dialog box were you can return<br>
+  in the main chat area or continue playing.</p>
+<p>The <strong>restartGame()</strong> method will clear all current game values and start a new game:</p>
+<pre class="code"><font color="#993300">function</font> restartGame()
+{
+        hideWindow("<font color='blue'>gameEnd</font>")
+        resetGameBoard()
+        moveCount = 0
+        <font color="#000087">_global</font>.gameStarted = <font color="#000087">true</font>
+        nextTurn()
+}</pre>
+<p><span class="articleText">Now that we've described the flow of the application, we can take a closer look to the <strong>checkBoard()</strong> function:</span></p>
+<pre class="code"><font color="#993300">function</font> checkBoard()
+{
+        <font color="#993300">var</font> solution = []
+        
+        <font color='#878787'>// All Rows
+</font>        <font color="#993300">for</font> (<font color="#993300">var</font> i = 1; i &lt; 4; i++)
+        {
+                solution.<font color="#000087">push</font>(board["<font color='blue'>sq_1_</font>" + i].status + board["<font color='blue'>sq_2_</font>" + i].status + board["<font color='blue'>sq_3_</font>" + i].status)
+        }
+        
+        <font color='#878787'>// All Columns
+</font>        <font color="#993300">for</font> (<font color="#993300">var</font> i = 1; i &lt; 4; i++)
+        {
+                solution.<font color="#000087">push</font>(board["<font color='blue'>sq_</font>" + i + "<font color='blue'>_1</font>"].status + board["<font color='blue'>sq_</font>" + i + "<font color='blue'>_2</font>"].status + board["<font color='blue'>sq_</font>" + i + "<font color='blue'>_3</font>"].status)
+        }
+        
+        <font color='#878787'>// Diagonals
+</font>        solution.<font color="#000087">push</font>(board["<font color='blue'>sq_1_1</font>"].status + board["<font color='blue'>sq_2_2</font>"].status + board["<font color='blue'>sq_3_3</font>"].status)
+        solution.<font color="#000087">push</font>(board["<font color='blue'>sq_1_3</font>"].status + board["<font color='blue'>sq_2_2</font>"].status + board["<font color='blue'>sq_3_1</font>"].status)
+        
+        <font color="#993300">var</font> winner = <font color="#993300">null</font>
+        
+        <font color="#993300">for</font> (<font color="#993300">var</font> i <font color="#993300">in</font> solution)
+        {
+                <font color="#993300">var</font> st = solution.<font color="#000087">pop</font>()
+                <font color="#993300">if</font> (st == "<font color='blue'>RRR</font>")
+                {
+                        winner = "<font color='blue'>red</font>"
+                        <font color="#993300">break</font>
+                }
+                <font color="#993300">else</font> <font color="#993300">if</font> (st == "<font color='blue'>GGG</font>")
+                {
+                        winner = "<font color='blue'>green</font>"
+                        <font color="#993300">break</font>
+                }
+        }
+        
+        <font color='#878787'>// TIE !!!
+</font>        <font color="#993300">if</font> (winner == <font color="#993300">null</font> &amp;&amp; moveCount == 9)
+        {
+                <font color="#993300">var</font> win = showWindow("<font color='blue'>gameEnd</font>")
+                opaqueCover.<font color="#000087">_visible</font> = <font color="#000087">true</font>
+                win.message_txt.<font color="#000087">text</font> = "<font color='blue'>Tie !</font>"
+        }
+        <font color="#993300">else</font> <font color="#993300">if</font> (winner != <font color="#993300">null</font>)
+        {
+                <font color='#878787'>// There is a winner !
+</font>                <font color="#000087">_global</font>.gameStarted = <font color="#000087">false</font>
+                <font color="#993300">var</font> win = showWindow("<font color='blue'>gameEnd</font>")
+                opaqueCover.<font color="#000087">_visible</font> = <font color="#000087">true</font>
+                <font color="#993300">if</font> (<font color="#000087">_global</font>.myColor == winner)
+                {
+                        <font color='#878787'>// I WON! In the next match, it will be my turn first
+</font>                        <font color="#993300">var</font> message = "<font color='blue'>You WIN !</font>"
+                        <font color="#000087">_global</font>.whoseTurn = <font color="#000087">_global</font>.myID
+                }
+                <font color="#993300">else</font>
+                {
+                        <font color='#878787'>// I LOST! Next match i will not move first
+</font>                        <font color="#993300">var</font> message = "<font color='blue'>You LOOSE !</font>"
+                        <font color="#000087">_global</font>.whoseTurn = (<font color="#000087">_global</font>.myID == 1) ? 2 : 1
+                }
+ 
+                win.message_txt.<font color="#000087">text</font> = message
+        }
+}</pre>
+<p><span class="articleText">Even if there is a lot of code the function works in a very simple way: it creates an empty array called &quot;<strong>solutions</strong>&quot; and fills it with 
+all possible rows and columns where you can put three items in a row.<br>
+              <br>
+The available solutions are 8 in total: 3 columns + 3 rows + 2 diagonals.<br>
+<br>
+When the array is populated we loop through it and if one combinantion of three is found then we have a winner! Also we check if 
+there's no more moves available. In that case we'll have a tie. When the game ends the &quot;gameEnd&quot; window is shown and you will be able to start a new game or just leave the room.<br>
+            <br>
+Leaving the room is done by calling the <strong>quitGame()</strong> method which in turn will call the &quot;<strong>leaveGameRoom</strong>&quot; function:</span></p>
+<pre class="code"><font color="#993300">function</font> leaveGameRoom()
+{
+        inGame = <font color="#000087">false</font>
+        <font color="#000087">gotoAndStop</font>("<font color='blue'>chat</font>")
+        smartfox.getRoomList()
+}</pre>
+<p>The <strong>inGame</strong> flag is put back to &quot;false&quot; and we're sent back to the chat label. The last line of code will refresh the roomList in the current zone and automatically join us in the main chat room called &quot;The Entrance&quot;</p>
+<p><span class="subTitle">&raquo; Conclusions </span></p>
+<p>  We have analyzed some of the techniques for building a simple multiplayer turn-based game and what you have learned so far can be applied to many different types of games, not just board ones.
+  Also the limit of two users in very game room can be expanded for games with 4, 6, 8 or more players.</p>
+<hr width="99%" size="1" noshade>
+<table width="99%"  border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td width="33%"><a href="../08_boardGame_p1/index.htm" class="navLinks"></a> </td>
+    <td width="34%" align="center"><a href="../../../index.htm" target="_top" class="navLinks">doc index </a></td>
+    <td width="33%" align="right">&nbsp;</td>
+  </tr>
+</table>
+
+</body>
+</html>

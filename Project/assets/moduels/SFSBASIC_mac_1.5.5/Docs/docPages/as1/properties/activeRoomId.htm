@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>SmartFoxServer Documentation</title>
+<link href="../../../api.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="plain">
+ <p class="itemName">activeRoomId</p>
+ <p class="title">Availability:</p>
+ <p class="plain">Flash Player 6.0<br />
+   SmartFoxServer Lite / Basic / Pro </p>
+ <p class="title">Usage:</p>
+ <p class="plain">smartFox.activeRoomId</p>
+ <p class="title">Description:</p>
+ The property stores the id of the last room the user has entered.<br />
+ In most multiuser applications users can join one room at a time: in this case the property value represents the id of the current room.<br />
+ If you're allowing the clients join more than one room at the same time you will have to track the various id(s) in an array for example and this<br />
+ property should be ignored.
+ <p class="title">Parameters:</p>
+ <table  border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td>none</td>
+	 <td>&nbsp;&nbsp;&nbsp;</td>
+     <td>&nbsp;</td>
+   </tr>
+ </table>
+ <p class="title">Returns:</p>
+ <p class="plain">Nothing.</p>
+ <p class="title">Example:</p>
+ <pre class="code">
+ var room = smartFox.getRoom(smartFox.activeRoomId)
+ trace("CurrentRoom is : " + room.getName())
+</pre>
+ <p class="plain"><span class="title">See also:</span></p>
+ <p class="plain"><strong>getRoom()<strong></strong></strong></p>
+ <p class="plain">&nbsp;</p>
+</body>
+</html>
