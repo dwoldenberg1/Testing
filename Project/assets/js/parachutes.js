@@ -1,13 +1,20 @@
  //***variable declarations***//
+var ctx;
+
+window.onload = function() {
+    //credit where credit is due:http://stackoverflow.com/questions/6796194/canvas-getcontext2d-returns-null
+    var canvas = document.getElementById('frame');
+    var preCtx = canvas.getContext('2d');
+    loadListeners();
+    ctx=preCtx;
+}
 
 var level = 1;
+var MultiPlayer = false;
 
 var bullet;
 var parachuets;
 
-var MultiPlayer = false;
-var canvas = document.getElementById('frame');
-var ctx = canvas.getContext('2d');
 var game = new GameBoard();
 
 //game keys
@@ -49,8 +56,8 @@ function keyPressedHandler(e) {
 function start(player) {
     game.drawHub(player);
     alert("gameHub worked");
-    bullets = array();
-    parachutes = array();
+    bullets = new Array();
+    parachutes = new Array();
 
 }
 
@@ -81,7 +88,7 @@ function GameBoard() {
                 ctx.strokeStyle = '#01125B';
                 break;
         }
-        alert("color, hub worked");
+        alert("color, hub worked" + typeof ctx);
         ctx.beginPath();
         ctx.arc(325, 150, 50, 0, Math.PI, true);
         ctx.closePath();
@@ -103,30 +110,33 @@ function GameBoard() {
 }
 
 //***Event Listeners***//
-document.getElementById('singleplayer').addEventListener('click', function () {
-    $('#singleplayer').fadeOut(2000, function () {
-        $(this).show().css({
-            visibility: 'hidden'
-        });
-    });
-    $('#multiplayer').fadeOut(3500, function () {
-        $(this).show().css({
-            visibility: 'hidden'
-        });
-    });
-    start('one')
-}, false);
 
-document.getElementById('multiplayer').addEventListener('click', function () {
-    $('#multiplayer').fadeOut(2000, function () {
-        $(this).show().css({
-            visibility: 'hidden'
+function loadListeners(){
+    document.getElementById('singleplayer').addEventListener('click', function () {
+        $('#singleplayer').fadeOut(2000, function () {
+            $(this).show().css({
+                visibility: 'hidden'
+            });
         });
-    });
-    $('#singleplayer').fadeOut(3500, function () {
-        $(this).show().css({
-            visibility: 'hidden'
+        $('#multiplayer').fadeOut(3500, function () {
+            $(this).show().css({
+                visibility: 'hidden'
+            });
         });
-    });
-    start('two')
-}, false);
+        start('one')
+    }, false);
+
+    document.getElementById('multiplayer').addEventListener('click', function () {
+        $('#multiplayer').fadeOut(2000, function () {
+            $(this).show().css({
+                visibility: 'hidden'
+            });
+        });
+        $('#singleplayer').fadeOut(3500, function () {
+            $(this).show().css({
+                visibility: 'hidden'
+            });
+        });
+        start('two')
+    }, false);
+}

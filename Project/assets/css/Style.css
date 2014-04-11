@@ -109,7 +109,8 @@ p.lead {
   
   #frame{
 	  height: 70%;
-	  display: none;
+    width: 70%;
+	  visibility: visible;
   }
   #board{
 	  height: 20%;
