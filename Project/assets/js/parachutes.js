@@ -10,10 +10,13 @@ window.onload = function() {
 }
 
 var level = 1;
-var MultiPlayer = false;
+var Player;
+var bullettMax=10;
 
-var bullet;
-var parachuets;
+var bullets;
+var Bindex=0;
+var parachutes;
+var Pindex;
 
 var game = new GameBoard();
 
@@ -54,6 +57,7 @@ function keyPressedHandler(e) {
 }
 
 function start(player) {
+    Player=player;
     game.drawHub(player);
     alert("gameHub worked");
     bullets = new Array();
@@ -61,11 +65,21 @@ function start(player) {
 
 }
 
+function slope(x, y) {
+	 var xFinal=)^*&D^F(*&SD^F(*SD&^F(SD*&F^S(-x;
+	 var yFinal=AS(*D&)F(*DS&SF)SD(*&F)S(D*FSD-y;
+	 
+	 var slope=Math.round(yFinal/xFinal);
+	 return slope;
+}
+
 //***defining parachute and bullet objects***//
-function bullet(Slope, PosX, PosY) {
+
+function bullet(Slope, PosX, PosY, Index;) {
     var slope = Slope;
     var posX = PosX;
     var posY = PosY;
+    var index = Index;
 }
 
 function parachute(Index, PosX, PosY) {
@@ -105,8 +119,26 @@ function GameBoard() {
     };
 
     this.clearBoard = function () {
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
+
+    this.drawBullet = function(xpos, ypos){
+	Slope=slope(xpos, ypos);
+	while(bullets.length<=bulletMax){
+	    bullets[Bindex]= new bullet(Slope, xpos, ypos, Bindex);
+	    Bindex++;
+	}
+    }
+
+    this.draw = function(){
+        this.drawHub(Player);
+	parachutes.forEach(function(entry) {
+    	    this.drawElement(entry.posX, entry.posY);
+	});
+	bullets.forEach(function(entry) {
+    	    this.drawElement(entry.posX, entry.posY);
+	});
+    };  
 }
 
 //***Event Listeners***//
@@ -139,4 +171,5 @@ function loadListeners(){
         });
         start('two')
     }, false);
-}
+
+    document.getElementById('game').addEventListener('click', drawBullet() );
