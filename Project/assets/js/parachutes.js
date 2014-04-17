@@ -1,17 +1,20 @@
  //***variable declarations***//
 var ctx;
+var background;
 
 window.onload = function() {
     //credit where credit is due:http://stackoverflow.com/questions/6796194/canvas-getcontext2d-returns-null
     var canvas = document.getElementById('frame');
     var preCtx = canvas.getContext('2d');
     loadListeners();
+    background=preCtx; //need to think about this
     ctx=preCtx;
 }
 
 var level = 1;
 var Player;
 var bullettMax=10;
+var paraMax = level * 15;
 
 var bullets;
 var Bindex=0;
@@ -65,9 +68,14 @@ function start(player) {
 
 }
 
+function nextLvl() {
+   level++;
+   paraMax = level * 15;
+}
+
 function slope(x, y) {
-	 var xFinal=)^*&D^F(*&SD^F(*SD&^F(SD*&F^S(-x;
-	 var yFinal=AS(*D&)F(*DS&SF)SD(*&F)S(D*FSD-y;
+	 var xFinal=1000-x;
+	 var yFinal=600-y;
 	 
 	 var slope=Math.round(yFinal/xFinal);
 	 return slope;
@@ -75,17 +83,37 @@ function slope(x, y) {
 
 //***defining parachute and bullet objects***//
 
-function bullet(Slope, PosX, PosY, Index;) {
+function bullet(Slope, PosX, PosY, Index) {
     var slope = Slope;
     var posX = PosX;
     var posY = PosY;
     var index = Index;
+
+    this.drawBullet = function(xpos, ypos){
+	Slope=slope(xpos, ypos);
+	if(bullets.length<=bulletMax){
+	    bullets[Bindex]= new bullet(Slope, xpos, ypos, Bindex);
+	    Bindex++;
+	    game.draw();
+	}
+    }
+
 }
 
 function parachute(Index, PosX, PosY) {
     var index = Index;
     var posX = PosX;
     var posY = PosY;
+
+    this.drawParachute = function(){
+	if(parachutes.length<=paraMax){
+	    var xpos;
+	    var ypos; //need to updadte dimensions (own section where declaring variables)
+	    parachutes[Pindex]= new parachute(xpos, ypos, Pindex);
+	    Pindex++;
+	    game.draw();
+	}
+    }
 }
 
 //***canvas gameboard***//
@@ -121,14 +149,6 @@ function GameBoard() {
     this.clearBoard = function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
-
-    this.drawBullet = function(xpos, ypos){
-	Slope=slope(xpos, ypos);
-	while(bullets.length<=bulletMax){
-	    bullets[Bindex]= new bullet(Slope, xpos, ypos, Bindex);
-	    Bindex++;
-	}
-    }
 
     this.draw = function(){
         this.drawHub(Player);
@@ -172,4 +192,5 @@ function loadListeners(){
         start('two')
     }, false);
 
-    document.getElementById('game').addEventListener('click', drawBullet() );
+    document.getElementById('game').addEventListener('click', bullet.drawBullet(e.clientx, e.clienty) ); //http://www.kirupa.com/html5/getting_mouse_click_position.htm
+}
