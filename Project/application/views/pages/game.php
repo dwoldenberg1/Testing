@@ -5,7 +5,6 @@
 <div id="spin" ></div>
 
 <div id="game">
-	<canvas id="frame"></canvas>
 	<div class="options">
 			<div id="singleplayer" style="visibility: hidden;" >Singleplayer</div>
 			<div id="multiplayer" style="visibility: hidden;" >Multiplayer</div>

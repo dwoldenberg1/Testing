@@ -4,11 +4,16 @@ var background;
 
 window.onload = function() {
     //credit where credit is due:http://stackoverflow.com/questions/6796194/canvas-getcontext2d-returns-null
-    var canvas = document.getElementById('frame');
+    var canvas = document.createElement('canvas');
     var preCtx = canvas.getContext('2d');
     loadListeners();
     background=preCtx; //need to think about this
     ctx=preCtx;
+
+    canvas.width = gameX;
+    canvas.height = gameY;
+    canvas.setAttribute('id', 'frame');
+    document.('#game').appendChild(canvas);
 }
 
 var level = 1;
