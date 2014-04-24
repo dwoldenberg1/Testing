@@ -9,6 +9,7 @@ var gameX;
 window.onload = function() {
     //credit where credit is due:http://stackoverflow.com/questions/6796194/canvas-getcontext2d-returns-null
 <<<<<<< HEAD
+<<<<<<< HEAD
     var canvas = document.getElementById('frame');
     /*var preCtx*/ctx = canvas.getContext('2d');
     
@@ -20,6 +21,8 @@ window.onload = function() {
     //background=preCtx; //need to think about this
     //ctx=preCtx;
 =======
+=======
+>>>>>>> FETCH_HEAD
     var canvas = document.createElement('canvas');
     var preCtx = canvas.getContext('2d');
     loadListeners();
@@ -30,6 +33,9 @@ window.onload = function() {
     canvas.height = gameY;
     canvas.setAttribute('id', 'frame');
     document.('#game').appendChild(canvas);
+<<<<<<< HEAD
+>>>>>>> FETCH_HEAD
+=======
 >>>>>>> FETCH_HEAD
 }
 
