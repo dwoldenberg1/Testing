@@ -1,6 +1,7 @@
  //***variable declarations***//
 var ctx;
 var background;
+var lastTime;
 
 //Game Dimensions
 var gameY;
@@ -8,8 +9,6 @@ var gameX;
 
 window.onload = function() {
     //credit where credit is due:http://stackoverflow.com/questions/6796194/canvas-getcontext2d-returns-null
-<<<<<<< HEAD
-<<<<<<< HEAD
     var canvas = document.getElementById('frame');
     /*var preCtx*/ctx = canvas.getContext('2d');
     
@@ -20,9 +19,6 @@ window.onload = function() {
     loadListeners();
     //background=preCtx; //need to think about this
     //ctx=preCtx;
-=======
-=======
->>>>>>> FETCH_HEAD
     var canvas = document.createElement('canvas');
     var preCtx = canvas.getContext('2d');
     loadListeners();
@@ -33,10 +29,6 @@ window.onload = function() {
     canvas.height = gameY;
     canvas.setAttribute('id', 'frame');
     document.('#game').appendChild(canvas);
-<<<<<<< HEAD
->>>>>>> FETCH_HEAD
-=======
->>>>>>> FETCH_HEAD
 }
 
 var level = 1;
@@ -91,9 +83,13 @@ function start(player) {
     Player=player;
     game.drawHub(player);
     alert("gameHub worked");
-    bullets = new Array();
-    parachutes = new Array();
+    bullets = [];
+    parachutes = [];
     gameListeners();
+    
+    reset();
+    lastTime = Date.now();
+    main();
 
 }
 
@@ -101,6 +97,87 @@ function nextLvl() {
    level++;
    paraMax = level * 15;
 }
+
+function main() {
+    var now = Date.now();
+    var dt = (now - lastTime) / 1000.0;
+
+    update(dt);
+    render();
+
+    lastTime = now;
+    requestAnimFrame(main);
+};
+
+function update(dt) {
+    gameTime += dt;
+
+    updateEntities(dt);
+
+    // It gets harder over time by adding enemies using this
+    // equation: 1-.993^gameTime
+    if(Math.random() < 1 - Math.pow(.993, gameTime)) {
+        enemies.push({
+            pos: [Math.random() * (canvas.width - 4),
+                  canvas.height],
+            sprite: new Sprite('img/sprites.png', [0, 78], [80, 39],
+                               6, [0, 1, 2, 3, 2, 1])
+        });
+    }
+
+    checkCollisions();
+
+    scoreEl.innerHTML = score;
+};
+
+function updateEntities(dt) {
+    // Update the player sprite animation
+    player.sprite.update(dt);
+
+    // Update all the bullets
+    for(var i=0; i<bullets.length; i++) {
+        var bullet = bullets[i];
+
+        switch(bullet.dir) {
+        case 'up': bullet.pos[1] -= bulletSpeed * dt; break;
+        case 'down': bullet.pos[1] += bulletSpeed * dt; break;
+        default:
+            bullet.pos[0] += bulletSpeed * dt;
+        }
+
+        // Remove the bullet if it goes offscreen
+        if(bullet.pos[1] < 0 || bullet.pos[1] > canvas.height ||
+           bullet.pos[0] > canvas.width) {
+            bullets.splice(i, 1);
+            i--;
+        }
+    }
+
+    // Update all the enemies
+    for(var i=0; i<enemies.length; i++) {
+        enemies[i].pos[0] -= enemySpeed * dt;
+        enemies[i].sprite.update(dt);
+
+        // Remove if offscreen
+        if(enemies[i].pos[0] + enemies[i].sprite.size[0] < 0) {
+            enemies.splice(i, 1);
+            i--;
+        }
+    }
+
+    // Update all the explosions
+    for(var i=0; i<explosions.length; i++) {
+        explosions[i].sprite.update(dt);
+
+        // Remove if animation is done
+        if(explosions[i].sprite.done) {
+            explosions.splice(i, 1);
+            i--;
+        }
+    }
+}
+
+//***various functions or helpers***//
 
 function slope(x, y) {
 	 var xFinal=gameX-x;
