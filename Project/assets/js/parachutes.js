@@ -2,13 +2,35 @@
 var ctx;
 var background;
 
+//Game Dimensions
+var gameY;
+var gameX;
+
 window.onload = function() {
     //credit where credit is due:http://stackoverflow.com/questions/6796194/canvas-getcontext2d-returns-null
+<<<<<<< HEAD
     var canvas = document.getElementById('frame');
+    /*var preCtx*/ctx = canvas.getContext('2d');
+    
+    gameX=document.getElementById("game").clientWidth;
+    gameY=document.getElementById("game").clientHeight;
+    alert(gameY + ":" + gameX);
+    
+    loadListeners();
+    //background=preCtx; //need to think about this
+    //ctx=preCtx;
+=======
+    var canvas = document.createElement('canvas');
     var preCtx = canvas.getContext('2d');
     loadListeners();
     background=preCtx; //need to think about this
     ctx=preCtx;
+
+    canvas.width = gameX;
+    canvas.height = gameY;
+    canvas.setAttribute('id', 'frame');
+    document.('#game').appendChild(canvas);
+>>>>>>> FETCH_HEAD
 }
 
 var level = 1;
@@ -65,6 +87,7 @@ function start(player) {
     alert("gameHub worked");
     bullets = new Array();
     parachutes = new Array();
+    gameListeners();
 
 }
 
@@ -74,8 +97,8 @@ function nextLvl() {
 }
 
 function slope(x, y) {
-	 var xFinal=1000-x;
-	 var yFinal=600-y;
+	 var xFinal=gameX-x;
+	 var yFinal=gameY-y;
 	 
 	 var slope=Math.round(yFinal/xFinal);
 	 return slope;
@@ -124,19 +147,22 @@ function GameBoard() {
             case 'one':
                 ctx.fillStyle = 'red';
                 ctx.strokeStyle = '#5B2701';
+                var hubX=Math.round(gameX/2);
                 break;
             case 'two':
                 ctx.fillStyle = 'blue';
                 ctx.strokeStyle = '#01125B';
+                var hubX=Math.round(gameX * (1/3));
                 break;
         }
-        alert("color, hub worked" + typeof ctx);
+        alert("color, hub worked, typeOf(ctx)=" + typeof ctx + " hubX=" + hubX + "gameY=" +gameY);
         ctx.beginPath();
-        ctx.arc(325, 150, 50, 0, Math.PI, true);
+        ctx.arc(hubX, gameY, 50, 0, Math.PI, true); //context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
         ctx.closePath();
         ctx.lineWidth = 5;
         ctx.fill();
         ctx.stroke();
+        alert("circle was drawn at " + hubX + ", " +Math.round(gameY/2));
     }
 
     this.drawElement = function (xpos, ypos) {
@@ -191,6 +217,11 @@ function loadListeners(){
         });
         start('two')
     }, false);
+    
+    $('#frame').css('height',gameY+'px').css('width',gameX+'px');
 
+}
+
+function gameListeners() {
     document.getElementById('game').addEventListener('click', bullet.drawBullet(e.clientx, e.clienty) ); //http://www.kirupa.com/html5/getting_mouse_click_position.htm
 }
