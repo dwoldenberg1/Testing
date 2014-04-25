@@ -10,16 +10,12 @@ var gameX;
 
 window.onload = function() {
     //credit where credit is due:http://stackoverflow.com/questions/6796194/canvas-getcontext2d-returns-null
-    var canvas = document.getElementById('frame');
-    /*var preCtx*/ctx = canvas.getContext('2d');
-    
+    var canvas = document.getElementById('frame');    
     gameX=document.getElementById("game").clientWidth;
     gameY=document.getElementById("game").clientHeight;
     alert(gameY + ":" + gameX);
     
     loadListeners();
-    //background=preCtx; //need to think about this
-    //ctx=preCtx;
     var canvas = document.createElement('canvas');
     ctx = canvas.getContext('2d');
     loadListeners();
