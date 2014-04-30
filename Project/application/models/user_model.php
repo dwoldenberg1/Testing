@@ -1,14 +1,25 @@
 <?php
-class game_model extends CI_Model {
+class user extends CI_Model {
+
+	var $loggedin;
+	private var user;
+	private var pass;
+	private var email;
+	private final var account;
 
 	public function __construct()
 	{
-		$this->load->database();
+		account=[user, pass, email];
 		
 		
 	}
+
+	public validate()
+	{
+
+	}
 	
-	public function get_user_and_pass($user = FALSE)
+	public function get_user($user = FALSE)
 	{
 		if ($user === FALSE)
 		{
@@ -19,6 +30,30 @@ class game_model extends CI_Model {
 		$query = $this->db->get_where('accounts', array('username' => $user));
 		return $query->row_array();
 		
+	}
+
+	public function get_pass()
+	{
+		if ($user === FALSE)
+		{
+			$query = $this->db->get('accounts');
+			return $query->result_array();
+		}
+
+		$query = $this->db->get_where('accounts', array('password_encrypted' => $user));
+		return $query->row_array();
+	}
+
+	public function get_email()
+	{
+		if ($user === FALSE)
+		{
+			$query = $this->db->get('accounts');
+			return $query->result_array();
+		}
+
+		$query = $this->db->get_where('accounts', array('password_encrypted' => $user));
+		return $query->row_array();
 	}
 	
 	public function index()
@@ -32,7 +67,7 @@ class game_model extends CI_Model {
 		$this->load->view('templates/footer');
 	}
 	
-	public function submit_username_and_passwor()
+	public function create_acccount()
 	{
 		$this->load->helper('url');
 
