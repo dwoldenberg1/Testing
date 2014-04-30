@@ -31,10 +31,11 @@ var Player;
 var bullettMax=10;
 var paraMax = level * 15;
 
+var bulletSpeed=1000;
+var enemySpeed=0;
+
 var bullets;
-var Bindex=0;
 var parachutes;
-var Pindex;
 
 var game = new GameBoard();
 
@@ -81,7 +82,8 @@ function start(player) {
     bullets = [];
     parachutes = [];
     gameListeners();
-    
+    enemySpeed=100*level;
+
     reset();
     lastTime = Date.now();
     main();
@@ -91,6 +93,7 @@ function start(player) {
 function nextLvl() {
    level++;
    paraMax = level * 15;
+   enemySpeed=Math.round((dt*level)/2);
 }
 
 // Game over
@@ -107,6 +110,7 @@ function reset() {
     isGameOver = false;
     gameTime = 0;
     score = 0;
+    level = 0;
 
     enemies = [];
     bullets = [];
@@ -136,14 +140,13 @@ function update(dt) {
         enemies.push({
             pos: [Math.random() * (canvas.width - 4),
                   canvas.height],
-            sprite: new Sprite('img/sprites.png', [0, 78], [80, 39],
-                               6, [0, 1, 2, 3, 2, 1])
+            parachute: new Parachute()
         });
     }
 
     checkCollisions();
 
-    scoreEl.innerHTML = score;
+    //scoreEl.innerHTML = score;
 };
 
 function updateEntities(dt) {
@@ -274,37 +277,36 @@ function checkCollisions() {
 
 //***defining parachute and bullet objects***//
 
-function bullet(Slope, PosX, PosY, Index) {
+function Sprite(url, pos, size, speed, frames, dir, once) {
+    this.pos = pos;
+    this.size = size;
+    this.speed = typeof speed === 'number' ? speed : 0;
+    this.frames = frames;
+    this._index = 0;
+    this.url = url;
+    this.dir = dir || 'vertical';
+    this.once = once;
+};
+
+function bullet(Slope, PosX, PosY) {
     var slope = Slope;
     var posX = PosX;
     var posY = PosY;
-    var index = Index;
 
     this.drawBullet = function(xpos, ypos){
 	Slope=slope(xpos, ypos);
-	if(bullets.length<=bulletMax){
-	    bullets[Bindex]= new bullet(Slope, xpos, ypos, Bindex);
-	    Bindex++;
-	    game.draw();
+	if(bullets.length<=bulletMax && !isGameOver && Date.now() - lastFire > 100){
+        bullets.push(Slope, xpos, ypos);
+
+        lastFire = Date.now();
 	}
     }
 
 }
 
-function parachute(Index, PosX, PosY) {
-    var index = Index;
+function parachute(PosX, PosY) {
     var posX = PosX;
     var posY = PosY;
-
-    this.drawParachute = function(){
-	if(parachutes.length<=paraMax){
-	    var xpos;
-	    var ypos; //need to updadte dimensions (own section where declaring variables)
-	    parachutes[Pindex]= new parachute(xpos, ypos, Pindex);
-	    Pindex++;
-	    game.draw();
-	}
-    }
 }
 
 //***canvas gameboard***//
@@ -333,27 +335,6 @@ function GameBoard() {
         alert("circle was drawn at " + hubX + ", " +Math.round(gameY/2));
     }
 
-    this.drawElement = function (xpos, ypos) {
-        ctx.beginPath();
-        ctx.moveTo(xpos, ypos);
-        ctx.lineTo(xpos + 3, ypos + 7);
-        ctx.stroke();
-    };
-
-    this.clearBoard = function () {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    };
-
-    this.draw = function(){
-        this.drawHub(Player);
-	parachutes.forEach(function(entry) {
-    	    this.drawElement(entry.posX, entry.posY);
-	});
-	bullets.forEach(function(entry) {
-    	    this.drawElement(entry.posX, entry.posY);
-	});
-    };  
-
     // Draw everything
     this.render= function() {
         ctx.fillStyle = terrainPattern;
@@ -364,6 +345,7 @@ function GameBoard() {
             this.renderEntity(player);
         }
 
+        this.drawHub(Player);
         this.renderEntities(bullets);
         this.renderEntities(enemies);
         this.renderEntities(explosions);
