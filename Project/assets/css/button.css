@@ -36,20 +36,18 @@
 	position: absolute;
 	margin-left: 2%;
 	/*added css*/
+
+/*LoVe-f-HAte mnemonic*/
+}.back:visited {
+	color: white;
 }
-.back:hover, a.back:link{
+.back:hover{
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #80b5ea), color-stop(1, #bddbfa) );
 	background:-moz-linear-gradient( center top, #80b5ea 5%, #bddbfa 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#80b5ea', endColorstr='#bddbfa');
 	background-color:#80b5ea;
 	color: white;
 }.back:active {
-	position: inherit;
-	top:1px;
-	color: black;
-}.back:visited {
-	position: inherit;
 	color: white;
-}
 /* This button was generated using CSSButtonGenerator.com */
 }
