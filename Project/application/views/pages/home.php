@@ -13,7 +13,7 @@
       <div class="span12">
         <!-- Special typography from Bootstrap for lead paragraph. -->
         <!-- http://twitter.github.io/bootstrap/base-css.html#typography -->
-        <p class="lead">Bitches don't know about my swag.</p>
+        <p class="lead">Ipsum Lorem</p>
       </div>
     </div>
 </div>
