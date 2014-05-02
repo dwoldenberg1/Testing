@@ -46,7 +46,12 @@ class Game extends CI_Controller {
 
 		$this->form_validation->set_rules('user', 'Username', 'required');
 		$this->form_validation->set_rules('pass', 'Password', 'required');
+		
+		$user = $this->user_model->get_user();
+		$pass = $this->user_model->get_pass();
 
+		$this->form_validation->set_rules('pass', 'Password', 'required|matches[$user]');
+		$this->form_validation->set_rules('pass', 'Password', 'required');
 		if ($this->form_validation->run() == FALSE){
 			$this->load->view('templates/login');	
 		}
@@ -54,7 +59,7 @@ class Game extends CI_Controller {
 			$userData = array(
 				'user' => $this->input->post('user'),
 				'pass' => $this->input->post('pass'),
-				'email' => $this->input->post('email')
+				'email' => $this->user_model->get_email()//$this->input->post('email')
 			);
 			return $userData;
 		}
@@ -86,7 +91,6 @@ class Game extends CI_Controller {
 		$data['title'] = 'Game';
 
 		$this->load->view('templates/header', $data);
-		$this->user_model->validate();
 		$this->load->view('pages/game', $data);
 	}
 }

@@ -2,15 +2,15 @@
 
 <?php echo validation_errors(); ?>
 
-<?php echo form_open('news/create') ?>
+<?php echo form_open('game/prompt_login') ?>
 
-	<label for="title">Title</label>
-	<input type="input" name="title" /><br />
+	<label for="user">Username</label>
+	<input type="input" name="user" /><br />
 
-	<label for="text">Text</label>
-	<textarea name="text"></textarea><br />
+	<label for="pass">Password</label>
+	<input type="input" name="user" /><br />
 
-	<input type="submit" name="submit" value="Create news item" />
+	<input type="submit" name="submit" value="Login" />
 
 </form>
 
