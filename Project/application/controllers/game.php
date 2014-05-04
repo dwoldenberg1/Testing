@@ -2,6 +2,12 @@
 
 class Game extends CI_Controller {
 
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('user_model');
+	}
+
 	public function view($page = 'home')
 	{
 		if ( ! file_exists('application/views/pages/'.$page.'.php'))
@@ -77,14 +83,16 @@ class Game extends CI_Controller {
 		$this->form_validation->set_rules('user', 'Username', 'required');
 		$this->form_validation->set_rules('pass', 'Password', 'required');
 		$this->form_validation->set_rules('email', 'Email', 'required');
+		
+		$data['title'] = 'Create an Account';
 
 		if ($this->form_validation->run() == FALSE){
 			$this->load->view('templates/header', $data);
 			$this->load->view('templates/new_user', $data);	
 		}
 		else{
-			$this->load->view('templates/header', $data);
 			$this->user_model->create_account();
+			$this->load->view('news/success', $data);
 		}
 
 	}

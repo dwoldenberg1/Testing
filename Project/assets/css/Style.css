@@ -98,6 +98,21 @@ p.lead {
 	  padding-bottom: 10px;
   }
   
+  .login {
+	  display: block;
+  }
+  
+  .main-wrapper {
+	  position: relative;
+  }
+  
+  .right-main-wrapper {
+	  position:absolute;
+	  padding-right: 2%;
+	  right:0;
+	  
+  }
+  
 /*game.php*/
   #game {
 	border-width: medium;

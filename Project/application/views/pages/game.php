@@ -9,11 +9,22 @@
 
     <link rel="stylesheet" href="/Testing/phpframeworks/CodeIgniter_2/assets/css/app.css">
   </head>
-  <body>    
+  <body>
+  	<div class="main-wrapper">
+  		<div class="right-main-wrapper"> 
+        	<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/new_user" class="login">
+    			<b>Login to an Existing Account</b> <br> <div style="text-align: center;">or</div> <b>Create a new Account</b>
+    		</a>
+    	</div>
+        <a <?php echo " href= '/Testing/phpframeworks/CodeIgniter_2/index.php/pages/view/".$previous. "' " ?> class="back">Back</a>
+    </div>  
     <div id="game-over-overlay">
     </div>
-    <a <?php echo " href= '/Testing/phpframeworks/CodeIgniter_2/index.php/pages/view/".$previous. "' " ?> class="back">Back</a>
+    <!--<a <?php echo " href= '/Testing/phpframeworks/CodeIgniter_2/index.php/pages/view/".$previous. "' " ?> class="back">Back</a>
 
+    <a href="#" class="login">
+    	<b>Login to an Existing Account</b> <br> or <br> <b>Create a new Account</b>
+    </a> -->
     <div id="game-over">
       <h1>GAME OVER</h1>
       <button id="play-again">Play Again</button>

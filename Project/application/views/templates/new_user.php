@@ -7,11 +7,12 @@
 	<label for="user">Username</label>
 	<input type="input" name="user"><br />
 
+	<label for="pass">Password</label>
+	<input type="input" name="pass"><br />
+	
 	<label for="email">Email</label>
 	<input type="input" name="email"><br />
 
-	<label for="pass">Password</label>
-	<input type="input" name="pass"><br />
 
 	<input type="submit" name="submit" value="Create an account" />
 
