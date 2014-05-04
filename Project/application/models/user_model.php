@@ -1,7 +1,7 @@
 <?php
 class user extends CI_Model {
 
-	var $logged_in=FALSE;
+	var $logged_in = FALSE;
 	private var $user;
 	private var $pass;
 	private var $email;
@@ -32,16 +32,50 @@ class user extends CI_Model {
 			'user' => $user,
 			'pass' => $this->input->post('pass'),
 			'email' =>$this->input->post('email'),
+			'logged_in'=>TRUE;
 			);
 
+		setAccount();
 		return $this->db->insert('accounts', $data);
 	}
 
 	public function setAccount($data)
 	{
         $this->session->set_userdata($data);
+        $logged_in = TRUE;
 	}
 
+	public function isValidUser($test)
+	{
+		$query = "SELECT COUNT('iD') FROM eif WHERE user = '$test'";
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				return $this->db->query($row);
+			}
+		}
+		else
+		{
+			return "USERNAME_DOES_NOT_EXIST";
+		}
+	}
+	
+	public function isValidPass($testUser, $testPass)
+	{
+		$query = "SELECT COUNT('iD') FROM eif WHERE user = '$testUser' AND pass = '$testPass'";
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				return $this->db->query($row);
+			}
+		}
+		else
+		{
+			return "PASSWRD_IS_INVALID";
+		}
+	}
 	//getter methods
 	
 	public function get_user($user = FALSE)
@@ -82,7 +116,7 @@ class user extends CI_Model {
 	}
 	
 	public function isLoggedIn(){
-		return $loggen_in;
+		return $logged_in;
 	}
 	
 }

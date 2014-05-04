@@ -47,19 +47,23 @@ class Game extends CI_Controller {
 		$this->form_validation->set_rules('user', 'Username', 'required');
 		$this->form_validation->set_rules('pass', 'Password', 'required');
 		
-		$user = $this->user_model->get_user();
-		$pass = $this->user_model->get_pass();
+		$user = $this->user_model->isValidUser($this->input->post('user'));
+		$pass = $this->user_model->isValidPass($user, $this->input->post('pass'));
 
 		$this->form_validation->set_rules('pass', 'Password', 'required|matches[$user]');
-		$this->form_validation->set_rules('pass', 'Password', 'required');
+		$this->form_validation->set_rules('pass', 'Password', 'required|matches[$pass]');
 		if ($this->form_validation->run() == FALSE){
+			print '<script type="text/javascript">'; 
+			print 'alert("Either the username does not exist or the password is incorrect for that usrname.")'; 
+			print '</script>'; 
 			$this->load->view('templates/login');	
 		}
 		else{
 			$userData = array(
 				'user' => $this->input->post('user'),
 				'pass' => $this->input->post('pass'),
-				'email' => $this->user_model->get_email()//$this->input->post('email')
+				'email' => $this->user_model->get_email(),//$this->input->post('email')
+				'logged_in' => TRUE
 			);
 			return $userData;
 		}
