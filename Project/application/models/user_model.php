@@ -46,36 +46,44 @@ class user_model extends CI_Model {
         $logged_in = TRUE;
 	}
 
-	public function isValidUser($test)
+	public function isValidPass($username, $password)
 	{
-		$query = "SELECT COUNT('iD') FROM eif WHERE user = '$test'";
-		if ($query->num_rows() > 0)
+		$query = $this->db->select('password_encrypted')->from('accounts')->where('username',$username)->get();
+		if ($query->num_rows() == 0)
 		{
-			foreach ($query->result() as $row)
-			{
-				return $this->db->query($row);
-			}
+			return false;
 		}
 		else
 		{
-			return "USERNAME_DOES_NOT_EXIST";
-		}
-	}
-	
-	public function isValidPass($testUser, $testPass)
-	{
-		$query = "SELECT COUNT('iD') FROM eif WHERE user = '$testUser' AND pass = '$testPass'";
-		if ($query->num_rows() > 0)
-		{
-			foreach ($query->result() as $row)
-			{
-				return $this->db->query($row);
+			foreach($query ->result() as $row) {
+				if($password == $row->password) {
+					return true;
+				}
+				
 			}
+			return false;
 		}
-		else
+		
+		/*function valid_login($username,$password) from here http://ellislab.com/forums/viewthread/71712/
 		{
-			return "PASSWRD_IS_INVALID";
-		}
+    	$query = $this->db->select('password')->from('users')->where('username',$username)->get();
+    	if($query->num_rows() == 0)
+    	{
+        	return false;
+        }
+    	else
+    	{
+       		$this->load->library('encrypt');
+       		foreach($query->result as $row)
+       		{
+          	if($this->encrypt->decode($password) == $row->password)
+          	{
+             	return true;
+             }
+          }
+       	return false;
+       	}
+    	} */
 	}
 	//getter methods
 	

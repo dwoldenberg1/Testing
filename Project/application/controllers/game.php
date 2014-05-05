@@ -50,15 +50,10 @@ class Game extends CI_Controller {
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 
-		$this->form_validation->set_rules('user', 'Username', 'required');
+		$this->form_validation->set_rules('user', 'Username', 'required|is_unique[accounts.username]');
 		$this->form_validation->set_rules('pass', 'Password', 'required');
 		
-		$user = $this->user_model->isValidUser($this->input->post('user'));
-		$pass = $this->user_model->isValidPass($user, $this->input->post('pass'));
-
-		$this->form_validation->set_rules('pass', 'Password', 'required|matches[$user]');
-		$this->form_validation->set_rules('pass', 'Password', 'required|matches[$pass]');
-		if ($this->form_validation->run() == FALSE){
+		if ($this->form_validation->run() == FALSE && $this->user_model->isValidPass($this->input->post('user'), $this->input->post('pass'))){
 			print '<script type="text/javascript">'; 
 			print 'alert("Either the username does not exist or the password is incorrect for that usrname.")'; 
 			print '</script>'; 
@@ -80,9 +75,9 @@ class Game extends CI_Controller {
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 
-		$this->form_validation->set_rules('user', 'Username', 'required');
+		$this->form_validation->set_rules('user', 'Username', 'required||max_length[12]|is_unique[accounts.username]');
 		$this->form_validation->set_rules('pass', 'Password', 'required');
-		$this->form_validation->set_rules('email', 'Email', 'required');
+		$this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[accounts.email]');
 		
 		$data['title'] = 'Create an Account';
 

@@ -12,7 +12,7 @@
   <body>
   	<div class="main-wrapper">
   		<div class="right-main-wrapper"> 
-        	<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/new_user" class="login">
+        	<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/prompt_login" class="login">
     			<b>Login to an Existing Account</b> <br> <div style="text-align: center;">or</div> <b>Create a new Account</b>
     		</a>
     	</div>

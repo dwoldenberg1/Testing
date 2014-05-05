@@ -13,3 +13,5 @@
 	<input type="submit" name="submit" value="Login" />
 
 </form>
+<p></p>
+<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/new_user" class="create-Account"><b>Create a New Account</b></a>
