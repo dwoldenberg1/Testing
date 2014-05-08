@@ -45,8 +45,14 @@ class user_model extends CI_Model {
         $this->session->set_userdata($data);
         $logged_in = TRUE;
 	}
+	
+	public function logOut()
+	{
+		$logged_in = FALSE;
+		$this->session->sess_destroy();
+	}
 
-	public function isValidPass($username, $password)
+	public function isAccount($username, $password)
 	{
 		$query = $this->db->select('password_encrypted')->from('accounts')->where('username',$username)->get();
 		if ($query->num_rows() == 0)
@@ -55,39 +61,16 @@ class user_model extends CI_Model {
 		}
 		else
 		{
-			foreach($query ->result() as $row) {
-				if($password == $row->password) {
-					return true;
-				}
-				
+			$row = $query->row(); 
+			if($password == $row->password_encrypted) {
+				return true;
 			}
 			return false;
 		}
-		
-		/*function valid_login($username,$password) from here http://ellislab.com/forums/viewthread/71712/
-		{
-    	$query = $this->db->select('password')->from('users')->where('username',$username)->get();
-    	if($query->num_rows() == 0)
-    	{
-        	return false;
-        }
-    	else
-    	{
-       		$this->load->library('encrypt');
-       		foreach($query->result as $row)
-       		{
-          	if($this->encrypt->decode($password) == $row->password)
-          	{
-             	return true;
-             }
-          }
-       	return false;
-       	}
-    	} */
 	}
 	//getter methods
 	
-	public function get_user($user = FALSE)
+	public function get_email($user)
 	{
 		if ($user === FALSE)
 		{
@@ -96,31 +79,6 @@ class user_model extends CI_Model {
 		}
 
 		$query = $this->db->get_where('accounts', array('username' => $user));
-		return $query->row()->username;
-		
-	}
-
-	public function get_pass()
-	{
-		if ($user === FALSE)
-		{
-			$query = $this->db->get('accounts');
-			return $query->result_array();
-		}
-
-		$query = $this->db->get_where('accounts', array('password_encrypted' => $pass));
-		return $query->row()->password_encrypted;
-	}
-
-	public function get_email()
-	{
-		if ($user === FALSE)
-		{
-			$query = $this->db->get('accounts');
-			return $query->result_array();
-		}
-
-		$query = $this->db->get_where('accounts', array('email' => $email));
 		return $query->row()->email;
 	}
 	

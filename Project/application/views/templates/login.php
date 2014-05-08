@@ -1,14 +1,14 @@
-<h2>Create a news item</h2>
+<h2>Log into an account</h2>
 
 <?php echo validation_errors(); ?>
 
-<?php echo form_open('game/prompt_login') ?> <!--form_open()=<form method="post" accept-charset="utf-8" action="http:/example.com/index.php/game/prompt_login" />-->
+<?php echo form_open('game/validate') ?> <!--form_open()=<form method="post" accept-charset="utf-8" action="http:/example.com/index.php/game/prompt_login" />-->
 
 	<label for="user">Username</label>
 	<input type="input" name="user" /><br />
 
 	<label for="pass">Password</label>
-	<input type="input" name="user" /><br />
+	<input type="input" name="pass" /><br />
 
 	<input type="submit" name="submit" value="Login" />
 

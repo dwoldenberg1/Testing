@@ -11,8 +11,8 @@
   </head>
   <body>
   	<div class="main-wrapper">
-  		<div class="right-main-wrapper"> 
-        	<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/prompt_login" class="login">
+  		<div class="right-main-wrapper" id="test"> 
+        	<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/validate" id="login">
     			<b>Login to an Existing Account</b> <br> <div style="text-align: center;">or</div> <b>Create a new Account</b>
     		</a>
     	</div>
@@ -47,5 +47,14 @@
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/input.js"></script>
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/sprite.js"></script>
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/app.js"></script>
+    <script>
+	    if (<?php echo $logged_in ?> == true)
+	    {
+		    var user="<?php echo ($username) ?>";
+		    $('#test').html('<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/validate" id="login"> You are logged in as: <b> ' + user + '</b> <br> Highscore: <b>' + + '</b> <br> </a');
+		    $('#test').append('><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/logout">Logout</a>');
+	    }
+	    
+    </script>
   </body>
 </html>
