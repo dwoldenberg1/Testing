@@ -55,6 +55,7 @@ class Game extends CI_Controller {
 
 	public function prompt_login()
 	{
+		$data['title']="Login";
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') 
 		{
 		
@@ -68,7 +69,6 @@ class Game extends CI_Controller {
 				print '<script type="text/javascript">'; 
 				print 'alert("Either the username does not exist or the password isn\'t valid.")'; 
 				print '</script>';
-				$data['title']="Login";
 				$this->load->view('templates/header', $data);
 				$this->load->view('templates/login');	
 			}
@@ -82,7 +82,8 @@ class Game extends CI_Controller {
 							'username' => $this->input->post('user'),
 							'password' => $this->input->post('pass'),
 							'email' => $this->user_model->get_email($this->input->post('user')),//$this->input->post('email')
-							'logged_in' => TRUE
+							'logged_in' => TRUE,
+							'highscore' => 0
 							);
 						$this->main('home', $userData);
 						return $userData;
@@ -101,7 +102,7 @@ class Game extends CI_Controller {
 			$this->form_validation->set_rules('user', 'Username', 'required');
 			$this->form_validation->set_rules('pass', 'Password', 'required');
 			
-			
+			$this->load->view('templates/header', $data);
 			$this->load->view('templates/login');	
 		}
 	}
@@ -136,11 +137,15 @@ class Game extends CI_Controller {
 		/*print '<script type="text/javascript">'; 
 		print 'alert('.implode("|",$account)..$account['username'].')'; 
 		print '</script>';*/
+		if($page === "new_user") {
+			$data['previous'] = ('Home');
+		}
 		$data['previous'] = ($page);
 		$data['title'] = 'Game';
 		if(count($account) > 0) {
 			$data['logged_in']=$account['logged_in'];
 			$data['username']=$account['username'];
+			$data['highscore']=$account['highscore'];
 		}
 		$this->load->view('templates/header', $data);
 		$this->load->view('pages/game', $data);

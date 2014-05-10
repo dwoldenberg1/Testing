@@ -51,8 +51,10 @@
 	    if (<?php echo $logged_in ?> == true)
 	    {
 		    var user="<?php echo ($username) ?>";
-		    $('#test').html('<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/validate" id="login"> You are logged in as: <b> ' + user + '</b> <br> Highscore: <b>' + + '</b> <br> </a');
+		    var highscore="<?php echo ($highscore) ?>";
+		    $('#test').html('<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/validate" id="login"> You are logged in as: <b> ' + user + '</b> <br> Highscore: <b> <div id="highscore">' + highscore + '</div> </b> <br> </a');
 		    $('#test').append('><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/logout">Logout</a>');
+		    alert (<?php $_COOKIE["highscore"] ?>);
 	    }
 	    
     </script>

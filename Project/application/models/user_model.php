@@ -68,6 +68,14 @@ class user_model extends CI_Model {
 			return false;
 		}
 	}
+	
+	public function updateHighscore($highscore, $username){
+		/*$score = $highscore;
+		$data = array( "highscore" => $score );
+		$this->db->update('accounts', $data, "username = $username");*/
+		//$this->db->query("UPDATE accounts SET highscore = $highscore WHERE username = $username");
+		$this->db->query("UPDATE accounts SET highscore = ? WHERE username = ?", array($highscore, $username));
+	}
 	//getter methods
 	
 	public function get_email($user)

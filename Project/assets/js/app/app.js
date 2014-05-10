@@ -288,6 +288,11 @@ function gameOver() {
     document.getElementById('game-over').style.display = 'block';
     document.getElementById('game-over-overlay').style.display = 'block';
     isGameOver = true;
+    if (score > parseInt($('#highscore').html()))
+    {
+	    createCookie("highscore", score, "10");
+	    $('#highschore').html(score);
+    }
 }
 
 // Reset game to original state
