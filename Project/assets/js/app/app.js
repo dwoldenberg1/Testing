@@ -68,6 +68,7 @@ var terrainPattern;
 var score = 0;
 var scoreEl = document.getElementById('score');
 
+var overCounter=0;
 // Speed in pixels per second
 var playerSpeed = 200;
 var bulletSpeed = 500;
@@ -288,11 +289,16 @@ function gameOver() {
     document.getElementById('game-over').style.display = 'block';
     document.getElementById('game-over-overlay').style.display = 'block';
     isGameOver = true;
-    if (score > parseInt($('#highscore').html()))
+    if (parseInt($('#scoreTest').html()) == true && overCounter<1 && score > parseInt($('#highscore').html()))
     {
-	    createCookie("highscore", score, "10");
-	    $('#highschore').html(score);
+	    alert("score: " + score);
+	    alert("highscore: " + parseInt($('#highscore').html()));
+	    $("#highestscore").html(score);
+	    alert("new highscore: " + parseInt($('#highestscore').html()));
+	    $('#test').append("<a href='/Testing/phpframeworks/CodeIgniter_2/index.php/game/updateScore/" + $('#username').html() + "/" + score + "/" + $('#previous').html() + "' id='scoreLink'></a>");
+	    document.getElementById('scoreLink').click();
     }
+    overCounter++;
 }
 
 // Reset game to original state

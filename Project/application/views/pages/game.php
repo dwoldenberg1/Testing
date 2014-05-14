@@ -11,8 +11,10 @@
   </head>
   <body>
   	<div class="main-wrapper">
+  		<div id="scoreTest" style="display: none;">0</div>
+  		<div id="previous" style="display: none;"><?php echo $previous ?></div>
   		<div class="right-main-wrapper" id="test"> 
-        	<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/validate" id="login">
+          <a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/validate/" + <?php echo $previous ?> + "' " id="login">
     			<b>Login to an Existing Account</b> <br> <div style="text-align: center;">or</div> <b>Create a new Account</b>
     		</a>
     	</div>
@@ -42,6 +44,7 @@
 
       <div id="score"></div>
     </div>
+    <div id="highestscore" style="display: none;"></div>
 
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/resources.js"></script>
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/input.js"></script>
@@ -52,11 +55,11 @@
 	    {
 		    var user="<?php echo ($username) ?>";
 		    var highscore="<?php echo ($highscore) ?>";
-		    $('#test').html('<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/validate" id="login"> You are logged in as: <b> ' + user + '</b> <br> Highscore: <b> <div id="highscore">' + highscore + '</div> </b> <br> </a');
-		    $('#test').append('><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/logout">Logout</a>');
-		    alert (<?php $_COOKIE["highscore"] ?>);
+		    var previous="<?php echo $previous ?>";
+		    $('#test').html('<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/validate/" + <?php echo $previous ?> + " " id="login"> You are logged in as: <b> <div id="username" style="display:inline;">' + user + '</div> </b> <br> Highscore: <b> <div id="highscore" style="display:inline;">' + highscore + '</div> </b> <br> </a');
+		    $('#test').append('<a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/logout">Logout</a>');
+		    $('#scoreTest').html('1');
 	    }
-	    
     </script>
   </body>
 </html>

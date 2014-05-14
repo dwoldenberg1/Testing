@@ -83,7 +83,7 @@ class Game extends CI_Controller {
 							'password' => $this->input->post('pass'),
 							'email' => $this->user_model->get_email($this->input->post('user')),//$this->input->post('email')
 							'logged_in' => TRUE,
-							'highscore' => 0
+							//'highscore' => 0
 							);
 						$this->main('home', $userData);
 						return $userData;
@@ -145,7 +145,7 @@ class Game extends CI_Controller {
 		if(count($account) > 0) {
 			$data['logged_in']=$account['logged_in'];
 			$data['username']=$account['username'];
-			$data['highscore']=$account['highscore'];
+			//$data['highscore']=$account['highscore'];
 		}
 		$this->load->view('templates/header', $data);
 		$this->load->view('pages/game', $data);

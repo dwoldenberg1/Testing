@@ -17,17 +17,6 @@
 	<link rel="stylesheet" type="text/css" href="/Testing/phpframeworks/CodeIgniter_2/assets/css/Style.css">
 	<link rel="stylesheet" type="text/css" href="/Testing/phpframeworks/CodeIgniter_2/assets/css/button.css">
 	<script>
-		 function createCookie(name, value, seconds) {
-		 	var expires;
-		 	if (days) {
-			 	var date = new Date();
-			 	date.setTime(date.getTime() + (seconds * 60 * 1000));
-			 	expires = "; expires=" + date.toGMTString();
-			 	} else {
-				 	expires = "";
-				}
-				document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
-		 }
 </script> 
 </head>
 <body>

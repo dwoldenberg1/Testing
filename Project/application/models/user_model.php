@@ -33,7 +33,8 @@ class user_model extends CI_Model {
 			"username" => $user,
 			"password_encrypted" => $this->input->post('pass'),
 			"email" =>$this->input->post('email'),
-			"logged_in"=>TRUE
+			"logged_in"=>TRUE,
+			"highscore"=>0
 			);
 
 		$this->user_model->setAccount($data);
@@ -70,10 +71,6 @@ class user_model extends CI_Model {
 	}
 	
 	public function updateHighscore($highscore, $username){
-		/*$score = $highscore;
-		$data = array( "highscore" => $score );
-		$this->db->update('accounts', $data, "username = $username");*/
-		//$this->db->query("UPDATE accounts SET highscore = $highscore WHERE username = $username");
 		$this->db->query("UPDATE accounts SET highscore = ? WHERE username = ?", array($highscore, $username));
 	}
 	//getter methods
@@ -88,6 +85,18 @@ class user_model extends CI_Model {
 
 		$query = $this->db->get_where('accounts', array('username' => $user));
 		return $query->row()->email;
+	}
+	
+	public function get_highScore($user)
+	{
+		if ($user === FALSE)
+		{
+			$query = $this->db->get('accounts');
+			return $query->result_array();
+		}
+
+		$query = $this->db->get_where('accounts', array('username' => $user));
+		return $query->row()->highscore;
 	}
 	
 	public function isLoggedIn(){
