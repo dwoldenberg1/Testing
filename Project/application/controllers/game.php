@@ -33,13 +33,22 @@ class Game extends CI_Controller {
 		
 	}
 	
+	public function updateScore()
+	{
+		$user=$_POST['user'];
+		$previous=$_POST['previous'];
+		$score=$_POST['score'];
+		
+		$this->user_model->updateHighScore($score, $user);
+	}
+	
 	public function logout()
 	{
 		$this->user_model->logout();
 		$this->main();
 	}
 
-	public function validate()
+	public function validate($previous = 'home')
 	{
 		$logged_in = $this->session->userdata('logged_in');
 		if($logged_in === FALSE)
@@ -49,7 +58,8 @@ class Game extends CI_Controller {
 		}
 		else {
 			$account = $this->session->all_userdata();
-			$this->main('home', $account);
+			$account['highscore']=$this->user_model->get_highScore($account['username']);
+			$this->main($previous, $account);
         }
 	}
 
@@ -61,7 +71,7 @@ class Game extends CI_Controller {
 		
 			$this->load->helper('form');
 			$this->load->library('form_validation');
-
+			
 			$this->form_validation->set_rules('user', 'Username', 'required');
 			$this->form_validation->set_rules('pass', 'Password', 'required');
 			
@@ -83,7 +93,7 @@ class Game extends CI_Controller {
 							'password' => $this->input->post('pass'),
 							'email' => $this->user_model->get_email($this->input->post('user')),//$this->input->post('email')
 							'logged_in' => TRUE,
-							//'highscore' => 0
+							'highscore' => $this->user_model->get_highscore($this->input->post('user'))
 							);
 						$this->main('home', $userData);
 						return $userData;
@@ -141,12 +151,14 @@ class Game extends CI_Controller {
 			$data['previous'] = ('Home');
 		}
 		$data['previous'] = ($page);
-		$data['title'] = 'Game';
+		$data['title'] = ucfirst($page); // Capitalize the first letter
 		if(count($account) > 0) {
 			$data['logged_in']=$account['logged_in'];
 			$data['username']=$account['username'];
-			//$data['highscore']=$account['highscore'];
+			$data['highscore']=$account['highscore'];
 		}
+		$data['bestUser']=$this->user_model->highestUser();
+		$data['bestScore']=$this->user_model->highestScore();
 		$this->load->view('templates/header', $data);
 		$this->load->view('pages/game', $data);
 	}

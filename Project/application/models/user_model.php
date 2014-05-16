@@ -26,12 +26,13 @@ class user_model extends CI_Model {
 	public function create_account()
 	{
 		$this->load->helper('url');
+		$this->load->helper('security');
 
 		$user = url_title($this->input->post('user'), '_', TRUE);
 
 		$data = array(
 			"username" => $user,
-			"password_encrypted" => $this->input->post('pass'),
+			"password_encrypted" => do_hash($this->input->post('pass')),
 			"email" =>$this->input->post('email'),
 			"logged_in"=>TRUE,
 			"highscore"=>0
@@ -50,11 +51,16 @@ class user_model extends CI_Model {
 	public function logOut()
 	{
 		$logged_in = FALSE;
+		$username=$this->session->userdata('username');
+		$this->db->query("UPDATE accounts SET logged_in = ? WHERE username = ?", array("0",$username));
 		$this->session->sess_destroy();
 	}
 
 	public function isAccount($username, $password)
 	{
+		$this->load->helper('security');
+		
+		$encryt = do_hash($password);
 		$query = $this->db->select('password_encrypted')->from('accounts')->where('username',$username)->get();
 		if ($query->num_rows() == 0)
 		{
@@ -63,7 +69,7 @@ class user_model extends CI_Model {
 		else
 		{
 			$row = $query->row(); 
-			if($password == $row->password_encrypted) {
+			if($encrypt == $row->password_encrypted) {
 				return true;
 			}
 			return false;
@@ -101,6 +107,20 @@ class user_model extends CI_Model {
 	
 	public function isLoggedIn(){
 		return $logged_in;
+	}
+	
+	public function highestUser()
+	{
+		$query= $this->db->query('SELECT username FROM accounts ORDER BY highscore DESC LIMIT 1');
+		$row = $query->row();
+		return $row->username; 
+	}
+	
+	public function highestScore()
+	{
+		$query= $this->db->query('SELECT highscore FROM accounts ORDER BY highscore DESC LIMIT 1');
+		$row = $query->row();
+		return $row->highscore;
 	}
 	
 }

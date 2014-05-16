@@ -291,12 +291,9 @@ function gameOver() {
     isGameOver = true;
     if (parseInt($('#scoreTest').html()) == true && overCounter<1 && score > parseInt($('#highscore').html()))
     {
-	    alert("score: " + score);
-	    alert("highscore: " + parseInt($('#highscore').html()));
 	    $("#highestscore").html(score);
-	    alert("new highscore: " + parseInt($('#highestscore').html()));
-	    $('#test').append("<a href='/Testing/phpframeworks/CodeIgniter_2/index.php/game/updateScore/" + $('#username').html() + "/" + score + "/" + $('#previous').html() + "' id='scoreLink'></a>");
-	    document.getElementById('scoreLink').click();
+	    $.post("/Testing/phpframeworks/CodeIgniter_2/index.php/game/updateScore",{ user: $('#username').html(), score: score, previous: $('#previous').html()});
+	    $('#highscore').html(score)
     }
     overCounter++;
 }
@@ -306,6 +303,7 @@ function reset() {
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('game-over-overlay').style.display = 'none';
     isGameOver = false;
+    overCounter=0;
     gameTime = 0;
     score = 0;
 

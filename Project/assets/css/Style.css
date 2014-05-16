@@ -117,6 +117,14 @@ p.lead {
 	  
   }
   
+  #overallScore {
+	  text-align: center;
+	  position: absolute;
+	  padding-top: 42%;
+	  padding-left: 7%;
+	  color: #7307a1;
+  }
+  
 /*game.php*/
   #game {
 	border-width: medium;
@@ -152,4 +160,4 @@ p.lead {
   }
   
   a:hover {color:#00AFBF; text-decoration: none;}
-  a:visited {color:#E075FF;}
+  //a:visited {color:#E075FF;}

@@ -11,8 +11,6 @@
   </head>
   <body>
   	<div class="main-wrapper">
-  		<div id="scoreTest" style="display: none;">0</div>
-  		<div id="previous" style="display: none;"><?php echo $previous ?></div>
   		<div class="right-main-wrapper" id="test"> 
           <a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/validate/" + <?php echo $previous ?> + "' " id="login">
     			<b>Login to an Existing Account</b> <br> <div style="text-align: center;">or</div> <b>Create a new Account</b>
@@ -43,8 +41,13 @@
       </div>
 
       <div id="score"></div>
+      <div id="overallScore"><b><?php echo $bestUser?></b> is the user with the highest score of <b><?php echo $bestScore?></b>!</div>
     </div>
-    <div id="highestscore" style="display: none;"></div>
+    <div id="data">
+    	<div id="scoreTest" style="display: none;">0</div>
+    	<div id="highestscore" style="display: none;"></div>
+  		<div id="previous" style="display: none;"><?php echo $previous ?></div>
+    </div>
 
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/resources.js"></script>
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/input.js"></script>
