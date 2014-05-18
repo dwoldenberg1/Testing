@@ -8,7 +8,7 @@
 	<input type="input" name="user"><br />
 
 	<label for="pass">Password</label>
-	<input type="input" name="pass"><br />
+	<input type="password" name="pass"><br />
 	
 	<label for="email">Email</label>
 	<input type="input" name="email"><br />

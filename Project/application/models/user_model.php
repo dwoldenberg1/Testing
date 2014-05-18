@@ -60,7 +60,7 @@ class user_model extends CI_Model {
 	{
 		$this->load->helper('security');
 		
-		$encryt = do_hash($password);
+		$encrypt = do_hash($password);
 		$query = $this->db->select('password_encrypted')->from('accounts')->where('username',$username)->get();
 		if ($query->num_rows() == 0)
 		{
@@ -68,7 +68,10 @@ class user_model extends CI_Model {
 		}
 		else
 		{
-			$row = $query->row(); 
+			$row = $query->row();
+			$pass=$row->password_encrypted; 
+			error_log("
+			New Line with user $username: $encrypt|$pass", 3, "error.txt");
 			if($encrypt == $row->password_encrypted) {
 				return true;
 			}
@@ -121,6 +124,12 @@ class user_model extends CI_Model {
 		$query= $this->db->query('SELECT highscore FROM accounts ORDER BY highscore DESC LIMIT 1');
 		$row = $query->row();
 		return $row->highscore;
+	}
+	
+	public function getUsers()
+	{
+		$query = $this->db->query('accounts');
+		$unordered = $query->result_array();
 	}
 	
 }

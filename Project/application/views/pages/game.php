@@ -42,6 +42,7 @@
 
       <div id="score"></div>
       <div id="overallScore"><b><?php echo $bestUser?></b> is the user with the highest score of <b><?php echo $bestScore?></b>!</div>
+      <a href="leaderboard">CLick here to view the full leaderboard</a>
     </div>
     <div id="data">
     	<div id="scoreTest" style="display: none;">0</div>

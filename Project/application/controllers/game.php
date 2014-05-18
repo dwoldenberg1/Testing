@@ -142,6 +142,16 @@ class Game extends CI_Controller {
 
 	}
 	
+	public function leaderboard()
+	{
+		$data['users'] = $this->user_model->get_news();
+		$data['title'] = 'Leaderboard';
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('templates/leadboard', $data);
+		//$this->load->view('templates/footer');
+	}
+	
 	public function main($page = 'home', $account = array())
 	{
 		/*print '<script type="text/javascript">'; 
