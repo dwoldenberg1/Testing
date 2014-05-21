@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title><?php echo $title ?> - David Woldenberg</title>
+	<title><?php echo $title ?> - Wold</title>
 	<script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/functions.js"></script>
 	<meta name="viewport" content="width-device-width, initial-scale-1.0">

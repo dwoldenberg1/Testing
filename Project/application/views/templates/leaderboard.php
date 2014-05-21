@@ -1,9 +1,18 @@
-<?php foreach ($news as $news_item): ?>
+<a href= "/index.php/game/validate" class="back">Back</a>
 
-    <h2><?php echo $news_item['title'] ?></h2>
-    <div id="main">
-        <?php echo $news_item['text'] ?>
-    </div>
-    <p><a <?php echo "href=/Testing/phpframeworks/CodeIgniter_2/index.php/news/view/".$news_item['slug'] ?> >View article</a></p>
-
-<?php endforeach ?>
+<table class="reference" style="width:60%">
+	<tbody><tr>
+		<tbody><tr>
+		<th>Rank</th>
+		<th>Username</th>		
+		<th>Highscore</th>
+	</tr>
+		<?php for ($x =0; $x<2; $x++): ?>
+			<tr>
+			    <td><?php $user=$users[$x]; echo $x + 1; ?>.</td>
+			    <td><?php echo $user['username'] ?></td>
+			    <td><?php echo $user['highscore'] ?></td>
+			</tr>
+		<?php endfor; ?>
+	</tbody>
+</table>

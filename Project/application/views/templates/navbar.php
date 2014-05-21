@@ -9,7 +9,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="brand" href="/Testing/phpframeworks/CodeIgniter_2/" >David Woldenberg</a>
+        <a class="brand" href="/Testing/phpframeworks/CodeIgniter_2/" >Wold</a>
         <div class="nav-collapse collapse">
           <ul class="nav" >
             <li <?php if($title==="Home")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/">Home</a>
@@ -20,7 +20,7 @@
             </li>
             <li <?php if($title==="News")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/news">News</a>
             </li>
-            <li <?php if($title==="Contact")echo"class='active'";?>><a href="#Contact">Contact</a>
+            <li <?php if($title==="Contact")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/contact">Contact</a>
             </li>
           </ul>
         </div>

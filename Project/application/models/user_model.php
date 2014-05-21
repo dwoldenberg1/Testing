@@ -82,6 +82,7 @@ class user_model extends CI_Model {
 	public function updateHighscore($highscore, $username){
 		$this->db->query("UPDATE accounts SET highscore = ? WHERE username = ?", array($highscore, $username));
 	}
+	
 	//getter methods
 	
 	public function get_email($user)
@@ -126,10 +127,10 @@ class user_model extends CI_Model {
 		return $row->highscore;
 	}
 	
-	public function getUsers()
+	public function get_Users()
 	{
-		$query = $this->db->query('accounts');
-		$unordered = $query->result_array();
+		$query = $this->db->query("SELECT * FROM accounts ORDER BY highscore ASC");
+		return $query->result_array();
 	}
 	
 }

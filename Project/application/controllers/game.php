@@ -144,12 +144,15 @@ class Game extends CI_Controller {
 	
 	public function leaderboard()
 	{
-		$data['users'] = $this->user_model->get_news();
+		$data['users'] = $this->user_model->get_Users();
 		$data['title'] = 'Leaderboard';
 
 		$this->load->view('templates/header', $data);
-		$this->load->view('templates/leadboard', $data);
-		//$this->load->view('templates/footer');
+		/*foreach ($data['users'] as $array):
+			echo implode(", ", $array);
+			echo " | ";
+		endforeach;*/
+		$this->load->view('templates/leaderboard', $data);
 	}
 	
 	public function main($page = 'home', $account = array())
