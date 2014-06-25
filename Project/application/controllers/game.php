@@ -28,7 +28,7 @@ class Game extends CI_Controller {
 		$data['title'] = 'Game';
 		
 		$this->load->view('templates/header', $data);
-		$this->load->view('pages/game');
+		$this->load->view('game/monsters');
 		//$this->load->view('templates/footer');
 		
 	}
@@ -148,14 +148,17 @@ class Game extends CI_Controller {
 		$data['title'] = 'Leaderboard';
 
 		$this->load->view('templates/header', $data);
-		/*foreach ($data['users'] as $array):
-			echo implode(", ", $array);
-			echo " | ";
-		endforeach;*/
 		$this->load->view('templates/leaderboard', $data);
 	}
 	
-	public function main($page = 'home', $account = array())
+	public function landing($page = 'home') 
+	{
+		$data['title']=$page;
+		$this->load->view('templates/header', $data);
+		$this->load->view('game/landing');
+	}
+	
+	public function main($page = 'home', $account = array(), $game = 'monsters')
 	{
 		/*print '<script type="text/javascript">'; 
 		print 'alert('.implode("|",$account)..$account['username'].')'; 
@@ -165,7 +168,7 @@ class Game extends CI_Controller {
 		}
 		$data['previous'] = ($page);
 		$data['title'] = ucfirst($page); // Capitalize the first letter
-		if(count($account) > 0) {
+		if(count($account) > 1) {
 			$data['logged_in']=$account['logged_in'];
 			$data['username']=$account['username'];
 			$data['highscore']=$account['highscore'];
@@ -173,7 +176,10 @@ class Game extends CI_Controller {
 		$data['bestUser']=$this->user_model->highestUser();
 		$data['bestScore']=$this->user_model->highestScore();
 		$this->load->view('templates/header', $data);
-		$this->load->view('pages/game', $data);
+		$this->load->view('game/'.$game, $data);
+		print '<script type="text/javascript">'; 
+		print 'alert("'.$game.'")'; 
+		print '</script>';
 	}
 }
 ?>

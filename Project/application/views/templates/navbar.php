@@ -16,7 +16,7 @@
             </li>
             <li <?php if($title==="About")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/about" >About</a>
             </li>
-            <li <?php if($title==="Game")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/main/<?php echo $title ?>" >Game</a>
+            <li <?php if($title==="Game")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/game/landing/<?php echo $title ?>" >Game</a>
             </li>
             <li <?php if($title==="News")echo"class='active'";?>><a href="/Testing/phpframeworks/CodeIgniter_2/index.php/news">News</a>
             </li>

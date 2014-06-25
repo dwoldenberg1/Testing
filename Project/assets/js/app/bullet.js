@@ -8,7 +8,7 @@ var GameState = function(game) {
 
 // Load images and sounds
 GameState.prototype.preload = function() {
-    this.game.load.image('bullet', 'assets/gfx/bullet.png');
+    this.game.load.image('bullet', 'http://gamemechanicexplorer.com/assets/gfx/bullet.png');
 };
 
 // Setup the example

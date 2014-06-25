@@ -95,7 +95,6 @@ p.lead {
   
   #spin {
 	  overflow: hidden;
-	  padding-bottom: 10px;
   }
   
   #login {
@@ -145,6 +144,13 @@ p.lead {
 	table.reference td.example_code
 	{
 	vertical-align:bottom;
+	}
+	
+	#landing {
+		position: relative;
+		text-align: center;
+		background-color: #151515;
+		padding-top: 50px;
 	}
 	
 /*game.php*/

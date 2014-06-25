@@ -68,7 +68,7 @@
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/resources.js"></script>
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/input.js"></script>
     <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/sprite.js"></script>
-    <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/app.js"></script>
+    <script type="text/javascript" src="/Testing/phpframeworks/CodeIgniter_2/assets/js/app/app2.js"></script>
     <script>
 	    if (<?php echo $logged_in ?> == true)
 	    {

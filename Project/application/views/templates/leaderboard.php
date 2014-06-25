@@ -1,6 +1,4 @@
-<a href= "/index.php/game/validate" class="back">Back</a>
-
-<table class="reference" style="width:60%">
+<table class="reference" style="width:100%">
 	<tbody><tr>
 		<tbody><tr>
 		<th>Rank</th>
